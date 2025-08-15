@@ -1,0 +1,58 @@
+<html>
+
+<head>
+    <title>Sky</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com%22%3E/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+</head>
+
+<body>
+    <img class="bg" src="images/bg.png">
+    <div class="sections">
+        <img class="collocationChicken" src="images/chicken.png">
+        <img class="collocationRighthandCleaver" src="images/righthandCleaver.png">
+        <img class="collocationlefthand" src="images/lefthand.png">
+        <img class="collocaionLines" src="images/lines.png">
+
+        <div onclick="cutHead()" class="knifeHitBox"></div>
+    </div>
+    <div class="area">
+        <img class="ItemBlood" src="images/blood.png">
+        <img class="ItemBodychicken" src="images/bodychicken.png"> 
+        <img class="ItemHeadchicken" src="images/headchicken.png">
+    </div>
+    <div class="kopya4">
+        <img class="centerRHC" src="images/righthandCleaver.png">
+        <img class="CenterChickenmeat" src="images/chickenmeat.png">
+        <img onclick="chickenLine(1)" class="CenterLines1 line" src="images/lines.png">
+        <img onclick="chickenLine(2)" class="CenterLines2 line" src="images/lines.png">
+        <img onclick="chickenLine(3)" class="CenterLines3 line" src="images/lines.png">
+        <img onclick="chickenLine(4)" class="CenterLines4 line" src="images/lines.png">
+    </div>
+    <div class="lastpage">
+        <img class="categoryPlate" src="images/plate.png">
+        <img class="ImageRH" src="images/Righthand.png">
+
+        <!-- <img onclick="selectPart(1, 'meat')" class="part_1" src="images/meat.png">
+        <img onclick="selectPart(2, 'wingmeat')" class="part_2" src="images/wingmeat.png">
+        <img onclick="selectPart(3, 'wingmeat')" class="part_3" src="images/wingmeat.png">
+        <img onclick="selectPart(4, 'thigh')" class="part_4" src="images/thigh.png">
+        <img onclick="selectPart(5, 'thigh')" class="part_5" src="images/thigh.png"> -->
+
+    
+        <div onclick="putPart()" class="partArea">
+            <div class="wingsArea"></div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+
+</body>
+

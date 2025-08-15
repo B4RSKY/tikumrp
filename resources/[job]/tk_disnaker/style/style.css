@@ -1,0 +1,435 @@
+﻿body {
+    overflow: hidden;
+    display: none;
+}
+
+@font-face {
+    font-family: Gilroy;
+    src: url(fonts/Gilroy-Regular.ttf);
+}
+@font-face{
+    font-family: Gilroy-extrabold;
+    src: url(fonts/Gilroy-ExtraBold.otf);
+}
+
+@font-face {
+    font-family: DrukCyr;
+    src: url(fonts/DrukCyr-Bold.ttf);
+}
+
+@font-face {
+    font-family:Oxanium ;
+    src: url(fonts/Oxanium-Light.ttf);
+}
+@font-face {
+    font-family: Akrobat;
+    src:url(fonts/Akrobat-Bold.otf);
+}
+
+@font-face{
+    font-family: Inter;
+    src: url(fonts/Inter-ExtraBold.ttf);
+}
+@font-face{
+    font-family: Inter1;
+    src: url(fonts/Inter-UI-BlackItalic.ttf);
+
+}
+@font-face{
+    font-family: Baloo;
+    src: url(fonts/Baloo-Regular.ttf);
+}
+@font-face{
+    font-family:SemiBold;
+    src: url(fonts/Inter-SemiBold.ttf);
+}
+@font-face{
+    font-family: Aclonica;
+    src: url(fonts/Aclonica.ttf);
+}
+@font-face{
+    font-family: Michroma;
+    src: url(fonts/Michroma.ttf);
+
+}
+@font-face{
+    font-family: oxanium extrabold;
+    src: url(fonts/Oxanium-ExtraBold.ttf);
+}
+@font-face{
+    font-family: oxanium regular;
+    src: url(fonts/Oxanium-Regular.ttf);
+}
+@font-face{
+    font-family: oxanium-bold;
+    src: url(fonts/Oxanium-Bold.ttf);
+}
+@font-face{
+    font-family: Passion One-regular;
+    src: url(fonts/PassionOne-Regular.ttf);
+
+}
+@font-face{
+    font-family: Passion One-bold;
+    src: url(fonts/PassionOne-Bold.ttf);
+
+}
+.kopya{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0vw;
+    top: 0vw;
+    opacity: 0.7;
+}
+.bg{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0vw;
+    top: 0vw;
+    opacity: 1;
+
+}
+.collocationRighthandCleaver{
+    position: absolute;
+    left: 37.8vw;
+    top: 1vw;
+    width: 62vw;
+    height: 55vw;
+
+    margin-top: -10vw;
+    margin-left:-8vw
+}
+.collocationChicken{
+    position: absolute;
+    top: 13vw;
+    left: 8vw;
+    height: 43.3vw;
+    width: 53.9vw;
+}
+.collocationlefthand{
+    position: absolute;
+    top: 24.2vw;
+    left: 11.6vw;
+    height:32vw;
+    width: 42.4vw;
+}
+.collocaionLines{
+    position: absolute;
+    top: 21.2vw;
+    left: 45vw;
+    height: 11vw;
+    width: 10vw;
+}
+.sections{
+    display: none;
+}
+.ItemBlood{
+    position: absolute;
+    left: 40vw;
+    top: 20.6vw;
+    width:24.4vw;
+    height: 23vw;
+}
+.ItemBodychicken{
+    position: absolute;
+    top: 28vw;
+    left: 8vw;
+    height: 28.6vw;
+    width: 44.9vw;
+}
+.ItemHeadchicken{
+    position: absolute;
+    left: 54.8vw;
+    top: 18vw;
+    height: 19.5vw;
+    width: 16.3vw;
+}
+.ItemBin{
+    position: absolute;
+    left: 78.9vw;
+    top: 7.9vw;
+    height: 44.2vw;
+    width: 20.99vw;
+}
+.area{
+    display: none;
+}
+.ImageFur{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0vw;
+    top: 0vw;
+}
+.ImageRH{
+    position: absolute;
+    left: 35.6vw;
+    top: 25.2vw;
+    width: 42.1vw;
+    height: 34.5vw;
+
+    margin-top: -10vw;
+    margin-left:0.5vw;
+    z-index: 555;
+}
+.Imagebodychicken{
+    position: absolute;
+    left: 24.9vw;
+    top: 17.9vw;
+    width: 44.8vw;
+    height: 38.2vw;
+    z-index: 99;
+}
+.ImageTitle{
+    position: absolute;
+    color: #575757;
+    font-family:Passion One-regular;
+    font-size: 1.30vw;
+    left: 35.5vw;
+    top: 8.3vw;
+
+}
+.ImageSubTitle{
+    position: absolute;
+    color: #FFF;
+    font-family:Passion One-bold;
+    font-size: 1.25vw;
+    left: 62.6vw;
+    top:8.7vw;
+}
+.range{
+    position: absolute;
+    height: 1vw;
+    width: 0%;
+    background: #FFB36B;
+    left: 0vw;
+    top:0vw;
+}
+.rangegrey{
+    position: absolute;
+    height: 1vw;
+    width: 29.4vw;
+    background: rgba(65, 65, 65, 0.65);
+    left: 35.5vw;
+    top:11.4vw;
+    border-radius: 0.4vw;
+    overflow: hidden;
+}
+.ImageEllips{
+    position: absolute;
+    left: 50vw;
+    top: 11.5vw;
+    height: 0.8vw;
+    width: 0.7vw;
+}
+.Text{
+    display: none;
+}
+.collocationLines{
+    position: absolute;
+}
+.centerRHC{
+    position: absolute;
+    left: 54vw;
+    top: -0.2vw;
+    height: 56vw;
+    width: 63vw;
+    z-index: 9;
+    margin-top: -10vw;
+    margin-left:-6vw
+}
+.CenterChickenmeat{
+    position: absolute;
+    left: 26.8vw;
+    top: 14.8vw;
+    height: 33.4vw;
+    width: 45.9vw;
+}
+.CenterLines1{
+    position: absolute;
+    left: 30vw;
+    top: 25.4vw;
+    transform: rotate(-20deg);
+    width: 10vw;
+    height:11.2vw;
+    z-index: 9;
+}
+.CenterLines2{
+    position: absolute;
+    left: 42vw;
+    top: 16.2vw;
+    transform: rotate(-35deg);
+    width: 10vw;
+    height:11.2vw;
+    display: none;
+    z-index: 9;
+}
+.CenterLines3{
+    position: absolute;
+    left: 52.7vw;
+    top: 19.5vw;
+    transform: rotate(37deg);
+    width: 10vw;
+    height:11.2vw;
+    display: none;
+    z-index: 9;
+}
+.CenterLines4{
+    position: absolute;
+    left: 42.9vw;
+    top:22.6vw;
+    transform: rotate(-70deg);
+    width: 10vw;
+    height:11.2vw;
+    display: none;
+    z-index: 9;
+}
+.kopya4{
+    display: none;
+}
+.part_1{
+    position: absolute;
+    top: 34.9vw;
+    left: 3.4vw;
+    width: 24vw;
+    height: 18.7vw;
+    z-index: 9;
+    margin-left:-1vw;
+    margin-top: -6vw;
+}
+.categoryPlate{
+    position: absolute;
+    left: 31vw;
+    top: 5.2vw;
+    width: 68.9vw;
+    height: 46.4vw;
+   
+}
+.part_2{
+    position: absolute;
+    top: 27vw;
+    left:1vw;
+    height: 12vw;
+    width: 19.8vw;
+
+    margin-top: -1vw;
+    margin-left: 3vw;
+    transform: rotate(50deg);
+}
+.part_3{
+    position: absolute;
+    top: 20.99vw;
+    left:1vw;
+    height: 12vw;
+    width: 19.8vw;
+
+    margin-top: -1vw;
+    margin-left: 3vw;
+    transform: rotate(50deg);
+}
+.part_5{
+    position: absolute;
+    top:6.5vw;
+    left: 5vw;
+    width: 21.9vw;
+    height: 23.6vw;
+
+    margin-top: -9vw;
+    margin-left: 3vw;
+    transform: rotate(50deg);
+    
+}
+.part_4{
+    position: absolute;
+    top:15vw;
+    left: 0vw;
+    width: 21.9vw;
+    height: 23.6vw;
+
+    margin-top: -9vw;
+    margin-left: 3vw;
+    transform: rotate(50deg);
+
+}
+.lastpage{
+    display: none;
+}
+
+.knifeHitBox{
+    position: absolute;
+    width: 5vw;
+    height: 15vw;
+    left:48vw;
+    top:20vw;
+    transform: rotate(-40deg);
+}
+
+img {
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+}
+
+*:not(input):not(textarea) {
+    -moz-user-select: -moz-none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
+    -ms-user-select: none;
+    user-select: none
+}
+
+* {
+    cursor: none;
+}
+
+.partArea{
+    position: absolute;
+    width: 25vw;
+    height: 22vw;
+    left:40vw;
+    top:15vw;
+    z-index: 999999;
+}
+
+.packagePart1{
+    position: absolute;
+    left:1vw;
+    top:3vw;
+    z-index: 1;
+}
+
+.packagePart2{
+    position: absolute;
+    top:9vw;
+    left:0vw;
+    transform: rotate(180deg);
+    z-index: 2;
+}
+
+.packagePart3{
+    position: absolute;
+    left:7vw;
+    top:1vw;
+    z-index: 3;
+}
+
+.packagePart4{
+    position: absolute;
+    left:2vw;
+    top:0vw;
+    transform: rotate(150deg);
+    z-index: 3;
+}
+
+.packagePart5{
+    position: absolute;
+    left:2vw;
+    top:-4vw;
+    transform: rotate(0deg);
+    z-index: 4;
+}

@@ -1,0 +1,14 @@
+fx_version "cerulean"
+lua54        "yes"
+game "gta5"
+
+shared_scripts {"@ox_lib/init.lua"}
+
+shared_script "config.lua"
+
+client_script "bridge/**/client.lua"
+server_script "bridge/**/server.lua"
+
+client_script "client/*.lua"
+
+server_script "server/*.lua"

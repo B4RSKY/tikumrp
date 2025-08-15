@@ -1,0 +1,261 @@
+# dds-identification
+An identification card resource modified for ox_inventory for QBox Framework.
+
+# Discord for more releases and support [dDStudio] https://discord.gg/P9ZzdzYaqm
+
+# Dependencies
+## Hard Dependencies
+These are required resources that this resource was built around. It's not designed to work without these resources and if you want to remove the requirement for them you'll be better off writing your own resource rather than try to remove those dependencies from this resource. 
+* [QBox](https://github.com/Qbox-project)
+* [ox_inventory](https://github.com/overextended/ox_inventory)
+* [MugShotBase64](https://github.com/BaziForYou/MugShotBase64)
+
+# Installation
+1. Drag and drop into your resource folder
+2. Make sure you install the required dependencies (listed above)
+3. Follow the instructions to install the other resources - especially the mugshot one for the imgur API
+4. Done!
+
+
+# Config / Disclaimer
+## Cards Types 
+I've done my best to provide a configurable resource. You are able to add your own identification types to this list however it's not just just plug and play, you'll still need to modify the server event and the js events for additional 
+
+You'll have to make sure that the list reflects the items that are available for you and your server, along with your own costs.
+
+## City hall integration
+Adjust the idcard options seen below to match your needs.  Driverlicense cdl and motorcycle license can all use a single ID card showing endorsements for each class.  If the basic driver license is revoked the user will not have access to obtain any license.
+
+qbx-cityhall idcard Items 
+Client Side
+```lua
+local function OpenCityhallIdentityMenu(closestCityhall)
+    local licensesMeta = PlayerData.metadata["licences"]
+    local availableLicenses = table_clone(Config.Cityhalls[closestCityhall].licenses)
+    for license, data in pairs(availableLicenses) do
+        if data.metadata and not licensesMeta[data.metadata] then
+            availableLicenses[license] = nil
+        end
+    end
+    local identityOptions = {}
+    for item, id in pairsInOrder(availableLicenses) do
+        identityOptions[#identityOptions + 1] = {
+            title = id.label,
+            description = ('Price: $%s'):format(id.cost),
+            onSelect = function()
+                lib.notify({ title = 'City Hall', description = 'Taking your photograph', duration = 5000, type = 'inform' })
+                mugshotURL = exports["MugShotBase64"]:GetMugShotBase64(PlayerPedId(), true)
+                TriggerServerEvent('qb-cityhall:server:requestId', item, closestCityhall, mugshotURL)
+                if not Config.UseTarget and inRangeCityhall then
+                    lib.showTextUI('[E] Open Cityhall')
+                end
+            end
+        }
+    end
+    lib.registerContext({
+        id = 'cityhall_identity_menu',
+        title = 'Identity',
+        menu = 'cityhall_menu',
+        onExit = function()
+            if not Config.UseTarget and inRangeCityhall then
+                lib.showTextUI('[E] Open Cityhall')
+            end
+        end,
+        options = identityOptions
+    })
+    lib.showContext('cityhall_identity_menu')
+end 
+```
+Server Side
+```lua
+RegisterNetEvent('qb-cityhall:server:requestId', function(item, hall, mugshotURL)
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    local itemlabels = exports.ox_inventory:Items()
+    if not Player then return end
+    local itemInfo = Config.Cityhalls[hall].licenses[item]
+    if not Player.Functions.RemoveItem("money", itemInfo.cost) then
+        return TriggerClientEvent('ox_lib:notify', src, { description = ('You don\'t have enough money on you, you need %s cash'):format(itemInfo.cost), type = 'error' })
+    end
+    local info = {}
+    if item == nil then
+        return DropPlayer(src, 'Attempted exploit abuse')
+    else
+        TriggerEvent('qbx-cityhall:createCard', src, mugshotURL, item)
+    end
+    TriggerClientEvent('ox_lib:notify', src, { description = ('You have received your %s for $%s'):format(itemlabels[item].label, itemInfo.cost), type = 'success' })
+end)
+
+RegisterServerEvent('qbx-cityhall:createCard', function(player, url, type)
+	local src = player
+	local Player = QBCore.Functions.GetPlayer(src)
+	local card_metadata = {}
+	if not Player then return end
+	card_metadata.type = Player.PlayerData.charinfo.firstname..' '..Player.PlayerData.charinfo.lastname
+	card_metadata.citizenid = Player.PlayerData.citizenid
+	card_metadata.firstName = Player.PlayerData.charinfo.firstname
+	card_metadata.lastName = Player.PlayerData.charinfo.lastname
+	card_metadata.dateofbirth = Player.PlayerData.charinfo.birthdate
+	card_metadata.sex = Player.PlayerData.charinfo.gender
+	card_metadata.nationality = Player.PlayerData.charinfo.nationality
+	card_metadata.mugshoturl = url
+	card_metadata.cardtype = type
+	local curtime = os.time(os.date("!*t"))
+	local diftime = curtime + 2629746
+	card_metadata.issuedon = os.date('%m / %d / %Y',curtime)
+	card_metadata.expireson = os.date('%m / %d / %Y', diftime)
+	if type == "identification" then
+		local sex, identifier = Player.PlayerData.charinfo.gender
+		if sex == 0 then sex = 'm' else sex = 'f' end
+		card_metadata.description = ('Sex: %s | DOB: %s'):format( sex, Player.PlayerData.charinfo.birthdate )
+	elseif type == "driver_license" then
+		if Player.PlayerData.metadata['licences']['driver'] then
+			card_metadata.driver = 'Class D'
+		end
+		if Player.PlayerData.metadata['licences']['bike'] then
+			card_metadata.bike = "Class M"
+		end
+		if Player.PlayerData.metadata['licences']['cdl'] then
+			card_metadata.cdl = "Class A"
+		end
+	elseif type == "firearms_license" then
+		if Player.PlayerData.metadata['licences']['weapon'] then
+			card_metadata.weapon = 'Class I'
+		end
+		if Player.PlayerData.metadata['licences']['weapon2'] then
+			card_metadata.weapon2 = 'Class II'
+		end
+	elseif type == "hunting_license" then
+		if Player.PlayerData.metadata['licences']['hunt'] then
+			card_metadata.hunting = 'Hunting & Fishing License'
+		end
+    elseif type == "pilot_license" then
+		if Player.PlayerData.metadata['licences']['pilot'] then
+			card_metadata.pilot = 'FAA Certified'
+		end
+	end
+	exports.ox_inventory:AddItem(src, type, 1, card_metadata)
+end)
+```
+
+## Multicharacter integration
+qbx-multicharacter Starter Items 
+```lua
+local function GiveStarterItems(source)
+    local Player = QBCore.Functions.GetPlayer(source)
+    local card_metadata = {}
+    card_metadata.type = Player.PlayerData.charinfo.firstname..' '..Player.PlayerData.charinfo.lastname
+    card_metadata.citizenid = Player.PlayerData.citizenid
+    card_metadata.firstName = Player.PlayerData.charinfo.firstname
+    card_metadata.lastName = Player.PlayerData.charinfo.lastname
+    card_metadata.dateofbirth = Player.PlayerData.charinfo.birthdate
+    card_metadata.sex = Player.PlayerData.charinfo.gender
+    card_metadata.nationality = Player.PlayerData.charinfo.nationality
+    card_metadata.cardtype = 'identification'
+    local curtime = os.time(os.date("!*t"))
+    local diftime = curtime + 2629746
+    card_metadata.issuedon = os.date('%m / %d / %Y',curtime)
+    card_metadata.expireson = os.date('%m / %d / %Y', diftime)
+    local sex, identifier = Player.PlayerData.charinfo.gender
+    if sex == 0 then sex = 'm' else sex = 'f' end
+    card_metadata.description = ('Sex: %s | DOB: %s'):format( sex, Player.PlayerData.charinfo.birthdate )
+    for _, v in pairs(ksFrameworkQBcore.Shared.StarterItems) do
+        if v.item == 'identification' then
+            card_metadata.cardtype = 'identification'
+            exports.ox_inventory:AddItem(Player.PlayerData.source, v.item, v.amount, card_metadata, nil, false)
+        elseif v.item == 'driver_license' then
+            card_metadata.cardtype = 'driver_license'
+            card_metadata.driver = 'Class D'
+            exports.ox_inventory:AddItem(Player.PlayerData.source, v.item, v.amount, card_metadata, nil, false)
+        else
+            exports.ox_inventory:AddItem(Player.PlayerData.source, v.item, v.amount, nil, nil, false)
+        end
+    end
+end
+```
+## ox_inventory/data/items.lua
+```lua
+	['identification'] = {
+		label = 'Identification',
+		weight = 0,
+		stack = false,
+		close = true,
+		consume = 0,
+		client = {
+			export = 'dds-identification.identification'
+		}
+	},
+	['drivers_license'] = {
+		label = 'Drivers License',
+		weight = 0,
+		stack = false,
+		close = true,
+		consume = 0,
+		client = {
+			export = 'dds-identification.identification'
+		}
+	},
+	['firearms_license'] = {
+		label = 'Firearms License',
+		weight = 0,
+		stack = false,
+		close = true,
+		consume = 0,
+		client = {
+			export = 'dds-identification.identification'
+		}
+	},
+```
+
+# This is an adaptation of qidentification for the QBox framework. [QuantusRP](https://github.com/QuantusRP/qidentification)
+# All credits goes to [Noms](https://github.com/OfficialNoms) for creating this script first.
+
+This resource was inspired by the original jsfour identification script and still uses some of the javascript from it. The rest of the LUA is entirely re-written.
+
+![ID Card Preview](https://i.imgur.com/PxVi8jK.png)
+
+# SQL
+CREATE TABLE IF NOT EXISTS `tk_license` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `license_type` VARCHAR(32) NOT NULL,
+  `holder_citizenid` VARCHAR(50) NOT NULL,
+  `issuer_name` VARCHAR(128) NOT NULL,
+  `issuer_citizenid` VARCHAR(50) NOT NULL,
+  `issued_at` INT NOT NULL,
+  `expires_at` INT NOT NULL,
+  `status` ENUM('active','revoked','expired','suspended') NOT NULL DEFAULT 'active',
+  `job_lock` VARCHAR(50) NULL,
+  `min_grade` INT NULL,
+  `dept_lock` VARCHAR(50) NULL,
+  `notes` VARCHAR(255) NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_holder_cid` (`holder_citizenid`),
+  KEY `idx_expires` (`expires_at`),
+  KEY `idx_type` (`license_type`),
+  KEY `idx_status` (`status`),
+  KEY `idx_joblock` (`job_lock`),
+  KEY `idx_deptlock` (`dept_lock`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `tk_license_log` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `license_id` INT NULL,
+  `ts` INT NOT NULL,
+  `action` VARCHAR(32) NOT NULL,
+  `actor_citizenid` VARCHAR(50) NULL,
+  `actor_name` VARCHAR(128) NULL,
+  `actor_job` VARCHAR(50) NULL,
+  `actor_grade` INT NULL,
+  `holder_citizenid` VARCHAR(50) NULL,
+  `holder_name` VARCHAR(128) NULL,
+  `license_type` VARCHAR(32) NULL,
+  `details` JSON NULL,
+  `source` VARCHAR(32) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_license_id` (`license_id`),
+  KEY `idx_holder_cid` (`holder_citizenid`),
+  KEY `idx_ts` (`ts`),
+  KEY `idx_action` (`action`),
+  KEY `idx_source` (`source`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
