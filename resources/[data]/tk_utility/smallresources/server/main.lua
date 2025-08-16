@@ -26,3 +26,11 @@ end)
 QBCore.Functions.CreateCallback('smallresources:server:GetCurrentPlayers', function(_, cb)
     cb(#GetPlayers())
 end)
+
+--Uang tidak bisa di masukkan trunk dsb
+local hookId = exports.ox_inventory:registerHook('swapItems', function(payload)
+    return payload.toType == 'player' and payload.fromType == 'player'
+end, {
+    print = false,
+    itemFilter = {money = true},
+})

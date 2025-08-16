@@ -130,7 +130,7 @@ Config.Locations = {                -- Edit the various interaction points for p
     ['hospital'] = {
         {
             ['name'] = "Rumah Sakit",
-            ['location'] = vector3(335.9, -1392.7, 32.51),
+            ['location'] = vector3(-500.28, -1002.92, 22.99),
             ['beds'] = {				
             { coords = vector4(352.16, -1374.6, 33.72, 146.06), taken = false, model = -708683881 },
             { coords = vector4(355.01, -1377.25, 33.72, 142.43), taken = false, model = -708683881 },
@@ -143,7 +143,7 @@ Config.Locations = {                -- Edit the various interaction points for p
         },
     },
     ['stations'] = {
-        { label = "Rumah Sakit", coords = vector3(335.9, -1392.7, 32.51) },
+        { label = "Rumah Sakit", coords = vector3(-500.28, -1002.92, 22.99) },
     }
 }
 

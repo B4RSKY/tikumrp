@@ -10,7 +10,7 @@ end, 'god')
 
 QBCore.Commands.Add(Config.Commands['MenuOpen'], Lang:t("info.keymapping_desc"), {}, false, function(source)
     TriggerClientEvent('tk_admin/client/try-open-menu', source, false)
-end, 'admin')
+end, 'god')
 
 QBCore.Commands.Add(Config.Commands['MenuDebug'], Lang:t("info.menu_debug"), {}, false, function(source)
     TriggerClientEvent('tk_admin/client/toggle-debug', source, false)
