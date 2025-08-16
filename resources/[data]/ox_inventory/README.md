@@ -1,11 +1,51 @@
+## ⚠️ Notice
+
+This version of `ox_inventory` has been modified to improve compatibility with the latest versions of **qb-core**. It began as a continuation of an older fork which originally reintroduced QB compatibility but is no longer available. Since then, this fork has evolved into a community-focused version aimed at ensuring broad compatibility while introducing small, non-intrusive quality-of-life enhancements.
+
+**Important:**
+The original `ox_inventory` was developed by the **Overextended** team, but is no longer actively maintained by them and remains under its original license.
+This modified version is **not officially supported by the Overextended team**.
+Please do **not contact them** for issues related to this fork.
+
+---
+
+### Purpose
+
+This fork exists to provide a more collaborative and inclusive solution for the FiveM community. We believe in open-source software that evolves with the input of its users, encouraging innovation and adaptation through collective development.
+
+---
+
+## Key Differences from Other Forks
+
+### Rarity Indicators (Optional Visual Feature)
+
+* Items can now display colored borders and glow effects based on a `"rarity"` metadata key.
+* Supported values: `common`, `uncommon`, `rare`, `epic`, `legendary`, `artifact`, `red`, `pink`, `gold`.
+
+### Modern QB-Core Compatibility Restored
+
+* Fully re-integrated with the latest versions of **qb-core**.
+* Preserves full support for **ESX**, **ox\_core**, **QBox**, and **ND\_Core** — no features are lost for users of these frameworks.
+
+### Additional Image Extensions Supported
+
+* Out-of-the-box support for `.jpg`, `.jpeg`, and `.gif` image formats.
+* No need for manual configuration to use these file types.
+
+### More Image Hosting Sources Allowed
+
+* Now supports image links from additional domains like **img.bb** and **Discord CDN**.
+* Simplifies the use of externally hosted images for inventory icons or embedded content.
+
+
 # ox_inventory
 
 A complete inventory system for FiveM, implementing items, weapons, shops, and more without any strict framework dependency.
 
-![](https://img.shields.io/github/downloads/communityox/ox_inventory/total?logo=github)
-![](https://img.shields.io/github/downloads/communityox/ox_inventory/latest/total?logo=github)
-![](https://img.shields.io/github/contributors/communityox/ox_inventory?logo=github)
-![](https://img.shields.io/github/v/release/communityox/ox_inventory?logo=github)
+![](https://img.shields.io/github/downloads/TheOrderFivem/ox_inventory/total?logo=github)
+![](https://img.shields.io/github/downloads/TheOrderFivem/ox_inventory/latest/total?logo=github)
+![](https://img.shields.io/github/contributors/TheOrderFivem/ox_inventory?logo=github)
+![](https://img.shields.io/github/v/release/TheOrderFivem/ox_inventory?logo=github)
 
 ## 📚 Documentation
 
@@ -13,15 +53,16 @@ https://coxdocs.dev/ox_inventory
 
 ## 💾 Download
 
-https://github.com/communityox/ox_inventory/releases/latest/download/ox_inventory.zip
+https://github.com/TheOrderFivem/ox_inventory/releases/latest/download/ox_inventory.zip
 
 ## Supported frameworks
 
 We do not guarantee compatibility or support for third-party resources.
 
-- [ox_core](https://github.com/communityox/ox_core)
+- [qb-core](https://github.com/qbcore-framework/qb-core)
 - [esx](https://github.com/esx-framework/esx_core)
 - [qbox](https://github.com/Qbox-project/qbx_core)
+- [ox_core](https://github.com/communityox/ox_core)
 - [nd_core](https://github.com/ND-Framework/ND_Core)
 
 ## ✨ Features

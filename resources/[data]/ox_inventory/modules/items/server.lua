@@ -111,9 +111,9 @@ CreateThread(function()
 
 			shared.info('Database contains', #items, 'items.')
 		end
+			Wait(500)
 
-		Wait(500)
-		elseif shared.framework == 'qb' then
+	elseif shared.framework == 'qb' then
 		local QBCore = exports['qb-core']:GetCoreObject()
 		local items = QBCore.Shared.Items
 

@@ -10,6 +10,7 @@ local config = require 'client.config'
 require 'client.debug'
 require 'client.defaults'
 require 'client.compat.qtarget'
+require 'client.compat.qb-target'
 
 local SendNuiMessage = SendNuiMessage
 local GetEntityCoords = GetEntityCoords
