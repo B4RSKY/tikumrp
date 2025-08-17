@@ -22,6 +22,7 @@ return {
         bank = { active = true, show = false, amount = nil },
         extra_currency = { active = true, show = false, amount = nil },
         job = { active = true, show = false, label = nil, gradeLabel = nil },
+        gang = { active = true, show = false, label = nil, gradeLabel = nil },
         weapon = { active = true, show = false, name = nil, ammo = { inClip = 0, inWeapon = 0 } },
     },
     navigation_widget = {
@@ -138,6 +139,7 @@ return {
 ---@field amount number | nil
 
 ---@class iJob
+---@---@class iGang
 ---@field active boolean
 ---@field show boolean
 ---@field label string | nil
@@ -163,6 +165,7 @@ return {
 ---@field cash iCash
 ---@field bank iBank
 ---@field job iJob
+---@---@field gang iGang
 ---@field weapon iWeapon
 ---@field extra_currency iExtraCurrency
 

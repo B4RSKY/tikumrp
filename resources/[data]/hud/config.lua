@@ -37,6 +37,7 @@ Config.DefaultHudSettings   = {
         bank = { active = true },
         cash = { active = true },
         job = { active = true },
+        gang = { active = true },
         player_source = { active = true },
         radio = { active = true },
         time = { active = true },

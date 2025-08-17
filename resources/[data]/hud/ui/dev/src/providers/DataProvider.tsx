@@ -39,7 +39,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({
       active: true,
       show: true,
       image: "index.png",
-      name: "0Resmon",
+      name: "tikumrp",
       playerCount: 0,
       maxPlayers: 32,
     },
@@ -47,6 +47,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({
     bank: { active: true, show: true, amount: 0 },
     extra_currency: { active: true, show: true, amount: 0 },
     job: { active: true, show: true, label: "Unemp", gradeLabel: "Unemp" },
+    gang: { active: true, show: true, label: "Nogang", gradeLabel: "Nogang" },
     weapon: {
       active: true,
       show: true,
@@ -82,8 +83,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({
   const [MusicInfo, setMusicInfo] = useState<iMusicInfo>({
     active: true,
     isPlaying: false,
-    songName: "0Resmon",
-    songLabel: "0Resmon",
+    songName: "tikumrp",
+    songLabel: "tikumrp",
   });
   const [VehicleInfo, setVehicleInfo] = useState<iVehicleInfo>({
     positions: { x: undefined, y: undefined },
@@ -229,6 +230,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({
           label: data.client_info.job.label,
           gradeLabel: data.client_info.job.gradeLabel,
         },
+        gang: {
+          ...prevClientInfo.gang,
+          label: data.client_info.gang.label,
+          gradeLabel: data.client_info.gang.gradeLabel,
+        },
         player_source: {
           ...prevClientInfo.player_source,
           source: data.client_info.player_source.source,
@@ -354,6 +360,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({
           active: def.client_info.extra_currency.active,
         },
         job: { ...prevClientInfo.job, active: def.client_info.job.active },
+        gang: { ...prevClientInfo.gang, active: def.client_info.gang.active },
         player_source: {
           ...prevClientInfo.player_source,
           active: def.client_info.player_source.active,
@@ -529,6 +536,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({
       job: {
         ...prevClientInfo.job,
         show: getLocalStorage("client_info.job.show", true, true),
+      },
+      gang: {
+        ...prevClientInfo.gang,
+        show: getLocalStorage("client_info.gang.show", true, true),
       },
       player_source: {
         ...prevClientInfo.player_source,

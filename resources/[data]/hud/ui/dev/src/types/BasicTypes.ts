@@ -1,4 +1,4 @@
-export type ClientInfoType = "radio" | "player_source" | "time" | "server_info" | "cash" | "bank" | "job" | "weapon" | "extra_currency";
+export type ClientInfoType = "radio" | "player_source" | "time" | "server_info" | "cash" | "bank" | "job" | "gang" | "weapon" | "extra_currency";
 
 export type BarType = "hunger" | "health" | "thirst" | "armor" | "stamina" | "oxygen" | "stress" | "voice" | "vehicle_engine" | "vehicle_nitro";
 
@@ -63,6 +63,12 @@ export interface iClientInfo {
     amount: number;
   };
   job: {
+    active: boolean;
+    show: boolean;
+    label: string;
+    gradeLabel: string;
+  };
+  gang: {
     active: boolean;
     show: boolean;
     label: string;

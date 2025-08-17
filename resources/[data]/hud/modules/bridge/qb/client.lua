@@ -58,6 +58,15 @@ function client.GetPlayerJob()
     return { label = label, grade = grade }
 end
 
+---@return table GangInfo
+function client.GetPlayerGang()
+    local label, grade = nil, nil
+    local xPlayer = client.GetPlayerData()
+    label = xPlayer.gang.label
+    grade = xPlayer.gang.grade.name
+    return { label = label, grade = grade }
+end
+
 -- Checks if the player is logged in based on local player state
 ---@return boolean isLoggedIn
 function client.IsPlayerLoaded()

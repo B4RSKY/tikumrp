@@ -152,6 +152,12 @@ local function updateClientInfo()
     client_info.job.gradeLabel = cache('client.job.gradeLabel', function()
         return client.GetPlayerJob().grade
     end, 2000)
+    client_info.gang.label = cache('client.gang.label', function()
+        return client.GetPlayerGang().label
+    end, 2000)
+    client_info.gang.gradeLabel = cache('client.gang.gradeLabel', function()
+        return client.GetPlayerGang().grade
+    end, 2000)
     client_info.radio.inChannel = cache('client.radio.inChannel', function()
         return Voice.GetPlayerRadio().inChannel
     end, 2000)
@@ -332,6 +338,7 @@ function Hud.SetDefaultSettings()
     Hud.data.client_info.bank.active = def.client_info.bank.active
     Hud.data.client_info.cash.active = def.client_info.cash.active
     Hud.data.client_info.job.active = def.client_info.job.active
+    Hud.data.client_info.gang.active = def.client_info.gang.active
     Hud.data.client_info.player_source.active = def.client_info.player_source.active
     Hud.data.client_info.radio.active = def.client_info.radio.active
     Hud.data.client_info.real_time.active = def.client_info.real_time.active

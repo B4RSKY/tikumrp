@@ -180,6 +180,13 @@ const Options = () => {
       onChange: () => toggleClientInfoShowValue("job"),
     },
     {
+      active: ClientInfo.active && ClientInfo.job.active,
+      icon: "images/icons/job_bag.svg",
+      label: t("current_gang"),
+      value: ClientInfo.gang.show,
+      onChange: () => toggleClientInfoShowValue("gang"),
+    },
+    {
       active: ClientInfo.active && ClientInfo.cash.active,
       icon: "images/icons/coin.svg",
       label: t("cash"),
