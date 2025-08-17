@@ -28,3 +28,9 @@ end)
 RegisterCommand('shuff', function()
     TriggerEvent('SeatShuffle')
 end, false)
+
+local SetPedConfigFlag = SetPedConfigFlag
+
+lib.onCache('vehicle', function(value)
+    SetPedConfigFlag(cache.ped, 35, false)
+end)

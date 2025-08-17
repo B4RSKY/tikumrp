@@ -6,19 +6,19 @@ QBCore = exports['qb-core']:GetCoreObject()
 
 QBCore.Commands.Add('login', 'Login', {}, false, function(source)
     TriggerClientEvent('QBCore:Client:OnPlayerLoaded', -1)
-end, 'god')
+end, 'admin')
 
 QBCore.Commands.Add(Config.Commands['MenuOpen'], Lang:t("info.keymapping_desc"), {}, false, function(source)
     TriggerClientEvent('tk_admin/client/try-open-menu', source, false)
-end, 'god')
+end, 'admin')
 
 QBCore.Commands.Add(Config.Commands['MenuDebug'], Lang:t("info.menu_debug"), {}, false, function(source)
     TriggerClientEvent('tk_admin/client/toggle-debug', source, false)
-end, 'god')
+end, 'admin')
 
 QBCore.Commands.Add(Config.Commands['MenuReset'], Lang:t("info.reset_data"), {}, false, function(source)
     TriggerClientEvent('tk_admin/client/reset-menu', -1, false)
-end, 'god')
+end, 'admin')
 
 QBCore.Commands.Add(Config.Commands['MenuPerms'], Lang:t("info.menu_perms"), {{name = "action", help = Lang:t('info.perm_action')}, {name = "commandid", help = Lang:t('info.commandid')}, {name = "group", help = Lang:t('info.rankid')}}, false, function(source, args)
     local Action = args[1]:lower()

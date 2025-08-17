@@ -15,9 +15,9 @@ return {
         -- You can enable (true) or disable (false) specific player events to log here
         events = {
             -- register_robbed is when a register has been robbed
-            register_robbed = false,
+            register_robbed = true,
             -- safe_robbed is when.. come on now, you gotta know..
-            safe_robbed = false
+            safe_robbed = true
         },
         -- If service = 'discord', you can customize the webhook data here
         -- If not using Discord, this section can be ignored
