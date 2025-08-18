@@ -286,6 +286,32 @@ RegisterNetEvent('sky-gudang:server:setAutobill', function(locationKey, rentKeyO
     end
 end)
 
+RegisterNetEvent('sky-gudang:server:cancel', function(locationKey)
+    local src = source
+    if type(locationKey) ~= 'string' then return end
+
+    local license = getLicense(src)
+    local locCfg = Config.Lokasi[locationKey]
+    if not locCfg then return end
+
+    local row = MySQL.single.await('SELECT id, stash_id, expire_at FROM tk_warehouses WHERE owner = ? AND location = ?', { license, locationKey })
+    if not row then
+        return lib.notify(src, { title = 'Batal Sewa', description = 'Tidak ada data sewa di lokasi ini.', type = 'error' })
+    end
+
+    -- Hapus isi & kontrak
+    exports.ox_inventory:ClearInventory(row.stash_id)
+    MySQL.query.await('DELETE FROM tk_warehouses WHERE id = ?', { row.id })
+
+    lib.notify(src, { title = 'Batal Sewa', description = ('Gudang %s berhasil dibatalkan & dihapus.'):format(locCfg.label), type = 'success' })
+
+    -- Webhook log
+    sendWebhook('Batalkan Sewa',
+        ('Lokasi: %s\nOwner: %s\nStatus sebelumnya: %s'):format(locationKey, license, (now() >= row.expire_at) and 'Kadaluarsa (tenggang)' or 'Aktif'),
+        15158332)
+    end)
+
+
 -- ===================== Admin Commands =====================
 RegisterCommand('gudang_extend', function(src, args)
     if src ~= 0 and not isAdmin(src) then return end

@@ -1,6 +1,8 @@
+local QBCore = exports['qb-core']:GetCoreObject()
 local curWeapon = nil
 local ox_inventory = exports.ox_inventory
 local ped = cache.ped
+
 local Weapons = {
     [`black_money`] = {object = `prop_money_bag_01`, item = 'black_money', rot = vector3(0,0,0)},
     [`weapon_pumpshotgun`] = {object = `w_sg_pumpshotgun`, item = 'WEAPON_PUMPSHOTGUN', rot = vector3(0,0,0)},
@@ -56,9 +58,20 @@ local slots = {
     },
 }
 
+local function removeAllAttachedProps()
+    for _, object in ipairs(GetGamePool('CObject')) do
+        if DoesEntityExist(object) and IsEntityAttachedToEntity(ped, object) then
+            SetEntityAsMissionEntity(object, true, true)
+            DeleteObject(object)
+        end
+    end
+end
+
 local function clearSlot(i)
-    DetachEntity(slots[i].entity)
-    DeleteEntity(slots[i].entity)
+    if DoesEntityExist(slots[i].entity) then
+        DetachEntity(slots[i].entity, true, true)
+        DeleteEntity(slots[i].entity)
+    end
     slots[i].entity = nil
     slots[i].hash = nil
     slots[i].wep = nil
@@ -174,9 +187,11 @@ local function putOnBack(hash)
         curWeapon = nil
         local object = Weapons[hash].object
         local item = Weapons[hash].item
-        lib.requestModel(object, 20000)
+        lib.requestModel(object)
         local coords = GetEntityCoords(ped)
-        local prop = CreateObject(object, coords.x, coords.y, coords.z,  true,  true, true)
+        local prop = CreateObject(object, coords.x, coords.y, coords.z, true, true, true)
+        Wait(10)
+        if not DoesEntityExist(prop) then return end
         slots[whatSlot].entity = prop
         slots[whatSlot].hash = hash
         slots[whatSlot].wep = item
@@ -232,13 +247,12 @@ end)
 
 local function refreshWeapons()
     if GetResourceState('ox_inventory') ~= 'started' then return end
-    Wait(2000)
     for i = 1, #slots do
         clearSlot(i)
     end
     Wait(100)
     for k, v in pairs(Weapons) do
-        local count = ox_inventory:Search(2, v.item)
+        local count = ox_inventory:Search('count', v.item)
         if count and count >= 1 then
             putOnBack(k)
         end
@@ -246,3 +260,9 @@ local function refreshWeapons()
 end
 
 exports('refreshWeapons', refreshWeapons)
+
+AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
+    removeAllAttachedProps()
+    Wait(10000)
+    refreshWeapons()
+end)

@@ -89,6 +89,17 @@ local function menuAutoBill(locationKey, currentKey)
     })
 end
 
+local function confirmCancel(locLabel)
+  local ans = lib.alertDialog({
+    header = 'Batalkan Sewa?',
+    content = ('%s akan DIHAPUS dan SELURUH ISI akan HILANG.\nTidak ada refund.\nLanjutkan?'):format(locLabel),
+    centered = true,
+    cancel = true,
+    labels = { confirm = 'Ya', cancel = 'Batal' }
+  })
+  return ans == 'confirm'
+end
+
 local function menuGudang(locationKey, data)
     local loc = Config.Lokasi[locationKey]; if not loc then return end
 
@@ -167,6 +178,18 @@ local function menuGudang(locationKey, data)
         description = 'Otomatis perpanjang saat expired',
         icon = 'fa-solid fa-rotate',
         menu = 'sky_gudang_ctx_autobill_' .. locationKey
+    }
+
+    options[#options+1] = {
+        title = 'Batal Sewa',
+        description = expired and 'Kontrak kadaluarsa (tenggang). Batal sekarang akan menghapus gudang & isi.' or 'Kontrak aktif. Batal sekarang akan menghapus gudang & isi.',
+        icon = 'fa-solid fa-trash-can',
+        onSelect = function()
+            local locLabel = loc.label or locationKey
+            if confirmCancel(locLabel) then
+                TriggerServerEvent('sky-gudang:server:cancel', locationKey)
+            end
+        end
     }
 
     lib.registerContext({
