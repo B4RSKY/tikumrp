@@ -207,3 +207,15 @@ RegisterNetEvent('police:server:RobPlayer', function(playerId)
     TriggerClientEvent('QBCore:Notify', SearchedPlayer.PlayerData.source, Lang:t('info.cash_robbed', { money = money }))
     TriggerClientEvent('QBCore:Notify', Player.PlayerData.source, Lang:t('info.stolen_money', { stolen = money }))
 end)
+
+RegisterServerEvent('tk-job:setPlayerEscort', function(target, state)
+    local player = QBCore.Functions.GetPlayers(source)
+
+    if not player then return end
+
+    target = Player(target)?.state
+
+    if not target then return end
+
+    target:set('isEscorted', state and source, true)
+end)

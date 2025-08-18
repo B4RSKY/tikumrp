@@ -69,7 +69,8 @@ Config.ItemRadial = {
         icon = "shield-alt",
         KeepOpen = false,
         canEnable = function ()
-            return exports.tk_disnaker:hasJob("police")
+            local hasJob = exports.tk_disnaker:hasJob("police")
+            return hasJob
         end,
         options = {
             {
@@ -100,12 +101,12 @@ Config.ItemRadial = {
                 id = "polisi:seret",
                 icon = "shield-alt",
                 label = "Seret",
-                event = "police:client:EscortPlayer"
+                event = "tk-job:seret"
             },
             {
                 id = "polisi:seret2",
                 icon = "shield-alt",
-                label = "Seret",
+                label = "Seret 2",
                 event = "police:client:KidnapPlayer"
             },
             {
@@ -133,7 +134,7 @@ Config.ItemRadial = {
                         return
                     end
 
-                    TriggerServerEvent('dl-job:message', GetPlayerServerId(player), 'Anda sedang digeledah!')
+                    TriggerServerEvent('tk-job:message', GetPlayerServerId(player), 'Anda sedang digeledah!')
                     exports.ox_inventory:openNearbyInventory()
                 end
             },
@@ -243,7 +244,7 @@ Config.ItemRadial = {
                 id = "ems:seret",
                 icon = "shield-alt",
                 label = "Seret",
-                event = "police:client:EscortPlayer"
+                event = "tk-job:seret"
             },
             {
                 id = "ems:mdt",
@@ -272,19 +273,78 @@ Config.ItemRadial = {
                 id = "mech:hijack",
                 icon = "gear",
                 label = "Bobol",
-                event = "dl-job:bobol"
+                event = "tk-job:bobol"
             },
             {
                 id = "mech:tow",
                 icon = "truck-pickup",
                 label = "Towing",
-                event = "dl-job:towcok"
+                event = "tk-job:towcok"
             },
             {
                 id = "mech:clean",
                 icon = "soap",
                 label = "Cuci",
                 event = "qb-mechanicjob:client:cleanVehicle"
+            },
+        }
+    },
+    {
+        id = 'radial:badside',
+        label = 'Job',
+        icon = "shield-alt",
+        KeepOpen = false,
+        canEnable = function()
+            local Data = QBCore.Functions.GetPlayerData()
+            return (Data.gang.name == 'vagos')
+        end,
+        options = {
+            {
+                id = "polisi:borgol",
+                icon = "handcuffs",
+                label = "Borgol",
+                event = "police:client:CuffPlayerSoft"
+            },
+            {
+                id = "job:geledah",
+                icon = "magnifying-glass",
+                label = "Geledah",
+                action = function ()
+                    local myCoords = GetEntityCoords(cache.ped)
+                    local closestPlayerId = lib.getClosestPlayer(myCoords, 2.5, false)
+
+                    if closestPlayerId then
+                        local targetServerId = GetPlayerServerId(closestPlayerId)
+
+                        if targetServerId ~= -1 then
+                            QBCore.Functions.Notify("Geledah", "Anda mulai menggeledah pemain di dekat Anda...", "info")
+                            TriggerServerEvent('tk-job:server:notifyTarget', targetServerId, 'Anda sedang digeledah oleh seseorang!')
+                            exports.ox_inventory:openNearbyInventory()
+                        else
+                            QBCore.Functions.Notify("Geledah", "Target tidak valid.", "error")
+                        end
+                    else
+                        QBCore.Functions.Notify("Geledah", "Tidak ada pemain di dekat Anda untuk digeledah.", "error")
+                    end
+                end
+            },
+            {
+                id = "job:seret",
+                icon = "user-secret",
+                label = "Seret",
+                event = "tk-job:seret"
+            },
+            {
+                id = "job:masuk",
+                icon = "user-secret",
+                label = "Masukkan",
+                event = "police:client:PutPlayerInVehicle"
+            },
+            {
+                id = "job:metu",
+                icon = "user-secret",
+                label = "keluarkan",
+                event = "police:client:SetPlayerOutVehicle"
             },
         }
     },

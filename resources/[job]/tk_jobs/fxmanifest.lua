@@ -13,3 +13,5 @@ client_scripts {
 server_scripts {
     '**/server/*.lua',
 }
+
+data_file "DLC_ITYP_REQUEST" "stream/cuffs_main.ytyp"
