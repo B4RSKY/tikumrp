@@ -11,13 +11,13 @@ for _, v in pairs(JewelryShowcase) do
 	jewelsCooldown[v.id] = os.time()
 end
 
-RegisterServerEvent('dgl_jewelry:syncPainting')
-AddEventHandler('dgl_jewelry:syncPainting', function(x)
-    TriggerClientEvent('dgl_jewelry:client:syncPainting', -1, x)
+RegisterServerEvent('tk_jewelry:syncPainting')
+AddEventHandler('tk_jewelry:syncPainting', function(x)
+    TriggerClientEvent('tk_jewelry:client:syncPainting', -1, x)
 end)
 
-RegisterServerEvent('dgl_jewelry:rewardItem')
-AddEventHandler('dgl_jewelry:rewardItem', function(scene)
+RegisterServerEvent('tk_jewelry:rewardItem')
+AddEventHandler('tk_jewelry:rewardItem', function(scene)
 	local src = source
 	local playerName =''
     if Config.Framework == 'esx' then
@@ -39,13 +39,13 @@ AddEventHandler('dgl_jewelry:rewardItem', function(scene)
 			
 		
 	DiscordLog(src, title, description, playerName)
-	TriggerClientEvent("dgl_jewelry:notif", src, _L("give_reward") .. Config.PaintingAmount .. "x " .._L('PaintingName'), "success")
+	TriggerClientEvent("tk_jewelry:notif", src, _L("give_reward") .. Config.PaintingAmount .. "x " .._L('PaintingName'), "success")
 end)
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 -- CHECKJEWELRY
 -----------------------------------------------------------------------------------------------------------------------------------------
-lib.callback.register('dgl_jewelry:checkJewelry', function(source)
+lib.callback.register('tk_jewelry:checkJewelry', function(source)
     local src = source
     local coords = GetEntityCoords(GetPlayerPed(src))
 	local count = 0
@@ -63,11 +63,11 @@ lib.callback.register('dgl_jewelry:checkJewelry', function(source)
 	end
 	if count < Config.MinimumPoliceToRob then
 		local nbrPoliceNeeded = Config.MinimumPoliceToRob - count
-		TriggerClientEvent("dgl_jewelry:notif", src, _L("need_police") .. _L("need_count") .. nbrPoliceNeeded, "error")
+		TriggerClientEvent("tk_jewelry:notif", src, _L("need_police") .. _L("need_count") .. nbrPoliceNeeded, "error")
 		return false
 
 	elseif os.time() < endCoolDown then
-		TriggerClientEvent("dgl_jewelry:notif", src, _L("cooldown"), "error")
+		TriggerClientEvent("tk_jewelry:notif", src, _L("cooldown"), "error")
 		return false
 	else
 		local title = "> Robbery Started"
@@ -93,7 +93,7 @@ end)
 -- CHECKJEWELS
 -----------------------------------------------------------------------------------------------------------------------------------------
 
-lib.callback.register('dgl_jewelry:checkJewels', function(source, id)
+lib.callback.register('tk_jewelry:checkJewels', function(source, id)
     local src = source
 	local savejewelCooldowne = jewelsCooldown[id]
 	if os.time() < jewelsCooldown[id] then
@@ -112,8 +112,8 @@ end)
 
 
 ---- POLICE ALERT
-RegisterServerEvent('dgl_jewelry:PoliceAlertStandalone')
-AddEventHandler('dgl_jewelry:PoliceAlertStandalone', function()
+RegisterServerEvent('tk_jewelry:PoliceAlertStandalone')
+AddEventHandler('tk_jewelry:PoliceAlertStandalone', function()
     local src = source
 
     if Config.Framework == 'esx' then
@@ -123,7 +123,7 @@ AddEventHandler('dgl_jewelry:PoliceAlertStandalone', function()
         for i=1, #xPlayers, 1 do
             
             if chance <= Config.Dispatch.ChanceToAlertPolice then
-				TriggerClientEvent('dgl_jewelry:setBlip', xPlayers[i].source)
+				TriggerClientEvent('tk_jewelry:setBlip', xPlayers[i].source)
 				--TriggerClientEvent('esx:showNotification', xPlayers[i], _L("notif_police"))
 				--TriggerClientEvent('stoned-atmrob:callPolice')
             end
@@ -139,7 +139,7 @@ AddEventHandler('dgl_jewelry:PoliceAlertStandalone', function()
             if chance <= Config.Dispatch.ChanceToAlertPolice then
                 if Player and Player.PlayerData.job.name then
                     TriggerClientEvent('QBCore:Notify', playerId, _L("notif_police"))
-                    TriggerClientEvent('dgl_jewelry:setBlip', playerId, coords)
+                    TriggerClientEvent('tk_jewelry:setBlip', playerId, coords)
                     --TriggerClientEvent('stoned-atmrob:callPolice')
                 end
             end
@@ -150,8 +150,8 @@ end)
 GlobalState.doors = Config.doors	
 GlobalState.lasers = {status = false, visibility = false}
 
-RegisterServerEvent("dgl_jewelry:openDoorsActivateLasers")
-AddEventHandler("dgl_jewelry:openDoorsActivateLasers", function()
+RegisterServerEvent("tk_jewelry:openDoorsActivateLasers")
+AddEventHandler("tk_jewelry:openDoorsActivateLasers", function()
 	local doors = GlobalState.doors
 	doors.jewelry1_l.locked = 0
 	doors.jewelry1_r.locked = 0
@@ -165,12 +165,12 @@ AddEventHandler("dgl_jewelry:openDoorsActivateLasers", function()
 	end)
 end)
 
-RegisterServerEvent("dgl_jewelry:setLasersVisibility")
-AddEventHandler("dgl_jewelry:setLasersVisibility", function(visible)
+RegisterServerEvent("tk_jewelry:setLasersVisibility")
+AddEventHandler("tk_jewelry:setLasersVisibility", function(visible)
 	GlobalState.lasers = {status = GlobalState.lasers.status, visibility = visible}-- GlobalState.lasers.status
 end)
 
-lib.callback.register("dgl_jewelry:deactivateLasers", function(source)
+lib.callback.register("tk_jewelry:deactivateLasers", function(source)
 	if GlobalState.lasers.status then
 		GlobalState.lasers = {status = false, visibility = false}
 		return true
@@ -191,7 +191,7 @@ Give_item = function(source)
 			return 'inv full'
 		end
 		xPlayer.addInventoryItem(joie.item, quantity)
-		TriggerClientEvent("dgl_jewelry:notif", source, _L("give_reward") ..quantity.."x " ..joie.name, "success")
+		TriggerClientEvent("tk_jewelry:notif", source, _L("give_reward") ..quantity.."x " ..joie.name, "success")
 			-- Registro de log no Discord
 		local playerName = xPlayer.getName()
 		local steamName = GetPlayerName(source)
@@ -295,9 +295,9 @@ Give_item = function(source)
 end
 if Config.Framework == 'esx' then
 	ESX.RegisterUsableItem("spray", function(source)
-		TriggerClientEvent('dgl_jewelry:startSpray', source)
+		TriggerClientEvent('tk_jewelry:startSpray', source)
 	end)
-	lib.callback.register('dgl_jewelry:checkItem', function(source, itemname)
+	lib.callback.register('tk_jewelry:checkItem', function(source, itemname)
 		
 		local xPlayer = ESX.GetPlayerFromId(source)
 		local item = xPlayer.hasItem(itemname)
@@ -317,9 +317,9 @@ elseif Config.Framework == 'qb' then
 	QBCore.Functions.CreateUseableItem('spray', function(source, item)
 		local Player = QBCore.Functions.GetPlayer(source)
 		if not Player.Functions.GetItemByName(item.name) then return end
-		TriggerClientEvent('dgl_jewelry:startSpray', source)
+		TriggerClientEvent('tk_jewelry:startSpray', source)
 	end)
-	lib.callback.register('dgl_jewelry:checkItem', function(source, itemname)
+	lib.callback.register('tk_jewelry:checkItem', function(source, itemname)
 		local Player = QBCore.Functions.GetPlayer(source)
 		if not Player.Functions.GetItemByName(itemname) then return end
 		QBCore.Functions.UseItem(source, itemname)

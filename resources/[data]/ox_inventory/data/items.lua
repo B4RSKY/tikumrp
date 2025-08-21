@@ -2028,6 +2028,12 @@ return {
 			image = "walkstick.png",
 		}
 	},
+	["contract"] = {
+        label = "Kontrak Kendaraan",
+        weight = 2000,
+        stack = false,
+        close = true,
+    },
 	--DISNAKER
 	["wool"] = {
 		label = "Benang",
@@ -2258,7 +2264,7 @@ return {
         weight = 500,
         stack = true,
         client = {
-            event="dgl_jewelry:startSpray"
+            event = "tk_jewelry:startSpray"
         },
         close = true,
     },

@@ -42,9 +42,9 @@ end
 
 function PoliceCall()
 	if Config.Dispatch.Type == 'standalone' then
-		TriggerServerEvent('dgl_jewelry:PoliceAlertStandalone')
+		TriggerServerEvent('tk_jewelry:PoliceAlertStandalone')
 	elseif Config.Dispatch.Type == 'linden_alerts' then
-		TriggerServerEvent('dgl_jewelry:server:PoliceAlertMessage') 
+		TriggerServerEvent('tk_jewelry:server:PoliceAlertMessage') 
 	elseif Config.Dispatch.Type == 'qb_defaultalert' then
     	TriggerServerEvent('police:server:policeAlert', 'Attempted Jewelry Robbery')
     elseif Config.Dispatch.Type == 'cd_dispatch' then

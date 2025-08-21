@@ -88,8 +88,8 @@ AddEventHandler('jewel:client:syncBoxs', function(id)
     end)
 end)
 
-RegisterNetEvent('dgl_jewelry:client:syncPainting')
-AddEventHandler('dgl_jewelry:client:syncPainting', function(x)
+RegisterNetEvent('tk_jewelry:client:syncPainting')
+AddEventHandler('tk_jewelry:client:syncPainting', function(x)
     Config['ArtHeist']['painting'][x]['taken'] = true
     SetTimeout(Config.Cooldown*1000, function ()-- this will disable targetting and reduces server calls but not required
         Config['ArtHeist']['painting'][x]['taken'] = false
@@ -259,7 +259,7 @@ function HeistAnimation(sceneId)
     Wait(1500)
     NetworkStartSynchronisedScene(ArtHeist['scenes'][10])
     Wait(7500)
-    TriggerServerEvent('dgl_jewelry:rewardItem', scene)
+    TriggerServerEvent('tk_jewelry:rewardItem', scene)
     ClearPedTasks(ped)
 	FreezeEntityPosition(ped, false)
     RemoveAnimDict(animDict)
@@ -272,7 +272,7 @@ function HeistAnimation(sceneId)
     -- ArtHeist['cuting'] = false
     -- ArtHeist['cut'] = ArtHeist['cut'] + 1
     -- if ArtHeist['cut'] == #Config['ArtHeist']['painting'] then--this is bad
-    --     TriggerServerEvent('dgl_jewelry:syncAllPainting')
+    --     TriggerServerEvent('tk_jewelry:syncAllPainting')
     --     ArtHeist['cut'] = 0
     -- end
     paintingsRobbed = paintingsRobbed + 1
@@ -333,8 +333,8 @@ AddEventHandler('onResourceStart', function(resourceName)
 -- ROUBANDO AS JOIAS
 -----------------------------------------------------------------------------------------------------------------------------------------
 
-RegisterNetEvent('dgl_jewelry:setBlip')
-AddEventHandler('dgl_jewelry:setBlip', function()
+RegisterNetEvent('tk_jewelry:setBlip')
+AddEventHandler('tk_jewelry:setBlip', function()
 	blipRobbery = AddBlipForCoord(Locations['vangrob_start'].x, Locations['vangrob_start'].y, Locations['vangrob_start'].z)
 
 	SetBlipSprite(blipRobbery, Config.Dispatch.BlipSprite)
@@ -441,8 +441,8 @@ function DrawScaleform(bigMsg,smallMsg,time)
 end
 
 
-RegisterNetEvent("dgl_jewelry:notif")
-AddEventHandler("dgl_jewelry:notif", function(msg, type)
+RegisterNetEvent("tk_jewelry:notif")
+AddEventHandler("tk_jewelry:notif", function(msg, type)
     SendTextMessagee(msg, type)
 end)
 
@@ -545,10 +545,10 @@ end
 
 function StartDoorsHack(success)
     if success then
-        local canStartHack = lib.callback.await('dgl_jewelry:checkJewelry', false)
+        local canStartHack = lib.callback.await('tk_jewelry:checkJewelry', false)
         EndDrill(drillObject, soundID)
         if canStartHack then
-            TriggerServerEvent("dgl_jewelry:openDoorsActivateLasers")--open doors for everyone+activate lazers
+            TriggerServerEvent("tk_jewelry:openDoorsActivateLasers")--open doors for everyone+activate lazers
             -- lib.notify({description=_L("notif_police"),type="info"})
             PoliceCall()
             StartHeist()
@@ -587,7 +587,7 @@ exports.ox_target:addBoxZone({
 
 function StartLasersDeactivateHack(success)
     -- if success then
-    --     if lib.callback.await("dgl_jewelry:deactivateLasers", false) then 
+    --     if lib.callback.await("tk_jewelry:deactivateLasers", false) then 
     --         lib.notify({description='lasers deactivated', type="info"})
     --         PoliceCall()
     --     else
@@ -596,7 +596,7 @@ function StartLasersDeactivateHack(success)
     -- else
     --     lib.notify({description="hack failed " , type="error"})
     -- end
-        if lib.callback.await("dgl_jewelry:deactivateLasers", false) then 
+        if lib.callback.await("tk_jewelry:deactivateLasers", false) then 
             lib.notify({description='lasers deactivated', type="info"})
             PoliceCall()
         else
@@ -619,8 +619,8 @@ exports.ox_target:addBoxZone({
                 return GlobalState.lasers.status and ((true and isNight()) or (not Config.RobOnlyAtNighttrue))
             end,
             onSelect=function ()
-                StartLasersDeactivateHack(success)
-                --Config.LasersDeactivateHack()
+                startKeypad()
+                Config.LasersDeactivateHack()
             end,
             icon = 'fa-solid fa-cube',
             label = "hack electrical networks",
@@ -646,7 +646,7 @@ for k, v in pairs(Config['ArtHeist']['painting']) do
                 end,
                 distance = 1,
                 onSelect = function ()--open to concurrency I guess
-                    TriggerServerEvent('dgl_jewelry:syncPainting', k)
+                    TriggerServerEvent('tk_jewelry:syncPainting', k)
                     HeistAnimation(k)
                 end,
                 icon = 'fa-solid fa-cube',
@@ -679,7 +679,7 @@ for _, v in pairs(JewelryShowcase) do
 
                     --returns: cooldown / inv full / true 
                     if current_weapon == GetHashKey("WEAPON_ASSAULTRIFLE") or current_weapon == GetHashKey("WEAPON_SMG") or current_weapon == GetHashKey("WEAPON_PISTOL") then
-                        local canSteeljewel = lib.callback.await('dgl_jewelry:checkJewels', false, v.id)
+                        local canSteeljewel = lib.callback.await('tk_jewelry:checkJewels', false, v.id)
                         -- SetEntityCoords(cache.ped, v.xplayer, v.yplayer, v.zplayer, true, false,false, false)
                         -- TaskGoStraightToCoord(cache.ped, v.xplayer, v.yplayer, v.zplayer, 1.0, -1, v.heading, 0.1)
                         -- TaskGoToCoordAnyMeans(cache.ped, v.xplayer, v.yplayer, v.zplayer, 1.0, 0, 0, 786603, 0xbf800000)
@@ -703,8 +703,8 @@ for _, v in pairs(JewelryShowcase) do
     })
 end
 
-RegisterNetEvent('dgl_jewelry:startSpray')
-AddEventHandler('dgl_jewelry:startSpray', function()-- issue when two client start spraying here    
+RegisterNetEvent('tk_jewelry:startSpray')
+AddEventHandler('tk_jewelry:startSpray', function()-- issue when two client start spraying here    
     local pos = GetEntityCoords(cache.ped)
         local sprayDistance = 4
         if not cache.vehicle then--close to lazers
@@ -712,7 +712,7 @@ AddEventHandler('dgl_jewelry:startSpray', function()-- issue when two client sta
                 lib.notify({description="save your spray untill you can't see laser", type='info'})
                 return
             end
-            local hasIem = lib.callback.await('dgl_jewelry:checkItem', false, 'spray')
+            local hasIem = lib.callback.await('tk_jewelry:checkItem', false, 'spray')
             if hasIem then
                 LocalPlayer.state.invBusy = true
                 local animDict = lib.requestAnimDict('anim@scripted@freemode@postertag@graffiti_spray@male@')
@@ -737,7 +737,7 @@ AddEventHandler('dgl_jewelry:startSpray', function()-- issue when two client sta
                     index += 1
                     
                     if waited > 2000 and waited <= 2000+waitStep  and GlobalState.lasers.status and (#(pos - vector3(-625.2715, -233.0698, 38.0570)) <= sprayDistance) then--trriger once after waiting 2 sec
-                        TriggerServerEvent("dgl_jewelry:setLasersVisibility", true)
+                        TriggerServerEvent("tk_jewelry:setLasersVisibility", true)
                     end
                     Wait(waitStep)
                     waited += waitStep
@@ -750,7 +750,7 @@ AddEventHandler('dgl_jewelry:startSpray', function()-- issue when two client sta
                 SetModelAsNoLongerNeeded('prop_cs_spray_can')
                 for index, sprayPart in ipairs(sprayPartList) do --simulate smoke fadeout 
                     if index==#sprayPartList-1 and GlobalState.lasers.status then
-                        TriggerServerEvent("dgl_jewelry:setLasersVisibility", false )
+                        TriggerServerEvent("tk_jewelry:setLasersVisibility", false )
                         Wait(waitStep)
                     elseif index>#sprayPartList-1 then
                         Wait(waitStep)
