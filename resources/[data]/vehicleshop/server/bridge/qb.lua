@@ -129,3 +129,10 @@ AddEventHandler('px_vehicleshop:returnVehicle', function(vehicle, price, k, valu
         end
     end
 end)
+
+lib.callback.register('vehicleshop:isPlateTaken', function(source, cb, plate)
+	MySQL.scalar('SELECT plate FROM player_vehicles WHERE plate = ?', {plate},
+	function(result)
+		return (result ~= nil)
+	end)
+end)

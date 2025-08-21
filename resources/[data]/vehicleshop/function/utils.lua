@@ -11,24 +11,48 @@ function printdbg(...)
     end
 end
 
-function GeneratePlate()
-    local plateLetters = {}
-    local plateNumbers = {}
+local NumberCharset = {}
+local Charset = {}
 
-    for i = 1, 3 do
-        local randomLetter = string.char(math.random(65, 90))
-        table.insert(plateLetters, randomLetter)
-    end
+for i = 48,  57 do table.insert(NumberCharset, string.char(i)) end
+for i = 65,  90 do table.insert(Charset, string.char(i)) end
+for i = 97, 122 do table.insert(Charset, string.char(i)) end
 
-    for i = 1, 3 do
-        local randomNumber = math.random(0, 9)
-        table.insert(plateNumbers, randomNumber)
-    end
+local function IsPlateTaken(plate)
+	local p = promise.new()
+	
+    lib.callback("vehicleshop:isPlateTaken", false, function(isPlateTaken)
+		p:resolve(isPlateTaken)
+	end, plate)
 
-    local numberPlate = table.concat(plateLetters) .. table.concat(plateNumbers)
-
-    return numberPlate
+	return Citizen.Await(p)
 end
+
+local function GetRandomNumber(length)
+	Wait(0)
+	return length > 0 and GetRandomNumber(length - 1) .. NumberCharset[math.random(1, #NumberCharset)] or ''
+end
+
+local function GetRandomLetter(length)
+	Wait(0)
+	return length > 0 and GetRandomLetter(length - 1) .. Charset[math.random(1, #Charset)] or ''
+end
+
+
+local function GeneratePlate()
+	math.randomseed(GetGameTimer())
+
+	local generatedPlate = string.upper(GetRandomLetter(1) .. ' ' .. GetRandomNumber(3) .. ' ' .. GetRandomLetter(2))
+    
+	local isTaken = IsPlateTaken(generatedPlate)
+	if isTaken then 
+		return GeneratePlate()
+	end
+
+	return generatedPlate
+end
+
+exports('GeneratePlate', GeneratePlate)
 
 function InfoKeybind()
     Scale = RequestScaleformMovie("INSTRUCTIONAL_BUTTONS");
