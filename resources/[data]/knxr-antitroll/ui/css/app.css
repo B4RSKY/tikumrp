@@ -1,0 +1,78 @@
+.content {
+    position: absolute;
+    bottom: 20px;
+    right: 416px;
+    width: 150px;
+    padding: 5px 7px;
+
+    background: rgba(99, 99, 99, 0.85);
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.text2 {
+    position: absolute;
+    bottom: 120px;
+    right: 358px;
+    width: 205px;
+    padding: 3px 3px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.newPlayer {
+    font-family: 'Segoe UI', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    color: #FF4444;
+    text-align: center;
+    background: rgba(216, 0, 0, 0.527);
+    border-radius: 4px;
+    box-shadow: 0 4px 10px rgba(255, 0, 0, 0.5);
+    overflow: hidden;
+    padding: 2px 8px;
+}
+
+.description {
+    position: absolute;
+    bottom: 40px;
+    right: 340px;
+    width: 280px;
+    padding: 15px 20px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10px;
+
+    font-family: 'Segoe UI', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #FFFFFF;
+    text-align: center;
+}
+
+.timer {
+    font-family: 'Segoe UI', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    color: #FFFFFF;
+    text-align: center;
+    width: 100%;
+}

@@ -1,4 +1,5 @@
 Config = {}
+local QBCore = exports['qb-core']:GetCoreObject()
 Config.OpenRadial = { hold = true }
 Config.MaxItems = { enable = true, max = 8 }
 Config.ItemRadial = {
