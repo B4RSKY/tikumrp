@@ -36,7 +36,7 @@ Config.ItemRadial = {
         canEnable = function()
             return not IsEntityDead(PlayerPedId())
         end,
-        command = "billing"
+        command = "bills"
     },
     {
         id = 'radial:kunci',
@@ -88,7 +88,7 @@ Config.ItemRadial = {
             {
                 id = "polisi:borgol",
                 icon = "handcuffs",
-                label = "Borgol",
+                label = "Borgol/lepas",
                 event = "police:client:CuffPlayerSoft"
             },
             {
@@ -157,10 +157,10 @@ Config.ItemRadial = {
                 event = "police:client:CheckStatus"
             },
             {
-                id = "polisi:statuscheck",
-                icon = "kit-medical",
-                label = "Check Health Status",
-                event = "hospital:client:CheckStatus"
+                id = "polisi:billplayer",
+                icon = "money-bill",
+                label = "Billing Warga",
+                event = "peleg-billing:client:invOpen"
             },
         }
     },
@@ -217,6 +217,12 @@ Config.ItemRadial = {
                 event = "hospital:client:CheckStatus"
             },
             {
+                id = "ems:billplayer",
+                icon = "money-bill",
+                label = "Billing Warga",
+                event = "peleg-billing:client:invOpen"
+            },
+            {
                 id = "ems:revive",
                 icon = "kit-medical",
                 label = "Revive",
@@ -270,6 +276,12 @@ Config.ItemRadial = {
                 event = "qb-mechanicjob:client:repairVehicleFull"
             },
             {
+                id = "mech:billplayer",
+                icon = "money-bill",
+                label = "Billing Warga",
+                event = "peleg-billing:client:invOpen"
+            },
+            {
                 id = "mech:hijack",
                 icon = "gear",
                 label = "Bobol",
@@ -302,7 +314,7 @@ Config.ItemRadial = {
             {
                 id = "polisi:borgol",
                 icon = "handcuffs",
-                label = "Borgol",
+                label = "Borgol/lepas",
                 event = "police:client:CuffPlayerSoft"
             },
             {
