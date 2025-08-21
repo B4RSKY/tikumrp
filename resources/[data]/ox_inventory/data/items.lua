@@ -2215,4 +2215,69 @@ return {
 		close = true,
 		description = "Lets Fly Togheter(Illegal)",
 	},
+	--RObbery
+	--Jewel
+    ["ring"] = {
+        label = "ring",
+        weight = 10,
+        stack = true,
+        close = true,
+    },
+    ["bracelet"] = {
+        label = "bracelet",
+        weight = 30,
+        stack = true,
+        close = true,
+    },
+    ["chain"] = {
+        label = "chain",
+        weight = 30,
+        stack = true,
+        close = true,
+    },
+    ["clock"] = {
+        label = "clock",
+        weight = 70,
+        stack = true,
+        close = true,
+    },
+    ["painting"] = {
+        label = "painting",
+        weight = 5,
+        stack = true,
+        close = true,
+    },
+    ["earrings"] = {
+        label = "earrings",
+        weight = 10,
+        stack = true,
+        close = true,
+    },
+    ["spray"] = {
+        label = "spray",
+        weight = 500,
+        stack = true,
+        client = {
+            event="dgl_jewelry:startSpray"
+        },
+        close = true,
+    },
+    ["drill"] = {
+        label = "drill",
+        weight = 2000,
+        stack = false,
+        close = true,
+    },
+    ["computer"] = {
+        label = "computer",
+        weight = 2000,
+        stack = false,
+        close = true,
+    },
+    ["alphawifi"] = {
+        label = "alphawifi",
+        weight = 2000,
+        stack = false,
+        close = true,
+    },
 }
