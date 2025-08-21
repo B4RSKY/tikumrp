@@ -10,7 +10,9 @@ Config.ItemRadial = {
         canEnable = function()
             return not IsEntityDead(PlayerPedId())
         end,    
-        command = "phone"
+        action = function ()
+            exports["lb-phone"]:ToggleOpen(true, false)
+        end
     },
     {
         id = 'radial:inventory',

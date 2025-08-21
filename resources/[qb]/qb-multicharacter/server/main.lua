@@ -100,8 +100,8 @@ RegisterNetEvent('qb-multicharacter:server:loadUserData', function(cData)
         local identifier = QBCore.Functions.GetIdentifier(src, 'steam') or 'undefined'
         local cid = cData.citizenid
         local dc = "**@"..(QBCore.Functions.GetIdentifier(src, 'discord'):gsub("discord:", "") or "unknown")
-        local message = '**'..name..'** is connecting to the server \n\n **Player: '..name..'**\n **`🎮` Steam Hex**: `'..identifier..'\n`🎮` **NIK**: `'..cid..'`\n`🎮`**Discord**: '..dc..
-        TriggerEvent('qb-log:server:CreateLog', 'join', 'Player Join', 'green', message, false)
+        local isi = '**'..name..'** is connecting to the server \n\n **Player: '..name..'**\n **`🎮` Steam Hex**: `'..identifier..'\n`🎮` **NIK**: `'..cid..'`\n`🎮`**Discord**: '..dc..""
+        TriggerEvent('qb-log:server:CreateLog', 'join', 'Player Join', 'green', isi, false)
     end
 end)
 

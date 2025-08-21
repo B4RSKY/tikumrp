@@ -116,13 +116,13 @@ return {
 		client = {
 			add = function(total)
 				if total > 0 then
-					pcall(function() return exports.npwd:setPhoneDisabled(false) end)
+					pcall(function() return exports["lb-phone"]:ToggleDisabled(false) end)
 				end
 			end,
 
 			remove = function(total)
 				if total < 1 then
-					pcall(function() return exports.npwd:setPhoneDisabled(true) end)
+					pcall(function() return exports["lb-phone"]:ToggleDisabled(true) end)
 				end
 			end
 		}
@@ -1979,6 +1979,14 @@ return {
         weight = 2000,
         stack = false,
         close = true,
+    },
+	['powerbank'] = {
+        label = 'Power Bank',
+        weight = 350,
+        stack = true,
+        close = true,
+        description = 'A Power Bank, that will recharge your phone!',
+        consume = 0.50,
     },
 	--DISNAKER
 	["wool"] = {

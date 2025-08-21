@@ -1,14 +1,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700&display=swap");
 
 :root {
-    /* Dark Theme Variables */
-    --md-primary: #f44336;
-    --md-dark-primary-container: #f44336;
-    --md-dark-on-secondary: #c8c4ca;
-    --md-on-surface: #1c1b1f;
-    --md-surface: #ffffff;
-    --md-surface-container: #454446; 
-    --md-dark-on-surface: #e6e1e5;
+    /* Dark Purple Theme Variables */
+    --md-primary: #9c27b0; /* Ungu utama */
+    --md-dark-primary-container: #7b1fa2; /* Ungu lebih gelap */
+    --md-dark-on-secondary: #b39ddb; /* Ungu soft untuk teks sekunder */
+    --md-on-surface: #121212; /* Hitam pekat untuk background konten */
+    --md-surface: #ffffff; /* Putih untuk teks utama */
+    --md-surface-container: #1e1e1e; /* Abu gelap/hitam */
+    --md-dark-on-surface: #e0e0e0; /* Abu terang untuk teks */
 
     /* Shapes */
     --md-radius-small: 8px;
@@ -17,11 +17,11 @@
     --md-radius-extra-large: 28px;
 
     /* Elevation */
-    --md-elevation-1: 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
-    --md-elevation-2: 0px 2px 6px 2px rgba(0, 0, 0, 0.15);
-    --md-elevation-3: 0px 4px 8px 3px rgba(0, 0, 0, 0.15);
-    --md-elevation-4: 0px 6px 10px 4px rgba(0, 0, 0, 0.15);
-    --md-elevation-5: 0px 8px 12px 6px rgba(0, 0, 0, 0.15);
+    --md-elevation-1: 0px 1px 3px 1px rgba(0, 0, 0, 0.3);
+    --md-elevation-2: 0px 2px 6px 2px rgba(0, 0, 0, 0.35);
+    --md-elevation-3: 0px 4px 8px 3px rgba(0, 0, 0, 0.4);
+    --md-elevation-4: 0px 6px 10px 4px rgba(0, 0, 0, 0.45);
+    --md-elevation-5: 0px 8px 12px 6px rgba(0, 0, 0, 0.5);
 
     /* Typography */
     --md-typescale-display-large-size: 57px;

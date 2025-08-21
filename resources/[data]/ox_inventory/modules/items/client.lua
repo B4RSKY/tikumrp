@@ -129,6 +129,84 @@ Item('parachute', function(data, slot)
 	end
 end)
 
+Item('powerbank', function(data, slot)
+    ox_inventory:useItem(data, function(data)
+        if data then
+            if not exports["lb-phone"]:IsCharging() or exports["lb-phone"]:IsPhoneDead() then
+                exports["lb-phone"]:ToggleCharging(true)
+                BatteryLoop()
+                lib.notify({
+                    title = 'PHONE CHARGER',
+                    description = 'Charging phone',
+                    position = 'top',
+                    style = {
+                        backgroundColor = '#141517',
+                        color = '#909296'
+                    },
+                    icon = 'fa-solid fa-mobile-screen',
+                    iconColor = '#4ce074'
+                })
+            elseif exports["lb-phone"]:IsCharging() then
+                lib.notify({
+                    title = 'PHONE CHARGER',
+                    description = 'Phone Already Charging',
+                    position = 'top',
+                    style = {
+                        backgroundColor = '#141517',
+                        color = '#909296'
+                    },
+                    icon = 'fa-solid fa-mobile-screen',
+                    iconColor = 'red'
+                })
+            elseif exports["lb-phone"]:GetBattery() >= 90 then
+                lib.notify({
+                    title = 'PHONE CHARGER',
+                    description = 'Phone does not need charge yet.',
+                    position = 'top',
+                    style = {
+                        backgroundColor = '#141517',
+                        color = '#909296'
+                    },
+                    icon = 'fa-solid fa-mobile-screen',
+                    iconColor = 'red'
+                })
+            end
+        end
+    end)
+end)
+
+function BatteryLoop()
+    if not looped then
+        looped = true
+        CreateThread(function()
+            while true do
+                local myPhoneBattery = exports["lb-phone"]:GetBattery()
+                Wait(10)
+                if myPhoneBattery <= 99 then
+                Wait(1000 * 10)
+                myPhoneBattery +=1
+                exports["lb-phone"]:SetBattery(myPhoneBattery)
+                elseif myPhoneBattery >= 99 then
+                    exports["lb-phone"]:ToggleCharging(false)
+                    lib.notify({
+                        title = 'PHONE CHARGER',
+                        description = 'Charged',
+                        position = 'top',
+                        style = {
+                            backgroundColor = '#141517',
+                            color = '#909296'
+                        },
+                        icon = 'fa-solid fa-mobile-screen',
+                        iconColor = '#4ce074'
+                    })
+                    looped = false
+                    break
+                end
+            end
+        end)
+    end
+end
+
 Item('phone', function(data, slot)
 	local success, result = pcall(function()
 		return exports.npwd:isPhoneVisible()

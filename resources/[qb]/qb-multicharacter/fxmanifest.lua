@@ -29,9 +29,4 @@ files {
     'html/qb-pixel.png',
 }
 
-dependencies {
-    'qb-core',
-    'qb-spawn'
-}
-
 lua54 'yes'

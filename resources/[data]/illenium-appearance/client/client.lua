@@ -731,7 +731,6 @@ RegisterNetEvent("illenium-appearance:client:reloadSkin", function(bypassChecks)
     end
 
     reloadSkinTimer = GetGameTimer()
-    BackupPlayerStats()
     local walkstyle = exports["rpemotes"]:getWalkstyle()
     BackupPlayerStats()
     removeAttachProps()

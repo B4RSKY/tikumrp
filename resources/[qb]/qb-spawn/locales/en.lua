@@ -1,6 +1,6 @@
 local Translations = {
     ui = {
-        last_location = "Last Location",
+        last_location = "Lokasi Terakhir",
         confirm = "Confirm",
         select = "Select",
         spawn_header = "Spawn Selector",

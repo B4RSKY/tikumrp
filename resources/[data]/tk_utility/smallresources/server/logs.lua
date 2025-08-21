@@ -78,7 +78,7 @@ RegisterNetEvent('qb-log:server:CreateLog', function(name, title, color, message
                 ['description'] = message,
                 ['author'] = {
                     ['name'] = 'TIKUMRP Logs',
-                    ['icon_url'] = 'https://raw.githubusercontent.com/GhzGarage/qb-media-kit/main/Display%20Pictures/Logo%20-%20Display%20Picture%20-%20Stylized%20-%20Red.png',
+                    ['icon_url'] = 'https://files.fivemerr.com/images/a437452f-5f0d-4550-aa83-2ac7e4aaa394.png',
                 },
                 ['image'] = imageUrl and imageUrl ~= '' and { ['url'] = imageUrl } or nil,
             }
