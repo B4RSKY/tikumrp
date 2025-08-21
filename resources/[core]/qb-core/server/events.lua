@@ -155,19 +155,51 @@ RegisterNetEvent('QBCore:UpdatePlayer', function()
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if not Player then return end
+
     local newHunger = Player.PlayerData.metadata['hunger'] - QBCore.Config.Player.HungerRate
     local newThirst = Player.PlayerData.metadata['thirst'] - QBCore.Config.Player.ThirstRate
-    if newHunger <= 0 then
-        newHunger = 0
-    end
-    if newThirst <= 0 then
-        newThirst = 0
-    end
-    Player.Functions.SetMetaData('thirst', newThirst)
+
+    -- jangan biarin minus
+    if newHunger < 0 then newHunger = 0 end
+    if newThirst < 0 then newThirst = 0 end
+
+    -- dibulatkan ke 2 digit koma
+    newHunger = tonumber(string.format("%.2f", newHunger))
+    newThirst = tonumber(string.format("%.2f", newThirst))
+
     Player.Functions.SetMetaData('hunger', newHunger)
+    Player.Functions.SetMetaData('thirst', newThirst)
+
     TriggerClientEvent('hud:client:UpdateNeeds', src, newHunger, newThirst)
     Player.Functions.Save()
 end)
+RegisterNetEvent('QBCore:UpdatePlayer', function()
+    local src = source
+    local Player = QBCore.Functions.GetPlayer(src)
+    if not Player then return end
+
+    local newHunger = Player.PlayerData.metadata['hunger'] - QBCore.Config.Player.HungerRate
+    local newThirst = Player.PlayerData.metadata['thirst'] - QBCore.Config.Player.ThirstRate
+    local newStress = Player.PlayerData.metadata['stress'] + QBCore.Config.Player.StressRate
+
+    if newHunger < 0 then newHunger = 0 end
+    if newThirst < 0 then newThirst = 0 end
+    if newStress > 100 then newStress = 100 end
+    if newStress < 0 then newStress = 0 end
+
+    newHunger = tonumber(string.format("%.2f", newHunger))
+    newThirst = tonumber(string.format("%.2f", newThirst))
+    newStress = tonumber(string.format("%.2f", newStress))
+
+    Player.Functions.SetMetaData('hunger', newHunger)
+    Player.Functions.SetMetaData('thirst', newThirst)
+    Player.Functions.SetMetaData('stress', newStress)
+
+    TriggerClientEvent('hud:client:UpdateNeeds', src, newHunger, newThirst)
+    TriggerClientEvent('hud:client:UpdateStress', src, newStress)
+    Player.Functions.Save()
+end)
+
 
 RegisterNetEvent('QBCore:ToggleDuty', function()
     local src = source

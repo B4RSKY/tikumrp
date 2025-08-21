@@ -1,71 +1,17 @@
 return {
-	['testburger'] = {
-		label = 'Test Burger',
-		weight = 220,
-		degrade = 60,
-		client = {
-			image = 'burger_chicken.png',
-			status = { hunger = 200000 },
-			anim = 'eating',
-			prop = 'burger',
-			usetime = 2500,
-			export = 'ox_inventory_examples.testburger'
-		},
-		server = {
-			export = 'ox_inventory_examples.testburger',
-			test = 'what an amazingly delicious burger, amirite?'
-		},
-		buttons = {
-			{
-				label = 'Lick it',
-				action = function(slot)
-					print('You licked the burger')
-				end
-			},
-			{
-				label = 'Squeeze it',
-				action = function(slot)
-					print('You squeezed the burger :(')
-				end
-			},
-			{
-				label = 'What do you call a vegan burger?',
-				group = 'Hamburger Puns',
-				action = function(slot)
-					print('A misteak.')
-				end
-			},
-			{
-				label = 'What do frogs like to eat with their hamburgers?',
-				group = 'Hamburger Puns',
-				action = function(slot)
-					print('French flies.')
-				end
-			},
-			{
-				label = 'Why were the burger and fries running?',
-				group = 'Hamburger Puns',
-				action = function(slot)
-					print('Because they\'re fast food.')
-				end
-			}
-		},
-		consume = 0.3
-	},
-
 	['bandage'] = {
-		label = 'Bandage',
+		label = 'Perban',
 		weight = 115,
 		client = {
 			anim = { dict = 'missheistdockssetup1clipboard@idle_a', clip = 'idle_a', flag = 49 },
 			prop = { model = `prop_rolled_sock_02`, pos = vec3(-0.14, -0.14, -0.08), rot = vec3(-50.0, -50.0, 0.0) },
 			disable = { move = true, car = true, combat = true },
-			usetime = 2500,
+			usetime = 3500,
 		}
 	},
 
 	['black_money'] = {
-		label = 'Dirty Money',
+		label = 'Uang Kotor',
 	},
 
 	['burger'] = {
@@ -115,7 +61,7 @@ return {
 	},
 
 	['identification'] = {
-		label = 'Identification',
+		label = 'KTP',
 		weight = 0,
 		stack = false,
 		close = true,
@@ -183,7 +129,7 @@ return {
 	},
 
 	['money'] = {
-		label = 'Money',
+		label = 'Uang',
 	},
 
 	['mustard'] = {

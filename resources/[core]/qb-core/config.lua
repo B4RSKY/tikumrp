@@ -15,6 +15,7 @@ QBConfig.Money.PayCheckSociety = false                              -- If true p
 QBConfig.Player = {}
 QBConfig.Player.HungerRate = 4.2 -- Rate at which hunger goes down.
 QBConfig.Player.ThirstRate = 3.8 -- Rate at which thirst goes down.
+QBConfig.Player.StressRate = 0.8 -- Rate at which Stress goes up.
 QBConfig.Player.Bloodtypes = {
     'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-',
 }
