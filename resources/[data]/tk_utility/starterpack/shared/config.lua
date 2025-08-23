@@ -8,7 +8,7 @@ return {
             garage = 'pillbox',
             spawnVehicle = true,
             stateOnRegister = 1,
-            SpawnPoint = vector4(251.09, -1067.27, 29.3, 3.97),
+            SpawnPoint = vec4(-1037.37, -2726.46, 20.15, 232.96),
         },
 
         Items = {
@@ -21,8 +21,8 @@ return {
         Target = {
             ped = {
                 model = 'cs_bankman',
-                coords = vec3(251.31, -1072.03, 29.30),
-                heading = 340.0,
+                coords = vec3(-1038.78, -2731.21, 20.17),
+                heading = 235.14,
                 scenario = 'WORLD_HUMAN_CLIPBOARD',
                 freeze = true
             },

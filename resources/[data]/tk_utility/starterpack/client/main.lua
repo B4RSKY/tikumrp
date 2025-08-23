@@ -5,7 +5,7 @@ local QBCore = exports['qb-core']:GetCoreObject()
 CreateThread(function()
     local m = Cfg.Target.ped.model
     local model = type(m) == 'string' and joaat(m) or m
-    lib.requestModel(model, 1500)
+    lib.requestModel(model, 150000)
 
     local p = Cfg.Target.ped
     local targetPed = CreatePed(4, model, p.coords.x, p.coords.y, p.coords.z - 1.0, p.heading or 0.0, false, true)

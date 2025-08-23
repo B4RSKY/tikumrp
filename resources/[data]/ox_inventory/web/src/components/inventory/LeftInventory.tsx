@@ -9,11 +9,11 @@ const LeftInventory: React.FC = () => {
   const newItems = leftInventory.items.slice(0, 5);
   leftInventory = {
     ...leftInventory,
-    items: leftInventory.items.slice(0, 60),
+    items: leftInventory.items.slice(0, 50),
   }
   backpackInventory = {
     ...backpackInventory,
-    items: backpackInventory.items.slice(30, 60),
+    items: backpackInventory.items.slice(50, 60),
   }
   let backpackDisabled = false;
 

@@ -2,7 +2,7 @@ Config = {}
 --Jobcenter
 Config.Disnaker = {
     model = 'a_m_y_business_02',
-    coords = vector4(-429.44, 1109.39, 327.68, 351.39),
+    coords = vector4(-435.05, 1097.65, 326.77, 351.12),
     scenario = 'WORLD_HUMAN_CLIPBOARD'
 }
 
@@ -266,6 +266,11 @@ Config.Blips = {
     {
         name = "Gudang", sprite = 473, color = 3, scale = 0.7,
         coords = vector3(-1607.43, -830.21, 10.08),
+        jobs = false
+    },
+    {
+        name = "Zona Santai", sprite = 621, color = 1, scale = 0.7,
+        coords = vector3(-1840.15, -1216.46, 13.02),
         jobs = false
     },
 }

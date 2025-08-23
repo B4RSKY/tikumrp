@@ -209,8 +209,8 @@ function OpenVehicleInfo(vehicle, price, vehicleData, job)
                                     r = tonumber(r)
                                     g = tonumber(g)
                                     b = tonumber(b)
-                                    TriggerServerEvent('px_vehicleshopBuyVehicle', vehicle, price, valueAction, r, g,
-                                        b, job, result)
+                                    -- Di dalam fungsi OpenVehicleInfo
+                                    TriggerServerEvent('px_vehicleshop:secureStockVehicle', vehicle, valueAction, r, g, b, job)
                                     buy = false
                                 else
                                     lib.notify({
@@ -447,8 +447,8 @@ function spawnVehicle(vehicle, job, red, green, blue)
     end)
 end
 
-function BuyVehicle(vehicle, r, g, b, price, result)
-    local PlateGenerated = GeneratePlate()
+function BuyVehicle(vehicle, r, g, b, result)
+    local PlateGenerated = exports.vehicleshop:GeneratePlate()
     local name = vehicle
     for k, v in pairs(Config.Shops) do
         if k == valueAction then
@@ -463,7 +463,7 @@ function BuyVehicle(vehicle, r, g, b, price, result)
                 SetEntityHeading(veh, 339.41)
                 SetPedIntoVehicle(cache.ped, vehi, -1)
                 TriggerEvent('vehiclekeys:client:SetOwner', QBCore.Functions.GetPlate(veh))
-                TriggerServerEvent('px_vehicleshop:setVehicle', name, newPlate, "Pillbox Garage Parking", price, result)
+                TriggerServerEvent('px_vehicleshop:secureBuyVehicle', name, newPlate, "garasi_a", result)
                 buy = false
             end, v.spawnVehicleBuy, true)
         end
@@ -692,11 +692,11 @@ function OpenActionVehicleSaved(vehicle, price, k, red, green, blue)
 end
 
 function SellVehicle(vehicle, player)
-    local PlateGenerated = GeneratePlate()
+    local PlateGenerated = exports.vehicleshop:GeneratePlate()
     if lastSelectedVehicleEntity ~= nil then
         DeleteEntity(lastSelectedVehicleEntity)
     end
-    local PlateGenerated = GeneratePlate()
+    local PlateGenerated = exports.vehicleshop:GeneratePlate()
     for k, v in pairs(Config.Shops) do
         if k == valueAction then
             QBCore.Functions.TriggerCallback('QBCore:Server:SpawnVehicle', function(netId)

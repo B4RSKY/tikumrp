@@ -102,11 +102,12 @@ local function CreateBlips(setloc)
     local Garage = AddBlipForCoord(setloc.takeVehicle.x, setloc.takeVehicle.y, setloc.takeVehicle.z)
     SetBlipSprite(Garage, setloc.blipNumber)
     SetBlipDisplay(Garage, 4)
-    SetBlipScale(Garage, 0.60)
+    SetBlipScale(Garage, 0.7)
     SetBlipAsShortRange(Garage, true)
     SetBlipColour(Garage, setloc.blipColor)
     BeginTextCommandSetBlipName('STRING')
     AddTextComponentSubstringPlayerName(setloc.blipName)
+    SetBlipCategory(Garage, 134)
     EndTextCommandSetBlipName(Garage)
 end
 
@@ -115,7 +116,7 @@ local function CreateZone(index, garage, zoneType)
         name = zoneType .. '_' .. index,
         minZ = garage.zone.minZ,
         maxZ = garage.zone.maxZ,
-        debugPoly = false,
+        debugPoly = true,
         data = {
             indexgarage = index,
             type = garage.type,
@@ -150,7 +151,7 @@ local function CreateBlipsZones()
         end
     end
 
-    local comboZone = ComboZone:Create(garageZones, { name = 'garageCombo', debugPoly = false })
+    local comboZone = ComboZone:Create(garageZones, { name = 'garageCombo', debugPoly = true })
 
     comboZone:onPlayerInOut(function(isPointInside, _, zone)
         if isPointInside then
@@ -263,7 +264,7 @@ RegisterNUICallback('callback', function(data)
         TriggerEvent('qb-garages:client:takeOutGarage', data.data)
     elseif data.action == "trackVehicle" then
         TriggerServerEvent('qb-garages:server:trackVehicle', data.plate)
-    elseif data.action == "takeOutDepo" then
+    elseif data.action == "takeDepotVehicle" then
         local depotPrice = data.depotPrice
         if depotPrice ~= 0 then
             TriggerServerEvent('qb-garages:server:PayDepotPrice', data.data)
@@ -357,7 +358,7 @@ local houseComboZones = nil
 local function CreateHouseZone(index, garage, zoneType)
     local houseZone = CircleZone:Create(garage.takeVehicle, 5.0, {
         name = zoneType .. '_' .. index,
-        debugPoly = false,
+        debugPoly = true,
         useZ = true,
         data = {
             indexgarage = index,
@@ -370,7 +371,7 @@ local function CreateHouseZone(index, garage, zoneType)
         houseGarageZones[#houseGarageZones + 1] = houseZone
 
         if not houseComboZones then
-            houseComboZones = ComboZone:Create(houseGarageZones, { name = 'houseComboZones', debugPoly = false })
+            houseComboZones = ComboZone:Create(houseGarageZones, { name = 'houseComboZones', debugPoly = true })
         else
             houseComboZones:AddZone(houseZone)
         end

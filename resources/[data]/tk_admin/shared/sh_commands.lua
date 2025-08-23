@@ -8,7 +8,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'noclip',
                 ['Name'] = 'Noclip',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -19,7 +19,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'changeModel',
                 ['Name'] = 'Change Model',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -43,7 +43,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'resetModel',
                 ['Name'] = 'Reset Model',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -61,7 +61,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'openClothing',
                 ['Name'] = 'Clothing',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -79,7 +79,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'giveArmor',
                 ['Name'] = 'Armor',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -97,7 +97,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'food-drink',
                 ['Name'] = 'Food & Drink',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -115,7 +115,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'setEnvironment',
                 ['Name'] = 'Set Environment',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -145,7 +145,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'opinventory',
                 ['Name'] = 'Open Inventory',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -163,7 +163,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'kill',
                 ['Name'] = 'Kill',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -181,7 +181,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'revive',
                 ['Name'] = 'Revive',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -199,7 +199,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'reviveRadius',
                 ['Name'] = 'Revive in Radius',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -217,7 +217,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'reviveAll',
                 ['Name'] = 'Revive All',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -228,7 +228,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'removeStress',
                 ['Name'] = 'Remove Stress',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -246,7 +246,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'freezePlayer',
                 ['Name'] = 'Freeze Player',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -264,7 +264,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'cloak',
                 ['Name'] = 'Cloak',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -282,7 +282,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'godmode',
                 ['Name'] = 'Godmode',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -300,7 +300,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'infAmmo',
                 ['Name'] = 'Infinite Ammo',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -318,7 +318,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'infStamina',
                 ['Name'] = 'Infinite Stamina',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -343,29 +343,29 @@ Config.CommandList = {
             {
                 ['Id'] = 'playerblips',
                 ['Name'] = 'Player Blips',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
-                ['Event'] = 'Admin:Toggle:PlayerBlips',
+                ['Event'] = 'admin:client:PlayerBlips',
                 ['EventType'] = 'Client',
                 ['Collapse'] = false,
             },
             {
                 ['Id'] = 'playernames',
                 ['Name'] = 'Player Names',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
-                ['Event'] = 'Admin:Toggle:PlayerNames',
+                ['Event'] = 'admin:client:PlayerNames',
                 ['EventType'] = 'Client',
                 ['Collapse'] = false,
             },
             {
                 ['Id'] = 'deleteArea',
                 ['Name'] = 'Delete In Area',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -389,7 +389,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'deleteVehicle',
                 ['Name'] = 'Delete Vehicle',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -399,7 +399,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'spawnVehicle',
                 ['Name'] = 'Spawn Vehicle',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -417,7 +417,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'fixVehicle',
                 ['Name'] = 'Fix Vehicle',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -428,7 +428,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'teleport',
                 ['Name'] = 'Teleport',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -459,7 +459,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'teleportAll',
                 ['Name'] = 'Teleport All',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -470,7 +470,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'teleportCoords',
                 ['Name'] = 'Teleport Coords',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -500,7 +500,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'teleportMarker',
                 ['Name'] = 'Teleport Marker',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -511,7 +511,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'chatSay',
                 ['Name'] = 'cSay',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -529,7 +529,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'copyCoords',
                 ['Name'] = 'Copy Coords',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -592,7 +592,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'setgang',
                 ['Name'] = 'Request Gang',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -616,7 +616,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'setjob',
                 ['Name'] = 'Request Job',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -640,7 +640,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'giveItem',
                 ['Name'] = 'Give Item',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -670,7 +670,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'setMoney',
                 ['Name'] = 'Set Money',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -700,7 +700,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'giveMoney',
                 ['Name'] = 'Give Money',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -730,7 +730,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'openBennys',
                 ['Name'] = 'Bennys',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -748,7 +748,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'banPlayer',
                 ['Name'] = 'Ban Player',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -800,7 +800,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'unbanPlayer',
                 ['Name'] = 'Unban Player',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -818,7 +818,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'kickPlayer',
                 ['Name'] = 'Kick Player',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -842,7 +842,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'kickAllPlayer',
                 ['Name'] = 'Kick All Players',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -860,7 +860,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'spectate',
                 ['Name'] = 'Spectate Player',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -886,7 +886,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'flingPlayer',
                 ['Name'] = 'Fling Player',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -904,7 +904,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'drunkPlayer',
                 ['Name'] = 'Make Player Drunk',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -922,7 +922,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'animalattackPlayer',
                 ['Name'] = 'Animal Attack',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -940,7 +940,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'setfirePlayer',
                 ['Name'] = 'Set On Fire',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'
@@ -958,7 +958,7 @@ Config.CommandList = {
             {
                 ['Id'] = 'fartPlayer',
                 ['Name'] = 'Fart Sound',
-                ['UseKVPGroups'] = true, 
+                ['UseKVPGroups'] = false, 
                 -- Below Groups Table will not be used when Option above is enabled. 
                 -- Command Groups will be handled by KVP and can be changed thru a command ingame: menuperms [add,remove,list] [commandid] [group]
                 ['Groups'] = {'all'}, -- 'all', 'admin', 'god', 'mod'

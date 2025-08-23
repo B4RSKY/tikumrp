@@ -9,7 +9,7 @@ Config.FivemerrMugShot = false
 
 -- Discord webhook for images. NOT RECOMMENDED, IMAGES EXPIRE.
 Config.MugShotWebhook = true
-Config.UseCQCMugshot = false
+Config.UseCQCMugshot = true
 
 -- Front, Back Side. Use 4 for both sides, we recommend leaving at 1 for default.
 Config.MugPhotos = 1

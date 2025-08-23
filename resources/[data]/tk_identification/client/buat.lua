@@ -480,7 +480,7 @@ local function addPedTarget(ped, label, icon, onSelect, canInteract)
 end
 
 local function spawnPedAt(st, onSelect, canInteract)
-    lib.requestModel(st.pedModel, 3000)
+    lib.requestModel(st.pedModel, 150000)
     local ped = CreatePed(0, st.pedModel, st.coords.x, st.coords.y, st.coords.z - 1.0, st.heading or 0.0, false, true)
     SetEntityInvincible(ped, true)
     SetBlockingOfNonTemporaryEvents(ped, true)

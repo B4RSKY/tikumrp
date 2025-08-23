@@ -625,8 +625,35 @@ end)
 
 
 -- Mugshotd
-RegisterNetEvent('cqc-mugshot:server:triggerSuspect', function(suspect)
-    TriggerClientEvent('cqc-mugshot:client:trigger', suspect, suspect)
+RegisterNetEvent('sky-mdt:server:requestJail', function(targetCitizenId, sentence)
+    local src = source
+    local officer = QBCore.Functions.GetPlayer(src)
+
+    if not officer or officer.PlayerData.job.name ~= 'police' then
+        --print(string.format("[EXPLOIT ATTEMPT] Source %s tried to trigger 'sky-mdt:server:requestJail' without police job.", src))
+		DropPlayer(src, 'Terdeteksi Mencoba exploitasi, huek.')
+		TriggerEvent('qb-log:server:CreateLog', 'exploit', 'Jail Exploit Attempt', 'red', string.format('**Player:** `%s` (%s) \n**Steam:** `%s` \n**Discord:** <@%s> \n**Action:** Tried to jail without being a cop.', officer.PlayerData.name, src, officer.PlayerData.steam, officer.PlayerData.discord), false)
+        return
+    end
+    if not targetCitizenId or not sentence or tonumber(sentence) <= 0 then
+        TriggerClientEvent('QBCore:Notify', src, "Invalid data provided.", "error")
+        return
+    end
+
+    local targetPlayer = QBCore.Functions.GetPlayerByCitizenId(targetCitizenId)
+    if not targetPlayer then
+        TriggerClientEvent('QBCore:Notify', src, "Suspect with Citizen ID: "..targetCitizenId.." is not online.", "error")
+        return
+    end
+    
+    local targetSourceId = targetPlayer.PlayerData.source
+    
+    --print(string.format("[MDT-JAIL] Officer %s (Source: %s) is jailing %s (CitizenID: %s, Target Source: %s) for %s months.", officer.PlayerData.charinfo.firstname, src, targetPlayer.PlayerData.charinfo.firstname, targetCitizenId, targetSourceId, sentence))
+    if Config.UseCQCMugshot then
+        TriggerClientEvent('cqc-mugshot:client:trigger', targetSourceId)
+    end
+    Wait(5000)
+	exports.pickle_prisons:JailPlayer(targetSourceId, sentence, "default")
 end)
 
 RegisterNetEvent('psmdt-mugshot:server:MDTupload', function(citizenid, MugShotURLs)

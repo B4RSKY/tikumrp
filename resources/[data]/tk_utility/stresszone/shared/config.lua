@@ -1,9 +1,7 @@
 return {
-    EnableBlips = true,
     Timer = 5000,
     Zones = {
         {
-            blip = vec3(-1840.15, -1216.46, 13.02), 
             points = {
                 vec3(-1823.0, -1260.0, 13.0),
                 vec3(-1807.0, -1241.0, 13.0),

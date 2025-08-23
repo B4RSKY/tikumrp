@@ -1618,6 +1618,22 @@ local function dropItem(source, playerInventory, fromData, data)
 	TriggerClientEvent('ox_inventory:createDrop', -1, dropId, Inventory.Drops[dropId], playerInventory.open and source, slot)
 
 	if server.loglevel > 0 then
+		local name      = playerInventory.owner or "Unknown"
+		local steamhex  = GetPlayerIdentifier(source) or "steam:unknown"
+		local itemName  = toData.name or "unknown_item"
+		local amount    = data.count or 0
+		local plabel 	= playerInventory.label
+		local dropIdStr = dropId or "N/A"
+		local isi = ( '**`📦` Drop Item**\n\n' ..
+			'**`👤` Player**: **%s**\n' ..
+			'**`🎮` Steam Hex**: `%s`\n' ..
+			'**`📗` Inventory Label**: `%s`\n' ..
+			'**`📗` Item**: `%s`\n' ..
+			'**`🔢` Amount**: `%s`\n' ..
+			'**`🧾` DropID**: `%s`'
+		):format(name, steamhex, plabel, itemName, amount, dropIdStr)
+
+		TriggerEvent('qb-log:server:CreateLog', 'invdrop', 'Item Dropped', 'ungu', isi, false)
 		lib.logger(playerInventory.owner, 'swapSlots', ('%sx %s transferred from "%s" to "%s"'):format(data.count, toData.name, playerInventory.label, dropId))
 	end
 
@@ -1866,6 +1882,22 @@ lib.callback.register('ox_inventory:swapItems', function(source, data)
 						end
 
 						if server.loglevel > 0 then
+							local namaSteam	= GetPlayerName(source) or "unknown"
+							local steamhex  = GetPlayerIdentifier(source) or "steam:unknown"
+
+							local isi = ( '**`📦` Swap Item**\n\n' ..
+								'**`👤` Player**: **%s**\n' ..
+								'**`👤` Nama steam**: **%s**\n' ..
+								'**`🎮` Steam Hex**: `%s`\n\n' ..
+								'**`📗` Dari (Label)**: `%s`\n' ..
+								'**`📗` Dari (ID)**: `%s`\n' ..
+								'**`📗` Ke (LABEL)**: `%s`\n' ..
+								'**`📗` Ke (ID)**: `%s`\n\n' ..
+								'**`🧾` Nama Item**: `%s`'..
+								'**`🔢` Amount**: `%s`\n'
+							):format(playerInventory.owner, namaSteam, steamhex, fromInventory.label, fromInventory.id, toInventory.label, toInventory.id, fromData.name, data.count)
+
+							TriggerEvent('qb-log:server:CreateLog', 'invswap', 'Swap Item', 'ungu', isi, false)
 							lib.logger(playerInventory.owner, 'swapSlots', ('%sx %s transferred from "%s" to "%s"'):format(data.count, fromData.name, fromInventory.owner and fromInventory.label or fromInventory.id, toInventory.owner and toInventory.label or toInventory.id))
 						end
 					end
@@ -2480,6 +2512,24 @@ local function giveItem(playerId, slot, target, count)
 			if Inventory.AddItem(toInventory, item, count, data.metadata, toSlot) then
 				if Inventory.RemoveItem(fromInventory, item, count, data.metadata, slot) then
 					if server.loglevel > 0 then
+						local namSteam = GetPlayerName(source)
+						local steamTarget = GetPlayerName(target)
+						local steamhex = GetPlayerIdentifier(source)
+						local hexTarget = GetPlayerIdentifier(target)
+						local isi = ( '**`📦` Give Item**\n\n' ..
+							'**PENGIRIM**\n'..
+							'**`👤` Player**: **%s**\n' ..
+							'**`🎮` Steam**: `%s`\n' ..
+							'**`🎮` Steam Hex**: `%s`\n\n' ..
+							'**PENERIMA**\n'..
+							'**`👤` Player**: **%s**\n' ..
+							'**`🎮` Steam**: `%s`\n' ..
+							'**`🎮` Steam Hex**: `%s`\n\n' ..
+							'**`📗` Item**: `%s`\n' ..
+							'**`🔢` Jumlah**: `%s`'
+						):format(fromInventory.label, namSteam, steamhex, toInventory.label, steamTarget, hexTarget, data.name, count)
+
+						TriggerEvent('qb-log:server:CreateLog', 'invgive', 'Give Item', 'ungu', isi, false)
 						lib.logger(fromInventory.owner, 'giveItem', ('"%s" gave %sx %s to "%s"'):format(fromInventory.label, count, data.name, toInventory.label))
 					end
 

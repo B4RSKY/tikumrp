@@ -21,7 +21,7 @@ Config.Commands = {
 
 Config.Settings = {
     ['Debug'] = false,
-    ['DefaultOpenKeybind'] = 'INSERT', -- Keybind to open Menu
+    ['DefaultOpenKeybind'] = 'F11', -- Keybind to open Menu
     ['Pages'] = { -- Enable or disable certain pages.
         ['PlayerList'] = true,
         ['RecentBans'] = true,
@@ -33,8 +33,8 @@ Config.Settings = {
         ['BanCheck'] = false, -- Check for ban when joining. (Enable when not using qb's default ban check.)
     },
     ['AdminGroups'] = { -- Admin Groups to check for permissions for commands.
-        'admin',
         'god',
+        'admin',
         'mod',
     },
     ['Cars'] = {

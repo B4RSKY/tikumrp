@@ -258,6 +258,27 @@ RegisterNUICallback('spawnplayer', function(data, cb)
     cb('ok')
 end)
 
+RegisterNetEvent('qb-spawn:client:isNew', function ()
+    SetNuiFocus(false, false)
+    SendNUIMessage({
+        action = "showUi",
+        status = false
+    })
+    choosingSpawn = false
+    PreSpawnPlayer()
+    QBCore.Functions.GetPlayerData(function(pd)
+        local ped = PlayerPedId()
+        SetEntityCoords(ped, pd.position.x, pd.position.y, pd.position.z)
+        SetEntityHeading(ped, pd.position.a)
+        FreezeEntityPosition(ped, false)
+    end)
+    TriggerServerEvent('QBCore:Server:OnPlayerLoaded')
+    TriggerEvent('QBCore:Client:OnPlayerLoaded')
+    PostSpawnPlayer()
+    Wait(500)
+    TriggerEvent('qb-clothes:client:CreateFirstCharacter')
+end)
+
 -- Threads
 
 CreateThread(function()

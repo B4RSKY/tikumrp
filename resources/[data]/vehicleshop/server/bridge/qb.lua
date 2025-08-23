@@ -11,7 +11,7 @@ lib.callback.register('px_vehicleshop:getPlayerMoney', function(source, price, s
             return "cash"
         end
     else
-        local moneyBank = exports['qb-banking']:GetAccountBalance(GetPlayerName(source))
+        local moneyBank = exports['Renewed-Banking']:getAccountMoney(GetPlayerName(source))
         if tonumber(moneyBank) > tonumber(price) then
             return "bank"
         end
@@ -20,61 +20,115 @@ end)
 
 
 QBCore.Functions.CreateCallback('px_vehicleshop:getSocietyMoney', function(source, cb, price, job)
-    local society = exports['qb-banking']:GetAccountBalance(job)
+    local society = exports['Renewed-Banking']:getAccountMoney(job)
     if society >= price then
-        exports['qb-banking']:RemoveMoney(job, price)
+        exports['Renewed-Banking']:removeAccountMoney(job, price)
         cb(true)
     else
         cb(false)
     end
 end)
 
-RegisterServerEvent('px_vehicleshopBuyVehicle')
-AddEventHandler('px_vehicleshopBuyVehicle', function(vehicle, price, action, r, g, b, job)
-    printdbg('Prezzo' .. price)
-    local loadFile = LoadResourceFile(GetCurrentResourceName(), "./vehicleSaved.json")
-    if loadFile ~= nil then
-        if Config.RemoveMoneyCompany then
-            exports['qb-banking']:RemoveMoney(job, price)
+local function GetVehicleData(modelName)
+    if not modelName then return nil end
+    for _, vehicle in ipairs(Config.Vehicles) do
+        if vehicle.model == modelName then
+            return vehicle
         end
-        local extract = json.decode(loadFile)
-        if type(extract) == "table" then
-            printdbg(extract)
-            table.insert(extract, { name = vehicle, price = price, job = action, r = r, g = g, b = b })
-            SaveResourceFile(GetCurrentResourceName(), "vehicleSaved.json", json.encode(extract, { indent = true }), -1)
-        else
-            local Table = {}
-            table.insert(Table, { name = vehicle, price = price, job = action, r = r, g = g, b = b })
-            SaveResourceFile(GetCurrentResourceName(), "vehicleSaved.json", json.encode(Table, { indent = true }), -1)
-        end
+    end
+    return nil
+end
+
+RegisterServerEvent('px_vehicleshop:secureBuyVehicle')
+AddEventHandler('px_vehicleshop:secureBuyVehicle', function(vehicleModel, plate, garage)
+    local src = source
+    local xPlayer = QBCore.Functions.GetPlayer(src)
+    
+    if not xPlayer then return end
+    local vehicleData = GetVehicleData(vehicleModel)
+    if not vehicleData then
+        print(string.format("[PX-VEHICLESHOP EXPLOIT] Player %s (CitizenID: %s) tried to buy an invalid vehicle model: %s", xPlayer.PlayerData.name, xPlayer.PlayerData.citizenid, vehicleModel))
+        -- Opsional: Tambahkan kick atau ban di sini jika perlu
+        -- exports.ghmattimysql:execute("INSERT INTO bans (name, license, discord, ip, reason, expire, bannedby) VALUES (@name, @license, @discord, @ip, @reason, @expire, @bannedby)", { ... })
+        return
+    end
+
+    local correctPrice = tonumber(vehicleData.price)
+    local accountType = 'cash' or 'bank'
+
+    if xPlayer.Functions.GetMoney(accountType) >= correctPrice then
+        -- 5. Eksekusi: Kurangi uang dan masukkan mobil ke database
+        xPlayer.Functions.RemoveMoney(accountType, correctPrice, 'vehicle-shop-purchase')
+        
+        MySQL.insert(
+            'INSERT INTO player_vehicles (license, citizenid, vehicle, hash, mods, plate, state, garage) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            {
+                xPlayer.PlayerData.license,
+                xPlayer.PlayerData.citizenid,
+                vehicleData.model, -- Gunakan model yang sudah divalidasi
+                GetHashKey(vehicleData.model),
+                '{}',
+                plate,
+                1,
+                garage
+            },
+            function()
+                TriggerClientEvent('QBCore:Notify', src, "Selamat, Anda telah membeli " .. (vehicleData.name or vehicleData.model) .. "!", "success", 8000)
+            end)
+    else
+        -- Jika uang tidak cukup
+        TriggerClientEvent('QBCore:Notify', src, "Uang Anda tidak cukup untuk membeli kendaraan ini.", "error", 8000)
     end
 end)
 
-RegisterServerEvent('px_vehicleshop:setVehicle')
-AddEventHandler('px_vehicleshop:setVehicle', function(vehicle, plate, garage, price, result)
-    printdbg(source)
-    printdbg(vehicle)
-    printdbg(plate)
-    printdbg(garage)
-    printdbg(price)
-    local _source = source
-    local xPlayer = QBCore.Functions.GetPlayer(_source)
-    print(result)
-    xPlayer.Functions.RemoveMoney(result, price, 'vehicle-bought-in-showroom')
-    local cid = xPlayer.PlayerData.citizenid
-    printdbg(xPlayer.PlayerData.license)
-    MySQL.insert(
-        'INSERT INTO player_vehicles (license, citizenid, vehicle, hash, mods, plate, state, garage) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-        {
-            xPlayer.PlayerData.license,
-            cid,
-            vehicle,
-            GetHashKey(vehicle),
-            '{}',
-            plate,
-            1,
-            garage
-        })
+
+-- ================================================================================
+-- == EVENT AMAN UNTUK DEALER MENYETOK KENDARAAN (PENGGANTI px_vehicleshopBuyVehicle) ==
+-- ================================================================================
+RegisterServerEvent('px_vehicleshop:secureStockVehicle')
+AddEventHandler('px_vehicleshop:secureStockVehicle', function(vehicleModel, action, r, g, b, job)
+    local src = source
+    local xPlayer = QBCore.Functions.GetPlayer(src)
+
+    if not xPlayer then return end
+
+    -- Keamanan Tambahan: Periksa apakah pemain benar-benar memiliki pekerjaan dealer
+    if xPlayer.PlayerData.job.name ~= job or job ~= "cardealer" then
+        print(string.format("[PX-VEHICLESHOP EXPLOIT] Player %s (Job: %s) tried to stock vehicle as a %s.", xPlayer.PlayerData.name, xPlayer.PlayerData.job.name, job))
+        return
+    end
+
+    -- 1. Validasi: Cari data kendaraan di config
+    local vehicleData = GetVehicleData(vehicleModel)
+
+    -- 2. Keamanan: Jika mobil tidak valid, hentikan
+    if not vehicleData then
+        print(string.format("[PX-VEHICLESHOP EXPLOIT] Dealer %s tried to stock an invalid vehicle model: %s", xPlayer.PlayerData.name, vehicleModel))
+        return
+    end
+
+    -- 3. Sumber Kebenaran: Ambil harga dari CONFIG SERVER
+    local correctPrice = tonumber(vehicleData.price)
+    
+    -- 4. Logika Bisnis: Lanjutkan proses pengurangan uang perusahaan & simpan ke JSON
+    if Config.RemoveMoneyCompany then
+        -- Gunakan API yang sesuai untuk mengambil uang dari society/company account
+        -- Contoh: exports['qb-management']:RemoveMoney(job, correctPrice) atau yang sejenisnya
+        -- Note: 'qb-banking' mungkin tidak punya fungsi untuk society, biasanya ada di qb-management atau framework job.
+        -- Sesuaikan baris di bawah ini dengan sistem ekonomi Anda.
+        exports['qb-management']:RemoveMoney(job, correctPrice)
+    end
+
+    local loadFile = LoadResourceFile(GetCurrentResourceName(), "./vehicleSaved.json")
+    local extract = loadFile and json.decode(loadFile) or {}
+    
+    if type(extract) ~= "table" then
+        extract = {}
+    end
+
+    table.insert(extract, { name = vehicleData.model, price = correctPrice, job = action, r = r, g = g, b = b })
+    SaveResourceFile(GetCurrentResourceName(), "vehicleSaved.json", json.encode(extract, { indent = true }), -1)
+    TriggerClientEvent('QBCore:Notify', src, "Anda berhasil menambahkan " .. (vehicleData.name or vehicleData.model) .. " ke stok.", "success")
 end)
 
 RegisterServerEvent('px_vehicleshop:SellVehicle')
@@ -112,7 +166,7 @@ end)
 RegisterServerEvent('px_vehicleshop:returnVehicle')
 AddEventHandler('px_vehicleshop:returnVehicle', function(vehicle, price, k, value)
     local returnPrice = price * 50 / 100
-    exports['qb-banking']:AddMoney(value, returnPrice)
+    exports['Renewed-Banking']:addAccountMoney(value, returnPrice)
     local loadFile = LoadResourceFile(GetCurrentResourceName(), "./vehicleSaved.json ")
     if loadFile ~= nil then
         local extract = json.decode(loadFile)

@@ -21,3 +21,7 @@ SetRelationshipBetweenGroups(1, `FIREMAN`, `PLAYER`)
 SetRelationshipBetweenGroups(1, `MEDIC`, `PLAYER`)
 SetRelationshipBetweenGroups(1, `COP`, `PLAYER`)
 SetRelationshipBetweenGroups(1, `PRISONER`, `PLAYER`)
+
+CreateThread(function ()
+    AddTextEntry('PM_PANE_CFX', 'TITIK KUMPUL ROLEPLAY')
+end)

@@ -1,7 +1,7 @@
 QBConfig = {}
 
 QBConfig.MaxPlayers = GetConvarInt('sv_maxclients', 48) -- Gets max players from config file, default 48
-QBConfig.DefaultSpawn = vector4(-1035.71, -2731.87, 12.86, 0.0)
+QBConfig.DefaultSpawn = vector4(-1037.6, -2737.66, 20.17, 331.83)
 QBConfig.UpdateInterval = 5                             -- how often to update player data in minutes
 QBConfig.StatusInterval = 5000                          -- how often to check hunger/thirst status in milliseconds
 

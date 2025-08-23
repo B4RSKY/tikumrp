@@ -92,15 +92,20 @@ RegisterNetEvent('qb-multicharacter:server:loadUserData', function(cData)
         repeat
             Wait(10)
         until hasDonePreloading[src]
-        print('^2[qb-core]^7 '..GetPlayerName(src)..' (Citizen ID: '..cData.citizenid..') has succesfully loaded!')
         QBCore.Commands.Refresh(src)
         loadHouseData(src)
         TriggerClientEvent('apartments:client:setupSpawnUI', src, cData)
         local name = GetPlayerName(src)
         local identifier = QBCore.Functions.GetIdentifier(src, 'steam') or 'undefined'
         local cid = cData.citizenid
-        local dc = "**@"..(QBCore.Functions.GetIdentifier(src, 'discord'):gsub("discord:", "") or "unknown")
-        local isi = '**'..name..'** is connecting to the server \n\n **Player: '..name..'**\n **`🎮` Steam Hex**: `'..identifier..'\n`🎮` **NIK**: `'..cid..'`\n`🎮`**Discord**: '..dc..""
+        local dc = "@"..(QBCore.Functions.GetIdentifier(src, 'discord'):gsub("discord:", "") or "unknown")
+        local isi = ('**%s** is connecting to the server \n\n' ..
+            '**Player**: **%s**\n' ..
+            '**`🎮` Steam Hex**: `%s`\n' ..
+            '**`📖` NIK**: `%s`\n' ..
+            '**`💻` Discord**: `%s`'
+        ):format(name, name, identifier, cid, dc)
+
         TriggerEvent('qb-log:server:CreateLog', 'join', 'Player Join', 'green', isi, false)
     end
 end)
@@ -117,14 +122,12 @@ RegisterNetEvent('qb-multicharacter:server:createCharacter', function(data)
         if data.isNew then
             local randbucket = (GetPlayerPed(src) .. math.random(1,999))
             SetPlayerRoutingBucket(src, randbucket)
-            print('^2[qb-core]^7 '..GetPlayerName(src)..' has succesfully loaded!')
             QBCore.Commands.Refresh(src)
             loadHouseData(src)
             TriggerClientEvent("qb-multicharacter:client:closeNUI", src)
             TriggerClientEvent('apartments:client:setupSpawnUI', src, newData)
             GiveStarterItems(src)
         else
-            print('^2[qb-core]^7 '..GetPlayerName(src)..' has succesfully loaded!')
             QBCore.Commands.Refresh(src)
             loadHouseData(src)
             TriggerClientEvent("qb-multicharacter:client:closeNUIdefault", src)

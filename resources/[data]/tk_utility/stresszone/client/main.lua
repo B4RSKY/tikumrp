@@ -4,20 +4,6 @@ local PlayerData = {}
 local stressZones = {}
 local inZone = false
 
-if Config.EnableBlips then
-    for _, data in pairs(Config.Zones) do
-        local stressBlips = AddBlipForCoord(data.blip)
-        SetBlipSprite(stressBlips, 311)
-        SetBlipDisplay(stressBlips, 4)
-        SetBlipScale(stressBlips, 0.7)
-        SetBlipColour(stressBlips, 23)
-        SetBlipAsShortRange(stressBlips, true)
-        BeginTextCommandSetBlipName('STRING')
-        AddTextComponentString('Relax Zone')
-        EndTextCommandSetBlipName(stressBlips)
-    end
-end
-
 local function isValidAnim()
     for _, anim in ipairs(Config.Animations) do
         if IsEntityPlayingAnim(cache.ped, anim[1], anim[2], 3) then
@@ -46,10 +32,9 @@ local function stressLoop()
     CreateThread(function()
         while inZone do
             Wait(Config.Timer)
-            if inZone then -- check to make sure we're still in zone after timer.
+            if inZone then
                 if isValidAnim() or isValidScenario() and PlayerData.metadata.stress > 0 then
-                    TriggerServerEvent('hud:server:RelieveStress', math.random(1,2))
-                    print('relax')
+                    TriggerServerEvent('hud:server:RelieveStress', math.random(5, 10))
                 end
             end
         end

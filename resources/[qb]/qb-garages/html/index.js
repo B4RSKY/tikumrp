@@ -578,7 +578,7 @@ function clFunc(name1, name2, name3, name4, name5, name6, name7, name8, name9, n
 			var xhr = new XMLHttpRequest();
 			xhr.open("POST", `https://${resourceName}/callback`, true);
 			xhr.setRequestHeader('Content-Type', 'application/json');
-			xhr.send(JSON.stringify({action: "takeOutDepo", data: choosedVehData}));
+			xhr.send(JSON.stringify({action: "takeDepotVehicle", data: choosedVehData}));
 			garageOpen = false;
 			document.getElementById("bgEffect").style.display = "none";
 			document.getElementById("mainDiv").style.display = "none";

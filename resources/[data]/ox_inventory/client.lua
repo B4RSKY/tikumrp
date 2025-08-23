@@ -1691,69 +1691,60 @@ local function isGiveTargetValid(ped, coords)
 end
 
 RegisterNUICallback('giveItem', function(data, cb)
-	cb(1)
-
+    cb(1)
     if usingItem then return end
 
-	if client.giveplayerlist then
-		local nearbyPlayers = lib.getNearbyPlayers(GetEntityCoords(playerPed), 3.0)
+    if client.giveplayerlist then
+        local playerCoords = GetEntityCoords(playerPed)
+        local nearbyPlayers = lib.getNearbyPlayers(playerCoords, 3.0)
         local nearbyCount = #nearbyPlayers
-
-		if nearbyCount == 0 then return end
+        if nearbyCount == 0 then return end
 
         if nearbyCount == 1 then
-			local option = nearbyPlayers[1]
-
+            local option = nearbyPlayers[1]
             if not isGiveTargetValid(option.ped, option.coords) then return end
-
             return giveItemToTarget(GetPlayerServerId(option.id), data.slot, data.count)
         end
 
-        local giveList, n = {}, 0
-
-		for i = 1, #nearbyPlayers do
-			local option = nearbyPlayers[i]
-
+        local options, n = {}, 0
+        for i = 1, nearbyCount do
+            local option = nearbyPlayers[i]
             if isGiveTargetValid(option.ped, option.coords) then
-				local playerName = GetPlayerName(option.id)
-				option.id = GetPlayerServerId(option.id)
-                ---@diagnostic disable-next-line: inject-field
-				option.label = ('[%s] %s'):format(option.id, playerName)
-				n += 1
-				giveList[n] = option
-			end
-		end
-
+                local svId = GetPlayerServerId(option.id)
+                local playerName = GetPlayerName(option.id)
+                n = n + 1
+                options[n] = {
+                    title = ('[%s] %s'):format(svId, playerName),
+                    icon = 'user',
+                    onSelect = function()
+                        giveItemToTarget(svId, data.slot, data.count)
+                    end
+                }
+            end
+        end
         if n == 0 then return end
 
-		lib.registerMenu({
-			id = 'ox_inventory:givePlayerList',
-			title = 'Give item',
-			options = giveList,
-		}, function(selected)
-            giveItemToTarget(giveList[selected].id, data.slot, data.count)
-        end)
-
-		return lib.showMenu('ox_inventory:givePlayerList')
-	end
-
+        lib.registerContext({
+            id = 'ox_inventory:givePlayerList',
+            title = 'Give item',
+            options = options
+        })
+        return lib.showContext('ox_inventory:givePlayerList')
+    end
     if cache.vehicle then
-		local seats = GetVehicleMaxNumberOfPassengers(cache.vehicle) - 1
-
-		if seats >= 0 then
-			local passenger = GetPedInVehicleSeat(cache.vehicle, cache.seat - 2 * (cache.seat % 2) + 1)
-
-			if passenger ~= 0 and IsEntityVisible(passenger) then
+        local seats = GetVehicleMaxNumberOfPassengers(cache.vehicle) - 1
+        if seats >= 0 then
+            local passenger = GetPedInVehicleSeat(cache.vehicle, cache.seat - 2 * (cache.seat % 2) + 1)
+            if passenger ~= 0 and IsEntityVisible(passenger) then
                 return giveItemToTarget(GetPlayerServerId(NetworkGetPlayerIndexFromPed(passenger)), data.slot, data.count)
-			end
-		end
-
+            end
+        end
         return
-	end
+    end
 
     local entity = Utils.Raycast(1|2|4|8|16, GetOffsetFromEntityInWorldCoords(cache.ped, 0.0, 3.0, 0.5), 0.2)
-
-    if entity and IsPedAPlayer(entity) and IsEntityVisible(entity) and #(GetEntityCoords(playerPed, true) - GetEntityCoords(entity, true)) < 3.0 then
+    if entity and IsPedAPlayer(entity) and IsEntityVisible(entity)
+        and #(GetEntityCoords(playerPed, true) - GetEntityCoords(entity, true)) < 3.0 then
         return giveItemToTarget(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)), data.slot, data.count)
     end
 end)

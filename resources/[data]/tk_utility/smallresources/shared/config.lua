@@ -44,18 +44,18 @@ Config.AIResponse = {
 -- To Set This Up visit https://forum.cfx.re/t/how-to-updated-discord-rich-presence-custom-image/157686
 Config.Discord = {
     isEnabled = true,                                     -- If set to true, then discord rich presence will be enabled
-    applicationId = '1380581788270858351',                   -- The discord application id
-    iconLarge = 'bahtera_logo',                               -- The name of the large icon
-    iconLargeHoverText = 'BAHTERA ROLEPLAY', -- The hover text of the large icon
+    applicationId = '1405879010650624071',                   -- The discord application id
+    iconLarge = 'tikumrp',                               -- The name of the large icon
+    iconLargeHoverText = 'TITIK KUMPUL ROLEPLAY', -- The hover text of the large icon
     iconSmall = '',                         -- The name of the small icon
     iconSmallHoverText = '', -- The hover text of the small icon
     updateRate = 60000,                                    -- How often the player count should be updated
-    showPlayerCount = true,                                -- If set to true the player count will be displayed in the rich presence
+    showPlayerCount = false,                                -- If set to true the player count will be displayed in the rich presence
     maxPlayers = 64,                                       -- Maximum amount of players
     buttons = {
         {
             text = 'DISCORD',
-            url = 'https://discord.gg/V7jqC3CXy7'
+            url = 'https://discord.gg/a9SPzgegrp'
         }
     }
 }

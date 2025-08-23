@@ -1,9 +1,5 @@
 fx_version 'cerulean'
 game 'gta5'
-
-author 'mfhasib'
-description 'Admin Menu'
-
 ui_page "nui/index.html"
 
 shared_scripts {
@@ -44,10 +40,4 @@ exports {
 server_exports {
     'CreateLog'
 } 
-
-dependencies {
-    'oxmysql',
-    'qb-core'
-}
-
 lua54 'yes'

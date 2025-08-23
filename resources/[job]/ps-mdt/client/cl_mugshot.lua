@@ -178,6 +178,7 @@ local function DestoryCamera()
     createdCamera = 0
 end
 
+-- client
 RegisterNetEvent('cqc-mugshot:client:trigger', function()
     ped = PlayerPedId()
     pedcoords = GetEntityCoords(ped)
@@ -207,27 +208,8 @@ RegisterNetEvent('cqc-mugshot:client:trigger', function()
 end)
 
 RegisterNUICallback("sendToJail", function(data, cb)
-    QBCore.Functions.TriggerCallback('ps-mdt:server:MugShotWebhook', function(webhookUrl, apiKey)
-        local webhookUrl = Config.MugShotWebhook and webhookUrl or 'https://api.fivemerr.com/v1/media/images'
-        if webhookUrl ~= '' then
-            local citizenId, sentence = data.citizenId, data.sentence
-
-            -- Gets the player id from the citizenId
-            local p = promise.new()
-            QBCore.Functions.TriggerCallback('mdt:server:GetPlayerSourceId', function(result)
-                p:resolve(result)
-            end, citizenId)
-        
-            local targetSourceId = Citizen.Await(p)
-        
-            if sentence > 0 then
-                if Config.UseCQCMugshot then
-                    TriggerServerEvent('cqc-mugshot:server:triggerSuspect', targetSourceId)
-                end
-                Citizen.Wait(5000)
-                -- Uses qb-policejob JailPlayer event
-                TriggerServerEvent("police:server:JailPlayer", targetSourceId, sentence)
-            end
-        end
-    end)
+    if data.citizenId and data.sentence and data.sentence > 0 then
+        TriggerServerEvent('sky-mdt:server:requestJail', data.citizenId, data.sentence)
+    end
+    cb('ok') 
 end)

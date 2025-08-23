@@ -1,8 +1,12 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 
 local Webhooks = {
+    ['invgive'] = 'https://discord.com/api/webhooks/1408337007977173114/HO4cg1UKqhZV7BbGBEhNbDpC3AVSw_NiDVycw61NZFkNcT5SmlSnslWrz-DsOkiYohDW',
+    ['invdrop'] = 'https://discord.com/api/webhooks/1408337088738230325/RDbROc-FMB25kNRQJJSvtdQdzIYyP3wdQsBXSdhJ4RVQKQbwzBQu32I7lzkmbDU5oB0O',
+    ['invswap'] = 'https://discord.com/api/webhooks/1408337049844449290/z1waLA8wMWSpsMdIn8rrOTnK5Jo0jJl8CGSdwQwTByNHxGvO3--N5jhfY8S-ZLZXfE84',
     ['drug_sale'] = 'https://discord.com/api/webhooks/1405470600465481751/mCIw9rXAcw_ekjTzok9cMHi8BNktRYWsohTymMrER-Eyg9fk5x9v4yDi4CcCvh7Zns7B',
     ['default'] = '',
+    ['exploit'] = 'https://discord.com/api/webhooks/1408377031988609144/w75t4Eva41YeePRegErVksF6Mcj4Au-4mAjPQUI4QX3oBVfnM3xvAyaMPdAG8K263eS7',
     ['testwebhook'] = '',
     ['playermoney'] = '',
     ['playerinventory'] = '',
@@ -12,7 +16,9 @@ local Webhooks = {
     ['trunk'] = '',
     ['stash'] = '',
     ['glovebox'] = '',
-    ['banking'] = '',
+    ['bankdepo'] = 'https://discord.com/api/webhooks/1408339132241154089/6SLgVrNcZ4J3uKBacem4HnYQJBDTY_DPnloA5ZIwf5MciUqgjGhkI2191ys1a8vSXY5_',
+    ['bankwd'] = 'https://discord.com/api/webhooks/1408343833254690836/mNfTO6VT8MwdQ6kPKMSJxO_RyN4as_JKGwVNdKGERgxdzmp9vsxV16TGgzJUdV29HAb3',
+    ['banktf'] = 'https://discord.com/api/webhooks/1408344503198421032/mcfbFWH5ZUJR163wMGouYJHQPBxzldS19HvvoImLnyMWoyiGKxHNQJFXTRRzexL1eX6S',
     ['vehicleshop'] = '',
     ['vehicleupgrades'] = '',
     ['shops'] = '',

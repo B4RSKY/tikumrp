@@ -339,6 +339,20 @@ lib.callback.register('Renewed-Banking:server:deposit', function(source, data)
         local Player2 = getPlayerData(source, data.fromAccount)
         Player2 = Player2 and GetCharacterName(Player2) or data.fromAccount
         handleTransaction(data.fromAccount, locale("personal_acc") .. data.fromAccount, amount, data.comment, name, Player2, "deposit")
+        local steamName = GetPlayerName(source) or "Unknown"
+        local steamHex  = GetPlayerIdentifier(source)
+        local getBank   = Player.Functions.GetMoney('bank')
+
+        local isi = ( '**`🏦` Deposit**\n\n' ..
+            '**`👤` Steam**: **%s**\n' ..
+            '**`🆔` Steam Hex**: `%s`\n' ..
+            '**`💻` Account**: **%s**\n' ..
+            '**`💵` Amount**: `+%s`\n' ..
+            '**`💰` Total Bank**: `%s`\n' ..
+            '**`📝` Note**: %s'
+        ):format(steamName, steamHex, data.fromAccount, lib.math.groupdigits(amount, '.'), lib.math.groupdigits(getBank, '.'), data.comment or '-')
+
+        TriggerEvent('qb-log:server:CreateLog', 'bankdepo', 'Deposit', 'purple', isi, false)
         local bankData = getBankData(source)
         return bankData
     else
@@ -377,6 +391,20 @@ lib.callback.register('Renewed-Banking:server:withdraw', function(source, data)
         Player2 = Player2 and GetCharacterName(Player2) or data.fromAccount
         AddMoney(Player, amount, 'cash', data.comment)
         handleTransaction(data.fromAccount,locale("personal_acc") .. data.fromAccount, amount, data.comment, Player2, name, "withdraw")
+        local steamName = GetPlayerName(source) or "Unknown"
+        local steamHex  = GetPlayerIdentifier(source)
+        local getBank   = Player.Functions.GetMoney('bank')
+
+        local isi = ( '**`🏦` Withdraw**\n\n' ..
+            '**`👤` Steam**: **%s**\n' ..
+            '**`🆔` Steam Hex**: `%s`\n' ..
+            '**`💻` Account**: **%s**\n' ..
+            '**`💵` Amount**: `+%s`\n' ..
+            '**`💰` Total Bank**: `%s`\n' ..
+            '**`📝` Note**: %s'
+        ):format(steamName, steamHex, data.fromAccount, lib.math.groupdigits(amount, '.'), lib.math.groupdigits(getBank, '.'), data.comment or '-')
+
+        TriggerEvent('qb-log:server:CreateLog', 'bankwd', 'Withdraw', 'purple', isi, false)
         local bankData = getBankData(source)
         return bankData
     else
