@@ -52,8 +52,8 @@ Config.Garages = {
                 vector2(-475.90774536133, -1070.6335449219),
                 vector2(-486.73031616211, -1070.7386474609)
             },
-                minZ = 22.589159011841,
-                maxZ = 22.589159011841
+                minZ = 20.589159011841,
+                maxZ = 26.589159011841
         },
         spawnPoint = {
             vector4(-484.77, -1069.34, 22.59, 351.08),
@@ -77,8 +77,8 @@ Config.Garages = {
                 vector2(-1795.8017578125, -1167.3311767578),
                 vector2(-1800.3023681641, -1173.12109375)
             },
-                minZ = 22.589159011841,
-                maxZ = 22.589159011841
+                minZ = 15.589159011841,
+                maxZ = 11.589159011841
         },
         spawnPoint = {
             vector4(-1795.35, -1172.49, 13.02, 262.62),
@@ -101,8 +101,8 @@ Config.Garages = {
                 vector2(-898.58984375, -2069.7419433594),
                 vector2(-891.03607177734, -2062.109375)
             },
-            minZ = 9.2994222640991,
-            maxZ = 9.2994222640991
+            minZ = 7.2994222640991,
+            maxZ = 13.2994222640991
         },
         spawnPoint = {
             vector4(-894.23, -2061.47, 9.3, 44.5),
@@ -126,14 +126,64 @@ Config.Garages = {
                 vector2(-416.19934082031, 1207.2524414062),
                 vector2(-409.32995605469, 1205.3203125)
             },
-            minZ = 325.64172363281,
-            maxZ = 325.66644287109
+            minZ = 324.64172363281,
+            maxZ = 329.66644287109
         },
         spawnPoint = {
             vector4(-413.75, 1202.32, 325.64, 166.19)
         },
         showBlip = true,
         blipName = 'Garasi E',
+        blipNumber = 357,
+        blipColor = 38,
+        type = 'public',
+        category = Config.VehicleClass['car']
+    },
+    garasi_f = {
+        label = 'Garasi F',
+        takeVehicle = vector3(117.19, -433.72, 40.33),
+        zone = {
+            shape = {
+                vector2(121.47467803955, -429.34176635742),
+                vector2(116.33910369873, -427.42654418945),
+                vector2(112.41915893555, -438.10437011719),
+                vector2(117.70240020752, -440.04818725586)
+            },
+            minZ = 38.325313568115,
+            maxZ = 44.325313568115
+        },
+        spawnPoint = {
+            vector4(118.28, -430.03, 40.33, 74.86),
+            vector4(117.19, -433.72, 40.33, 75.81),
+            vector4(115.91, -437.1, 40.33, 67.2)
+        },
+        showBlip = true,
+        blipName = 'Garasi F',
+        blipNumber = 357,
+        blipColor = 38,
+        type = 'public',
+        category = Config.VehicleClass['car']
+    },
+    garasi_g = {
+        label = 'Garasi G',
+        takeVehicle = vector3(1715.33, 3597.75, 35.22),
+        zone = {
+            shape = {
+                vector2(1719.9350585938, 3594.33984375),
+                vector2(1714.1715087891, 3590.9897460938),
+                vector2(1709.0634765625, 3598.9345703125),
+                vector2(1715.5046386719, 3602.919921875)
+            },
+            minZ = 33.363189697266,
+            maxZ = 39.412441253662
+        },
+        spawnPoint = {
+            vector4(1715.33, 3597.75, 35.22, 117.94),
+            vector4(1713.16, 3600.46, 35.2, 133.98),
+            vector4(1717.57, 3594.27, 35.28, 122.46)
+        },
+        showBlip = true,
+        blipName = 'Garasi G',
         blipNumber = 357,
         blipColor = 38,
         type = 'public',
