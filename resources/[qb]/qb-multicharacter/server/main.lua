@@ -27,34 +27,34 @@ local function GiveStarterItems(source)
 end
 
 local function loadHouseData(src)
-    local HouseGarages = {}
-    local Houses = {}
-    local result = MySQL.query.await('SELECT * FROM houselocations', {})
-    if result[1] ~= nil then
-        for _, v in pairs(result) do
-            local owned = false
-            if tonumber(v.owned) == 1 then
-                owned = true
-            end
-            local garage = v.garage ~= nil and json.decode(v.garage) or {}
-            Houses[v.name] = {
-                coords = json.decode(v.coords),
-                owned = owned,
-                price = v.price,
-                locked = true,
-                adress = v.label,
-                tier = v.tier,
-                garage = garage,
-                decorations = {},
-            }
-            HouseGarages[v.name] = {
-                label = v.label,
-                takeVehicle = garage,
-            }
-        end
-    end
-    TriggerClientEvent("qb-garages:client:houseGarageConfig", src, HouseGarages)
-    TriggerClientEvent("qb-houses:client:setHouseConfig", src, Houses)
+    -- local HouseGarages = {}
+    -- local Houses = {}
+    -- local result = MySQL.query.await('SELECT * FROM houselocations', {})
+    -- if result[1] ~= nil then
+    --     for _, v in pairs(result) do
+    --         local owned = false
+    --         if tonumber(v.owned) == 1 then
+    --             owned = true
+    --         end
+    --         local garage = v.garage ~= nil and json.decode(v.garage) or {}
+    --         Houses[v.name] = {
+    --             coords = json.decode(v.coords),
+    --             owned = owned,
+    --             price = v.price,
+    --             locked = true,
+    --             adress = v.label,
+    --             tier = v.tier,
+    --             garage = garage,
+    --             decorations = {},
+    --         }
+    --         HouseGarages[v.name] = {
+    --             label = v.label,
+    --             takeVehicle = garage,
+    --         }
+    --     end
+    -- end
+    -- TriggerClientEvent("qb-garages:client:houseGarageConfig", src, HouseGarages)
+    -- TriggerClientEvent("qb-houses:client:setHouseConfig", src, Houses)
 end
 
 -- Commands
@@ -94,7 +94,16 @@ RegisterNetEvent('qb-multicharacter:server:loadUserData', function(cData)
         until hasDonePreloading[src]
         QBCore.Commands.Refresh(src)
         loadHouseData(src)
-        TriggerClientEvent('apartments:client:setupSpawnUI', src, cData)
+        if Config.SkipSelection then
+            local coords = json.decode(cData.position)
+            TriggerClientEvent('qb-multicharacter:client:spawnLastLocation', src, coords, cData)
+        else
+            if GetResourceState('qb-apartments') == 'started' then
+                TriggerClientEvent('apartments:client:setupSpawnUI', src, cData)
+            else
+                TriggerClientEvent('Housing:client:SetupSpawnUI', src, cData)
+            end
+        end
         local name = GetPlayerName(src)
         local identifier = QBCore.Functions.GetIdentifier(src, 'steam') or 'undefined'
         local cid = cData.citizenid
@@ -119,18 +128,24 @@ RegisterNetEvent('qb-multicharacter:server:createCharacter', function(data)
         repeat
             Wait(10)
         until hasDonePreloading[src]
-        if data.isNew then
-            local randbucket = (GetPlayerPed(src) .. math.random(1,999))
+        if GetResourceState('qb-apartments') == 'started' and Apartments.Starting then
+            local randbucket = (GetPlayerPed(src) .. math.random(1, 999))
             SetPlayerRoutingBucket(src, randbucket)
+            print('^2[qb-core]^7 ' .. GetPlayerName(src) .. ' has successfully loaded!')
             QBCore.Commands.Refresh(src)
             loadHouseData(src)
-            TriggerClientEvent("qb-multicharacter:client:closeNUI", src)
+            TriggerClientEvent('qb-multicharacter:client:closeNUI', src)
             TriggerClientEvent('apartments:client:setupSpawnUI', src, newData)
             GiveStarterItems(src)
         else
+            print('^2[qb-core]^7 ' .. GetPlayerName(src) .. ' has successfully loaded!')
             QBCore.Commands.Refresh(src)
             loadHouseData(src)
-            TriggerClientEvent("qb-multicharacter:client:closeNUIdefault", src)
+            local player = QBCore.Functions.GetPlayer(src)
+            newData.citizenid = player.PlayerData.citizenid
+            Wait(100)
+            TriggerClientEvent('Housing:client:SetupSpawnUI', src, newData, true)
+            TriggerClientEvent('qb-multicharacter:client:closeNUI', src)
             GiveStarterItems(src)
         end
     end

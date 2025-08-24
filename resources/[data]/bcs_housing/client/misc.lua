@@ -64,7 +64,7 @@ RegisterNetEvent('Housing:client:SetupSpawnUI', function(cData, new)
                     }
                 end
                 TriggerEvent('qb-spawn:client:setupSpawns', cData, new, data, Config.UseStarterApartment)
-                TriggerEvent('qb-spawn:client:openUI', false)
+                TriggerEvent('qb-spawn:client:openUI', true)
             else
                 StarterApartmentMenu(appartments)
             end
@@ -72,8 +72,7 @@ RegisterNetEvent('Housing:client:SetupSpawnUI', function(cData, new)
     elseif cData then
         if IsResourceStarted('qb-spawn') or IsResourceStarted('qbx_spawn') then
             TriggerEvent('qb-spawn:client:setupSpawns', cData, new, nil, Config.UseStarterApartment)
-            TriggerEvent('qb-spawn:client:openUI', false)
-            TriggerEvent('qb-spawn:client:isNew')
+            TriggerEvent('qb-spawn:client:openUI', true)
         end
     end
     TriggerEvent('um-spawn:client:startSpawnUI', true)

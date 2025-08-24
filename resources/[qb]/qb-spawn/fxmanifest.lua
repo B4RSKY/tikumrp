@@ -23,8 +23,8 @@ server_scripts {
 ui_page 'html/index.html'
 
 files {
-    'html/index.html',
     'html/images/*.png',
+    'html/index.html',
     'html/style.css',
     'html/vue.js',
     'html/reset.css'
