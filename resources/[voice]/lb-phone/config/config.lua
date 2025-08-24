@@ -89,8 +89,8 @@ Config.Item.Inventory = "auto" --[[
 
 Config.ServerSideSpawn = false -- should entities be spawned on the server? (phone prop, vehicles)
 
-Config.PhoneModel = `lb_phone_prop` -- the prop of the phone, if you want to use a custom phone model, you can change this here
-Config.PhoneRotation = vector3(0.0, 0.0, 180.0) -- the rotation of the phone when attached to a player
+Config.PhoneModel = `prop_phone_ing_03` -- the prop of the phone, if you want to use a custom phone model, you can change this here
+Config.PhoneRotation = vector3(0.0, 0.0, 0.0) -- the rotation of the phone when attached to a player
 Config.PhoneOffset = vector3(0.0, -0.005, 0.0) -- the offset of the phone when attached to a player
 
 Config.DisableOpenNUI = false -- disable the phone from opening if another script has NUI focus?
