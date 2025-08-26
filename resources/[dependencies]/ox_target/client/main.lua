@@ -200,17 +200,13 @@ RegisterNUICallback('submenuSelect', function(data, cb)
     
     local originalOption = nil
     if targetType == "zones" then
-        if nearbyZones and nearbyZones[zoneId] then
-            if nearbyZones[zoneId].options then
-                originalOption = nearbyZones[zoneId].options[targetId] or nearbyZones[zoneId].options[targetId - 1]
-                if nearbyZones[zoneId].options[targetId] then
-                elseif nearbyZones[zoneId].options[targetId - 1] then
-                end
-            else
-            end
+        if nearbyZones and nearbyZones[zoneId] and nearbyZones[zoneId].options then
+            originalOption = nearbyZones[zoneId].options[targetId]
         end
     else
-        originalOption = currentTarget[targetType][targetId]
+        if options and options[targetType] then
+            originalOption = options[targetType][targetId]
+        end
     end
     
     if originalOption then
