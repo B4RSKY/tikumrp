@@ -116,7 +116,7 @@ local function CreateZone(index, garage, zoneType)
         name = zoneType .. '_' .. index,
         minZ = garage.zone.minZ,
         maxZ = garage.zone.maxZ,
-        debugPoly = true,
+        debugPoly = false,
         data = {
             indexgarage = index,
             type = garage.type,
@@ -151,7 +151,7 @@ local function CreateBlipsZones()
         end
     end
 
-    local comboZone = ComboZone:Create(garageZones, { name = 'garageCombo', debugPoly = true })
+    local comboZone = ComboZone:Create(garageZones, { name = 'garageCombo', debugPoly = false })
 
     comboZone:onPlayerInOut(function(isPointInside, _, zone)
         if isPointInside then
@@ -358,7 +358,7 @@ local houseComboZones = nil
 local function CreateHouseZone(index, garage, zoneType)
     local houseZone = CircleZone:Create(garage.takeVehicle, 5.0, {
         name = zoneType .. '_' .. index,
-        debugPoly = true,
+        debugPoly = false,
         useZ = true,
         data = {
             indexgarage = index,
@@ -371,7 +371,7 @@ local function CreateHouseZone(index, garage, zoneType)
         houseGarageZones[#houseGarageZones + 1] = houseZone
 
         if not houseComboZones then
-            houseComboZones = ComboZone:Create(houseGarageZones, { name = 'houseComboZones', debugPoly = true })
+            houseComboZones = ComboZone:Create(houseGarageZones, { name = 'houseComboZones', debugPoly = false })
         else
             houseComboZones:AddZone(houseZone)
         end
