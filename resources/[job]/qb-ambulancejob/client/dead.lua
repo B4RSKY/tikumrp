@@ -98,6 +98,16 @@ local function DrawTxt(x, y, width, height, scale, text, r, g, b, a, _)
     EndTextCommandDisplayText(x - width / 2, y - height / 2 + 0.005)
 end
 
+RegisterNetEvent('hospital:client:SetDead')
+AddEventHandler('hospital:client:SetDead', function(isDeadStatus)
+    isDead = isDeadStatus
+    if not isDeadStatus then
+        local playerPed = PlayerPedId()
+        ClearPedTasks(playerPed)
+        SetEntityInvincible(playerPed, false)
+    end
+end)
+
 -- Damage Handler
 local BulletAmmoTypes = {
   AMMO_PISTOL   = true,

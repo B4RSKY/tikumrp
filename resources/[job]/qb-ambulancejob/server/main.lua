@@ -291,6 +291,10 @@ RegisterNetEvent('qb-ambulancejob:server:stash', function()
 	exports['qb-inventory']:OpenInventory(src, stashName)
 end)
 
+RegisterServerEvent('tk_ambulance:requestCPR')
+AddEventHandler('tk_ambulance:requestCPR', function(target, playerheading, playerCoords, playerlocation)
+    TriggerClientEvent("tk_ambulance:playCPR", target, playerheading, playerCoords, playerlocation)
+end)
 -- Callbacks
 
 QBCore.Functions.CreateCallback('hospital:GetDoctors', function(_, cb)

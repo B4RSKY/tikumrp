@@ -45,14 +45,6 @@ Config.Locations = {                -- Edit the various interaction points for p
         vector3(311.18, -599.25, 43.29),
         vector3(-254.88, 6324.5, 32.58), -- paleto
     },
-    ['vehicle'] = {
-        vector4(294.578, -574.761, 43.179, 35.79),
-        vector4(-234.28, 6329.16, 32.15, 222.5), -- paleto
-    },
-    ['helicopter'] = {
-        vector4(351.58, -587.45, 74.16, 160.5),
-        vector4(-475.43, 5988.353, 31.716, 31.34), -- paleto
-    },
     ['roof'] = {
         vector4(338.5, -583.85, 74.16, 245.5),
     },
@@ -109,12 +101,6 @@ Config.Locations = {                -- Edit the various interaction points for p
     },
     ['stations'] = {
         { label = Lang:t('info.pb_hospital'), coords = vector3(304.27, -600.33, 43.28) }
-    }
-}
-
-Config.AuthorizedVehicles = { -- Grade is key, don't add same vehicle in multiple grades. Higher rank can see lower
-    [0] = {
-        ['ambulance'] = 'Ambulance'
     }
 }
 
@@ -437,41 +423,6 @@ Config.Weapons = { -- Correspond weapon names to their class number
     [`WEAPON_EXHAUSTION`] = Config.WeaponClasses['SUFFOCATING'],          -- Exhaust
     [`WEAPON_BZGAS`] = Config.WeaponClasses['SUFFOCATING'],
     [`WEAPON_SMOKEGRENADE`] = Config.WeaponClasses['SUFFOCATING'],
-}
-
-Config.VehicleSettings = { -- Enable or disable vehicle extras when pulling them from the ambulance job vehicle spawner
-    ['car1'] = {           -- Model name
-        ['extras'] = {
-            ['1'] = false, -- on/off
-            ['2'] = true,
-            ['3'] = true,
-            ['4'] = true,
-            ['5'] = true,
-            ['6'] = true,
-            ['7'] = true,
-            ['8'] = true,
-            ['9'] = true,
-            ['10'] = true,
-            ['11'] = true,
-            ['12'] = true,
-        }
-    },
-    ['car2'] = {
-        ['extras'] = {
-            ['1'] = false,
-            ['2'] = true,
-            ['3'] = true,
-            ['4'] = true,
-            ['5'] = true,
-            ['6'] = true,
-            ['7'] = true,
-            ['8'] = true,
-            ['9'] = true,
-            ['10'] = true,
-            ['11'] = true,
-            ['12'] = true,
-        }
-    }
 }
 
 --AiMedis

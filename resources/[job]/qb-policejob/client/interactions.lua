@@ -440,16 +440,13 @@ local function escortPlayer(ped, id)
         id = NetworkGetPlayerIndexFromPed(ped)
     end
 
-    print('tes')
-    TriggerServerEvent('tk-job:setPlayerEscort', GetPlayerServerId(id), not IsEntityAttachedToEntity(ped, cache.ped))
-    print(GetPlayerServerId(id))
+    TriggerServerEvent('tk_job:setPlayerEscort', GetPlayerServerId(id), not IsEntityAttachedToEntity(ped, cache.ped))
 end
 
-local IsPedCuffed = IsPedCuffed
 local IsEntityAttachedToEntity = IsEntityAttachedToEntity
 
 AddEventHandler('tk-job:seret', function()
-    local playerPed = lib.getClosestPlayer(GetEntityCoords(cache.ped), 2.5, false)
+    local playerPed = lib.getClosestPlayer(GetEntityCoords(cache.ped), 3.5, false)
     if not playerPed then QBCore.Functions.Notify("Info", "Tidak ada orang disekitar.", "error") return end
     escortPlayer(playerPed)
 end)
