@@ -5,7 +5,7 @@ return {
             mode = 'fixed',
             fixedModel = 'asea',
             randomPool = { 'asea', 'blista', 'panto' },
-            garage = 'pillbox',
+            garage = 'garasi_a',
             spawnVehicle = true,
             stateOnRegister = 1,
             SpawnPoint = vec4(-1037.37, -2726.46, 20.15, 232.96),
