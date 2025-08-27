@@ -43,7 +43,7 @@ local function jobCenter()
                 TriggerServerEvent('tk-jobs:duty', cache.serverId, true)
                 lib.notify({ title = 'DISNAKER', description = 'ON DUTY! Selamat Bekerja', type = 'info', duration = 3500})
             end,
-            canInteract = function(entity) return QBCore.Functions.GetPlayerData().metadata['disnakerDuty'] == 'false' end
+            -- canInteract = function(entity) return QBCore.Functions.GetPlayerData().metadata['disnakerDuty'] == 'false' end
         },
         {
             icon = 'fa-solid fa-pencil',

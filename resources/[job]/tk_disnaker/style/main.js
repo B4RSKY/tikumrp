@@ -58,7 +58,7 @@ function cutHeadDone() {
     $('body').hide()
     $('.sections').hide()
     $('.area').hide()
-    $.post('https://tk-disnaker/cutHead', JSON.stringify({}));
+    $.post('https://tk_disnaker/cutHead', JSON.stringify({}));
 }
 
 $(document).mousemove(function(e) {
@@ -96,7 +96,7 @@ function chickenLine(number) {
 function lineDone() {
     $('body').hide()
     $('.kopya4').hide()
-    $.post('https://tk-disnaker/lineDone', JSON.stringify({}));
+    $.post('https://tk_disnaker/lineDone', JSON.stringify({}));
 }
 
 let lastPart = undefined
@@ -136,7 +136,7 @@ function putPart() {
 function packageDone() {
     $('body').hide()
     $('.lastpage').hide()
-    $.post('https://tk-disnaker/packageDone', JSON.stringify({}));
+    $.post('https://tk_disnaker/packageDone', JSON.stringify({}));
 }
 
 var partId = 0

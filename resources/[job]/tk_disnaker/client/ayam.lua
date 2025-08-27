@@ -256,6 +256,15 @@ exports.ox_target:addBoxZone({
             label = 'Potong Ayam',
             groups = 'slaughterer',
             onSelect = function()
+                local hasAyam = exports['qb-core']:HasItem('death_chicken', 1)
+                if not hasAyam then 
+                    lib.notify({
+                        title = 'DISNAKER',
+                        description = 'Tidak Cukup Ayam Mati!',
+                        type = 'error'
+                    })
+                    return
+                end
                 PotongAyam()
             end
         }
@@ -273,6 +282,15 @@ exports.ox_target:addBoxZone({
             label = 'Bunuh Ayam',
             groups = 'slaughterer',
             onSelect = function()
+                local hasAyam = exports['qb-core']:HasItem('alive_chicken', 1)
+                if not hasAyam then 
+                    lib.notify({
+                        title = 'DISNAKER',
+                        description = 'Tidak Cukup Ayam!',
+                        type = 'error'
+                    })
+                    return
+                end
                 BunuhAyam()
             end
         }
@@ -290,6 +308,15 @@ exports.ox_target:addBoxZone({
             label = 'Kemas Ayam',
             groups = 'slaughterer',
             onSelect = function()
+                local hasAyam = exports['qb-core']:HasItem('slaughtered_chicken', 1)
+                if not hasAyam then 
+                    lib.notify({
+                        title = 'DISNAKER',
+                        description = 'Tidak Cukup Ayam Potong!',
+                        type = 'error'
+                    })
+                    return
+                end
                 KemasAYam()
             end
         }
