@@ -1,5 +1,5 @@
-RegisterServerEvent('px_vehicleshop:deleteVehicle')
-AddEventHandler('px_vehicleshop:deleteVehicle', function(vehicle, price)
+RegisterServerEvent('vehicleshop:deleteVehicle')
+AddEventHandler('vehicleshop:deleteVehicle', function(vehicle, price)
     local loadFile = LoadResourceFile(GetCurrentResourceName(), "./vehicleSaved.json ")
     if loadFile ~= nil then
         local extract = json.decode(loadFile)
@@ -17,7 +17,7 @@ AddEventHandler('px_vehicleshop:deleteVehicle', function(vehicle, price)
     end
 end)
 
-lib.callback.register('px_vehicleShop:getAllVehicle', function(source)
+lib.callback.register('vehicleshop:getAllVehicle', function(source)
     local loadFile = LoadResourceFile(GetCurrentResourceName(), "./vehicleSaved.json")
     if loadFile then
         local extract = json.decode(loadFile)

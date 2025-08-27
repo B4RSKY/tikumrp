@@ -2,24 +2,24 @@ QBCore = GetResourceState('qb-core'):find('start') and exports['qb-core']:GetCor
 
 if not QBCore then return end
 
-lib.callback.register('px_vehicleshop:getPlayerMoney', function(source, price, scroll)
+lib.callback.register('vehicleshop:getPlayerMoney', function(source, price, scroll)
+    local Player = QBCore.Functions.GetPlayer(source)
     if scroll == 1 then
         local money = exports.ox_inventory:GetItemCount(source, 'cash')
-        print(price)
-        print(money)
-        if tonumber(money) > tonumber(price) then
+        if money and price and (tonumber(money) >= tonumber(price)) then
             return "cash"
         end
     else
-        local moneyBank = exports['Renewed-Banking']:getAccountMoney(GetPlayerName(source))
-        if tonumber(moneyBank) > tonumber(price) then
+        local moneyBank = Player.Functions.GetMoney('bank')
+        if moneyBank and price and (tonumber(moneyBank) >= tonumber(price)) then
             return "bank"
         end
     end
+    return nil 
 end)
 
 
-QBCore.Functions.CreateCallback('px_vehicleshop:getSocietyMoney', function(source, cb, price, job)
+QBCore.Functions.CreateCallback('vehicleshop:getSocietyMoney', function(source, cb, price, job)
     local society = exports['Renewed-Banking']:getAccountMoney(job)
     if society >= price then
         exports['Renewed-Banking']:removeAccountMoney(job, price)
@@ -39,25 +39,32 @@ local function GetVehicleData(modelName)
     return nil
 end
 
-RegisterServerEvent('px_vehicleshop:secureBuyVehicle')
-AddEventHandler('px_vehicleshop:secureBuyVehicle', function(vehicleModel, plate, garage)
+RegisterServerEvent('vehicleshop:secureBuyVehicle')
+AddEventHandler('vehicleshop:secureBuyVehicle', function(vehicleModel, plate, garage, paymentMethod)
     local src = source
     local xPlayer = QBCore.Functions.GetPlayer(src)
     
     if not xPlayer then return end
+    if paymentMethod ~= 'cash' and paymentMethod ~= 'bank' then return end
     local vehicleData = GetVehicleData(vehicleModel)
     if not vehicleData then
-        print(string.format("[PX-VEHICLESHOP EXPLOIT] Player %s (CitizenID: %s) tried to buy an invalid vehicle model: %s", xPlayer.PlayerData.name, xPlayer.PlayerData.citizenid, vehicleModel))
-        -- Opsional: Tambahkan kick atau ban di sini jika perlu
-        -- exports.ghmattimysql:execute("INSERT INTO bans (name, license, discord, ip, reason, expire, bannedby) VALUES (@name, @license, @discord, @ip, @reason, @expire, @bannedby)", { ... })
+        local namaSteam	= GetPlayerName(src) or "unknown"
+        local steamhex  = GetPlayerIdentifier(src) or "steam:unknown"
+        local isi = ( '**`📦` Mencoba Exploit: Invalid vehicle model**\n\n' ..
+            '**`👤` Player**: **%s**\n' ..
+            '**`👤` Nama steam**: **%s**\n' ..
+            '**`🎮` Steam Hex**: `%s`\n\n' ..
+            '**`📗` CID**: `%s`\n' ..
+            '**`🚗` Kendaraan**: `%s`\n'
+        ):format(xPlayer.PlayerData.name, namaSteam, steamhex, xPlayer.PlayerData.citizenid, vehicleModel)
+        TriggerEvent('qb-log:server:CreateLog', 'vehicleshop', 'VEHICLESHOP', 'ungu', isi, false)
         return
     end
 
     local correctPrice = tonumber(vehicleData.price)
-    local accountType = 'cash' or 'bank'
+    local accountType = paymentMethod
 
     if xPlayer.Functions.GetMoney(accountType) >= correctPrice then
-        -- 5. Eksekusi: Kurangi uang dan masukkan mobil ke database
         xPlayer.Functions.RemoveMoney(accountType, correctPrice, 'vehicle-shop-purchase')
         
         MySQL.insert(
@@ -65,7 +72,7 @@ AddEventHandler('px_vehicleshop:secureBuyVehicle', function(vehicleModel, plate,
             {
                 xPlayer.PlayerData.license,
                 xPlayer.PlayerData.citizenid,
-                vehicleData.model, -- Gunakan model yang sudah divalidasi
+                vehicleData.model,
                 GetHashKey(vehicleData.model),
                 '{}',
                 plate,
@@ -74,48 +81,43 @@ AddEventHandler('px_vehicleshop:secureBuyVehicle', function(vehicleModel, plate,
             },
             function()
                 TriggerClientEvent('QBCore:Notify', src, "Selamat, Anda telah membeli " .. (vehicleData.name or vehicleData.model) .. "!", "success", 8000)
+                local namaSteam	= GetPlayerName(src) or "unknown"
+                local steamhex  = GetPlayerIdentifier(src) or "steam:unknown"
+                local isi = ( '**`📦` Membeli Kendaraan**\n\n' ..
+                    '**`👤` Player**: **%s**\n' ..
+                    '**`👤` Nama steam**: **%s**\n' ..
+                    '**`🎮` Steam Hex**: `%s`\n\n' ..
+                    '**`📗` CID**: `%s`\n' ..
+                    '**`🚗` Kendaraan**: `%s`\n'..
+                    '**`💵` Harga**: `%s`\n'..
+                    '**`🪙` Methode**: `%s`\n'
+                ):format(xPlayer.PlayerData.name, namaSteam, steamhex, xPlayer.PlayerData.citizenid, vehicleData.name, correctPrice, accountType)
+                TriggerEvent('qb-log:server:CreateLog', 'vehicleshop', 'VEHICLESHOP', 'ungu', isi, false)
             end)
     else
-        -- Jika uang tidak cukup
         TriggerClientEvent('QBCore:Notify', src, "Uang Anda tidak cukup untuk membeli kendaraan ini.", "error", 8000)
     end
 end)
 
-
--- ================================================================================
--- == EVENT AMAN UNTUK DEALER MENYETOK KENDARAAN (PENGGANTI px_vehicleshopBuyVehicle) ==
--- ================================================================================
-RegisterServerEvent('px_vehicleshop:secureStockVehicle')
-AddEventHandler('px_vehicleshop:secureStockVehicle', function(vehicleModel, action, r, g, b, job)
+RegisterServerEvent('vehicleshop:secureStockVehicle')
+AddEventHandler('vehicleshop:secureStockVehicle', function(vehicleModel, action, r, g, b, job)
     local src = source
     local xPlayer = QBCore.Functions.GetPlayer(src)
 
     if not xPlayer then return end
 
-    -- Keamanan Tambahan: Periksa apakah pemain benar-benar memiliki pekerjaan dealer
     if xPlayer.PlayerData.job.name ~= job or job ~= "cardealer" then
         print(string.format("[PX-VEHICLESHOP EXPLOIT] Player %s (Job: %s) tried to stock vehicle as a %s.", xPlayer.PlayerData.name, xPlayer.PlayerData.job.name, job))
         return
     end
 
-    -- 1. Validasi: Cari data kendaraan di config
     local vehicleData = GetVehicleData(vehicleModel)
-
-    -- 2. Keamanan: Jika mobil tidak valid, hentikan
     if not vehicleData then
         print(string.format("[PX-VEHICLESHOP EXPLOIT] Dealer %s tried to stock an invalid vehicle model: %s", xPlayer.PlayerData.name, vehicleModel))
         return
     end
-
-    -- 3. Sumber Kebenaran: Ambil harga dari CONFIG SERVER
     local correctPrice = tonumber(vehicleData.price)
-    
-    -- 4. Logika Bisnis: Lanjutkan proses pengurangan uang perusahaan & simpan ke JSON
     if Config.RemoveMoneyCompany then
-        -- Gunakan API yang sesuai untuk mengambil uang dari society/company account
-        -- Contoh: exports['qb-management']:RemoveMoney(job, correctPrice) atau yang sejenisnya
-        -- Note: 'qb-banking' mungkin tidak punya fungsi untuk society, biasanya ada di qb-management atau framework job.
-        -- Sesuaikan baris di bawah ini dengan sistem ekonomi Anda.
         exports['qb-management']:RemoveMoney(job, correctPrice)
     end
 
@@ -131,8 +133,8 @@ AddEventHandler('px_vehicleshop:secureStockVehicle', function(vehicleModel, acti
     TriggerClientEvent('QBCore:Notify', src, "Anda berhasil menambahkan " .. (vehicleData.name or vehicleData.model) .. " ke stok.", "success")
 end)
 
-RegisterServerEvent('px_vehicleshop:SellVehicle')
-AddEventHandler('px_vehicleshop:SellVehicle', function(vehicle, plate, garage, player)
+RegisterServerEvent('vehicleshop:SellVehicle')
+AddEventHandler('vehicleshop:SellVehicle', function(vehicle, plate, garage, player)
     printdbg(vehicle)
     printdbg(plate)
     printdbg(garage)
@@ -163,8 +165,8 @@ AddEventHandler('px_vehicleshop:SellVehicle', function(vehicle, plate, garage, p
 end)
 
 --BossMenu
-RegisterServerEvent('px_vehicleshop:returnVehicle')
-AddEventHandler('px_vehicleshop:returnVehicle', function(vehicle, price, k, value)
+RegisterServerEvent('vehicleshop:returnVehicle')
+AddEventHandler('vehicleshop:returnVehicle', function(vehicle, price, k, value)
     local returnPrice = price * 50 / 100
     exports['Renewed-Banking']:addAccountMoney(value, returnPrice)
     local loadFile = LoadResourceFile(GetCurrentResourceName(), "./vehicleSaved.json ")

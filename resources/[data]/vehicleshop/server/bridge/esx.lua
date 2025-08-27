@@ -2,7 +2,7 @@ local ESX = GetResourceState('es_extended'):find('start') and exports['es_extend
 
 if not ESX then return end
 
-lib.callback.register('px_vehicleshop:getPlayerMoney', function(source, price, scroll)
+lib.callback.register('vehicleshop:getPlayerMoney', function(source, price, scroll)
     local PaymentSystem
     if scroll == 1 then PaymentSystem = "money" else PaymentSystem = "bank" end
     local xPlayer = ESX.GetPlayerFromId(source)
@@ -15,7 +15,7 @@ lib.callback.register('px_vehicleshop:getPlayerMoney', function(source, price, s
     end
 end)
 
-lib.callback.register('px_vehicleShop:getSocietyMoney', function(source, value)
+lib.callback.register('vehicleshop:getSocietyMoney', function(source, value)
     local money
     for k, v in pairs(Config.Shops) do
         if k == value then
@@ -27,8 +27,8 @@ lib.callback.register('px_vehicleShop:getSocietyMoney', function(source, value)
     return money
 end)
 
-RegisterServerEvent('px_vehicleshop:setVehicle')
-AddEventHandler('px_vehicleshop:setVehicle', function(vehicleProps, vehicleType, price)
+RegisterServerEvent('vehicleshop:setVehicle')
+AddEventHandler('vehicleshop:setVehicle', function(vehicleProps, vehicleType, price)
     printdbg(source)
     printdbg(vehicleProps)
     printdbg(vehicleType)
@@ -47,8 +47,8 @@ AddEventHandler('px_vehicleshop:setVehicle', function(vehicleProps, vehicleType,
         end)
 end)
 
-RegisterServerEvent('px_vehicleshopBuyVehicle')
-AddEventHandler('px_vehicleshopBuyVehicle', function(vehicle, price, action, r, g, b)
+RegisterServerEvent('vehicleshopBuyVehicle')
+AddEventHandler('vehicleshopBuyVehicle', function(vehicle, price, action, r, g, b)
     local loadFile = LoadResourceFile(GetCurrentResourceName(), "./vehicleSaved.json")
     if loadFile ~= nil then
         if Config.RemoveMoneyCompany then
@@ -69,8 +69,8 @@ AddEventHandler('px_vehicleshopBuyVehicle', function(vehicle, price, action, r, 
     end
 end)
 
-RegisterServerEvent('px_vehicleshop:SellVehicle')
-AddEventHandler('px_vehicleshop:SellVehicle', function(vehicleProps, vehicleType, price, player)
+RegisterServerEvent('vehicleshop:SellVehicle')
+AddEventHandler('vehicleshop:SellVehicle', function(vehicleProps, vehicleType, price, player)
     printdbg(vehicleProps)
     printdbg(vehicleType)
     local _source = player
@@ -94,7 +94,7 @@ AddEventHandler('px_vehicleshop:SellVehicle', function(vehicleProps, vehicleType
         end)
 end)
 
-RegisterServerEvent("px_vehicleshop:returnVehicle", function(vehicle, price, k, action)
+RegisterServerEvent("vehicleshop:returnVehicle", function(vehicle, price, k, action)
     local loadFile = LoadResourceFile(GetCurrentResourceName(), "./vehicleSaved.json ")
     if loadFile ~= nil then
         local returnPrice = price * 50 / 100

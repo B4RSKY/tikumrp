@@ -61,7 +61,6 @@ Citizen.CreateThread(function()
                     180.0, 0.0, 0.5, 0.5, 0.5, 255, 128, 0, 50, false, true, 2, nil, nil, false)
                 if IsControlJustReleased(0, 38) then
                     valueAction = k
-                    print(valueAction)
                     lib.hideTextUI()
                     CamON('showRoom')
                 end
@@ -87,7 +86,7 @@ function OpenVehicleShop(job)
     end
     lib.registerMenu({
         id = 'openVehicleShop',
-        title = locale("px_vehicleshop_vehicle_categories"),
+        title = locale("vehicleshop_vehicle_categories"),
         position = Config.PositioMenu,
         options = options,
         onClose = function()
@@ -122,7 +121,7 @@ function OpenVehicleList(c, job)
     end
     lib.registerMenu({
         id = 'openVehicleList',
-        title = locale("px_vehicleshop_vehicle_list"),
+        title = locale("vehicleshop_vehicle_list"),
         position = Config.PositioMenu,
         options = options,
         onClose = function()
@@ -152,8 +151,8 @@ function OpenVehicleInfo(vehicle, price, vehicleData, job)
     printdbg(job)
     local options = {
         {
-            label = locale("px_vehicleshop_vehicle_info"),
-            icon = "nui://px_vehicleshop/img/icon/info.png",
+            label = locale("vehicleshop_vehicle_info"),
+            icon = "nui://vehicleshop/img/icon/info.png",
             close = true,
             action = function()
                 ShowInfoVehicle(vehicle)
@@ -164,8 +163,8 @@ function OpenVehicleInfo(vehicle, price, vehicleData, job)
     if Config.TestDrive then
         if job ~= "cardealer" then
             options[#options + 1] = {
-                label = locale("px_vehicleshop_test_drive"),
-                icon = "nui://px_vehicleshop/img/icon/timer.png",
+                label = locale("vehicleshop_test_drive"),
+                icon = "nui://vehicleshop/img/icon/timer.png",
                 close = true,
                 action = function()
                     DoScreenFadeOut(650)
@@ -180,14 +179,14 @@ function OpenVehicleInfo(vehicle, price, vehicleData, job)
         if k == valueAction then
             if v.requiredJob == false or (v.requiredJob == true and PlayerJob.name == v.jobName and job == "cardealer") then
                 options[#options + 1] = {
-                    label = locale("px_vehicleshop_buy_vehicle"),
-                    icon = "nui://px_vehicleshop/img/icon/money.png",
+                    label = locale("vehicleshop_buy_vehicle"),
+                    icon = "nui://vehicleshop/img/icon/money.png",
                     close = true,
                     action = function()
                         printdbg('Vehicle Price: ' .. price)
                         if job == "cardealer" then
                             print("Dentro job")
-                            QBCore.Functions.TriggerCallback('px_vehicleshop:getSocietyMoney', function(result)
+                            QBCore.Functions.TriggerCallback('vehicleshop:getSocietyMoney', function(result)
                                 if result then
                                     buy = true
                                     CamOFF()
@@ -196,8 +195,8 @@ function OpenVehicleInfo(vehicle, price, vehicleData, job)
                                         DeleteEntity(lastSelectedVehicleEntity)
                                         lastSelectedVehicleEntity = nil
                                     end
-                                    local input = lib.inputDialog(locale("px_vehicleshop_select_color"), {
-                                        { type = 'color', label = locale("px_vehicleshop_select_color"), format = 'rgb', default = '#eb4034' }
+                                    local input = lib.inputDialog(locale("vehicleshop_select_color"), {
+                                        { type = 'color', label = locale("vehicleshop_select_color"), format = 'rgb', default = '#eb4034' }
                                     })
                                     if not input then
                                         buy = false
@@ -210,12 +209,12 @@ function OpenVehicleInfo(vehicle, price, vehicleData, job)
                                     g = tonumber(g)
                                     b = tonumber(b)
                                     -- Di dalam fungsi OpenVehicleInfo
-                                    TriggerServerEvent('px_vehicleshop:secureStockVehicle', vehicle, valueAction, r, g, b, job)
+                                    TriggerServerEvent('vehicleshop:secureStockVehicle', vehicle, valueAction, r, g, b, job)
                                     buy = false
                                 else
                                     lib.notify({
-                                        title = locale("px_vehicleshop_notify"),
-                                        description = locale("px_vehicleshop_no_money"),
+                                        title = locale("vehicleshop_notify"),
+                                        description = locale("vehicleshop_no_money"),
                                         type = 'error',
                                         position = 'top',
                                     })
@@ -232,7 +231,7 @@ function OpenVehicleInfo(vehicle, price, vehicleData, job)
     Wait(50)
     lib.registerMenu({
         id = 'openVehicleInfo',
-        title = locale("px_vehicleshop_vehicle_info"),
+        title = locale("vehicleshop_vehicle_info"),
         position = Config.PositioMenu,
         options = options,
         onClose = function()
@@ -269,12 +268,12 @@ function SelectPaymentSystem(vehicle, price, result)
             end
         end,
     }, function(selected, scrollIndex, args)
-        local data = lib.callback.await('px_vehicleshop:getPlayerMoney', false, price, scrollIndex)
+        local data = lib.callback.await('vehicleshop:getPlayerMoney', false, price, scrollIndex)
         if data then
             buy = true
             lib.hideMenu('SelectPaymentSystem')
-            local input = lib.inputDialog(locale("px_vehicleshop_select_color"), {
-                { type = 'color', label = locale("px_vehicleshop_select_color"), format = 'rgb', default = '#eb4034' }
+            local input = lib.inputDialog(locale("vehicleshop_select_color"), {
+                { type = 'color', label = locale("vehicleshop_select_color"), format = 'rgb', default = '#eb4034' }
             })
             if not input then
                 buy = false
@@ -293,13 +292,13 @@ function SelectPaymentSystem(vehicle, price, result)
                     lastSelectedVehicleEntity = nil
                 end
                 Wait(100)
-                BuyVehicle(vehicle, r, g, b, price, data)
+                BuyVehicle(vehicle, r, g, b, data)
             end
         else
             SelectPaymentSystem(vehicle, price, data)
             lib.notify({
-                title = locale("px_vehicleshop_notify"),
-                description = locale("px_vehicleshop_no_money"),
+                title = locale("vehicleshop_notify"),
+                description = locale("vehicleshop_no_money"),
                 type = 'error',
                 position = 'top',
             })
@@ -349,7 +348,7 @@ function StartTestDrive(vehicle)
             Wait(5)
             if time > 0 then
                 DisableControlAction(0, 75, true)
-                lib.showTextUI(locale("px_vehicleshop_textui_test_drive"):format(time), {
+                lib.showTextUI(locale("vehicleshop_textui_test_drive"):format(time), {
                     position = "top-center",
                     icon = 'fa-solid fa-stopwatch-20',
                     style = {
@@ -396,13 +395,13 @@ function ShowInfoVehicle(vehicleData)
     printdbg(info)
     lib.registerMenu({
         id = 'showVehicleInfo',
-        title = locale("px_vehicleshop_vehicle_info"),
+        title = locale("vehicleshop_vehicle_info"),
         position = Config.PositioMenu,
         options = {
-            { label = locale("px_vehicleshop_traction"),     progress = info.traction * 10,        icon = "nui://px_vehicleshop/img/icon/trasmission.png", close = false },
-            { label = locale("px_vehicleshop_brakes"),       progress = info.breaking * 80,        icon = "nui://px_vehicleshop/img/icon/brakes.png",      close = false },
-            { label = locale("px_vehicleshop_maxspeed"),     progress = info.maxSpeed / 300 * 100, icon = "nui://px_vehicleshop/img/icon/speed.png",       close = false },
-            { label = locale("px_vehicleshop_acceleration"), progress = info.acceleration * 150,   icon = "nui://px_vehicleshop/img/icon/engine.png",      close = false }
+            { label = locale("vehicleshop_traction"),     progress = info.traction * 10,        icon = "nui://vehicleshop/img/icon/trasmission.png", close = false },
+            { label = locale("vehicleshop_brakes"),       progress = info.breaking * 80,        icon = "nui://vehicleshop/img/icon/brakes.png",      close = false },
+            { label = locale("vehicleshop_maxspeed"),     progress = info.maxSpeed / 300 * 100, icon = "nui://vehicleshop/img/icon/speed.png",       close = false },
+            { label = locale("vehicleshop_acceleration"), progress = info.acceleration * 150,   icon = "nui://vehicleshop/img/icon/engine.png",      close = false }
         },
         onClose = function()
             lib.showMenu('openVehicleInfo')
@@ -447,13 +446,12 @@ function spawnVehicle(vehicle, job, red, green, blue)
     end)
 end
 
-function BuyVehicle(vehicle, r, g, b, result)
+function BuyVehicle(vehicle, r, g, b, paymentMethod)
     local PlateGenerated = exports.vehicleshop:GeneratePlate()
     local name = vehicle
     for k, v in pairs(Config.Shops) do
         if k == valueAction then
             QBCore.Functions.SpawnVehicle(vehicle, function(vehi)
-                print('Vehicle: ', name)
                 local veh = NetToVeh(netId)
                 local newPlate = PlateGenerated
                 ClearVehicleCustomPrimaryColour(vehi)
@@ -462,8 +460,7 @@ function BuyVehicle(vehicle, r, g, b, result)
                 SetVehicleNumberPlateText(vehi, newPlate)
                 SetEntityHeading(veh, 339.41)
                 SetPedIntoVehicle(cache.ped, vehi, -1)
-                TriggerEvent('vehiclekeys:client:SetOwner', QBCore.Functions.GetPlate(veh))
-                TriggerServerEvent('px_vehicleshop:secureBuyVehicle', name, newPlate, "garasi_a", result)
+                TriggerServerEvent('vehicleshop:secureBuyVehicle', name, newPlate, "garasi_a", paymentMethod)
                 buy = false
             end, v.spawnVehicleBuy, true)
         end
@@ -545,14 +542,14 @@ function OpenActionCardealer()
     local options = {
         {
             label = locale("cardealer_buy_vehicle"),
-            icon = "nui://px_vehicleshop/img/icon/money.png",
+            icon = "nui://vehicleshop/img/icon/money.png",
             action = function()
                 CamON("cardealer")
             end
         },
         {
             label = locale("cardealer_vehicle_purschased"),
-            icon = "nui://px_vehicleshop/img/icon/garage.png",
+            icon = "nui://vehicleshop/img/icon/garage.png",
             action = function()
                 OpenVehicleSaved()
             end
@@ -579,7 +576,7 @@ end
 function OpenVehicleSaved()
     local open
     local options = {}
-    local data = lib.callback.await('px_vehicleShop:getAllVehicle', false)
+    local data = lib.callback.await('vehicleshop:getAllVehicle', false)
     if type(data) == "table" then
         if not data then
             open = false
@@ -613,7 +610,7 @@ function OpenVehicleSaved()
         lib.showMenu('openVehicleSaved')
     else
         lib.notify({
-            title = locale("px_vehicleshop_notify"),
+            title = locale("vehicleshop_notify"),
             description = locale("px_notify_noVehicle"),
             type = 'error',
             position = 'top',
@@ -637,7 +634,7 @@ function OpenActionVehicleSaved(vehicle, price, k, red, green, blue)
                 local closestPlayer, closestPlayerDistance = QBCore.Functions.GetClosestPlayer(coords)
                 if closestPlayer == -1 or closestPlayerDistance > 3.0 then
                     lib.notify({
-                        title = locale("px_vehicleshop_notify"),
+                        title = locale("vehicleshop_notify"),
                         description = "No players nearby",
                         type = 'error',
                         position = 'top',
@@ -659,7 +656,7 @@ function OpenActionVehicleSaved(vehicle, price, k, red, green, blue)
                     cancel = true
                 })
                 if alert == "confirm" then
-                    TriggerServerEvent('px_vehicleshop:returnVehicle', vehicle, price, k, valueAction)
+                    TriggerServerEvent('vehicleshop:returnVehicle', vehicle, price, k, valueAction)
                     if lastSelectedVehicleEntity ~= nil then
                         DeleteEntity(lastSelectedVehicleEntity)
                     end
@@ -706,12 +703,12 @@ function SellVehicle(vehicle, player)
                 SetEntityHeading(veh, 339.41)
                 ClearVehicleCustomPrimaryColour(vehicle)
                 SetVehicleCustomPrimaryColour(vehicle, red, green, blue)
-                TriggerServerEvent('px_vehicleshop:SellVehicle', vehicle, newPlate, "Pillbox Garage Parking", player)
+                TriggerServerEvent('vehicleshop:SellVehicle', vehicle, newPlate, "Pillbox Garage Parking", player)
             end, vehicle, v.spawnVehicleBuy, true)
         end
     end
     printdbg(vehicle)
-    TriggerServerEvent('px_vehicleshop:deleteVehicle', vehicle)
+    TriggerServerEvent('vehicleshop:deleteVehicle', vehicle)
 end
 
 --Boss Menu
