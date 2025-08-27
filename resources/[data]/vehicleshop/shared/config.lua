@@ -5,7 +5,7 @@ Config.EnableDebug = false
 Config.PositioMenu = "top-right"
 
 Config.TestDrive = true
-Config.TestDriveTime = 30 --seconds
+Config.TestDriveTime = 60 --seconds
 Config.MarkerDistance = 2.0
 Config.RemoveMoneyCompany = true
 
@@ -29,63 +29,63 @@ Config.Shops = {
         camCoords = vector3(-52.0340, -1092.87, 26.422),
         TestDriveCoords = vector3(-889.877, -3205.54, 13.944)
     },
-    police = {
-        -- Blip
-        title = 'Police Dealership',
-        color = 38,
-        id = 227,
-        scale = 0.8,
-        coords = vector3(418.4895, -1021.34, 29.030),
-        -- Other
-        requiredJob = true,
-        jobName = 'police',
-        gradeBoss = 'boss',
-        bossMenu = vector3(-43.7882, -1116.28, 26.427),
-        actionjob = vector3(417.5868, -1004.78, 29.233),
-        showcase = vector3(421.2276, -1011.13, 29.129),
-        spawnShowCase = vector4(423.9533, -1022.07, 28.929, 92.051),
-        spawnVehicleBuy = vector3(-58.1253, -1116.52, 26.434),
-        camCoords = vector3(414.4416, -1021.23, 29.199),
-        TestDriveCoords = vector3(-889.877, -3205.54, 13.944)
-    },
-    boat = {
-        -- Blip
-        title = 'Boat Dealership',
-        color = 2,
-        id = 427,
-        scale = 0.8,
-        coords = vector3(-754.725, -1504.79, 5.0005),
-        -- Other
-        requiredJob = false,
-        jobName = '',
-        gradeBoss = '',
-        bossMenu = vector3(0, 0, 0),
-        actionjob = vector3(0, 0, 0),
-        showcase = vector3(-755.026, -1507.16, 5.0069),
-        spawnShowCase = vector4(-800.174, -1503.35, -0.474, 113.62),
-        spawnVehicleBuy = vector3(-58.1253, -1116.52, 26.434),
-        camCoords = vector3(-779.257, -1496.29, 1.7786),
-        TestDriveCoords = vector3(-832.4774, -1532.5023, -0.4745)
-    },
-    plane = {
-        -- Blip
-        title = 'Plane Dealership',
-        color = 30,
-        id = 423,
-        scale = 0.8,
-        coords = vector3(-1013.82, -3022.10, 13.945),
-        -- Other
-        requiredJob = false,
-        jobName = '',
-        gradeBoss = '',
-        bossMenu = vector3(0, 0, 0),
-        actionjob = vector3(0, 0, 0),
-        showcase = vector3(-1012.82, -3022.10, 13.945),
-        spawnShowCase = vector4(-977.132, -2995.10, 13.944, 60.736),
-        spawnVehicleBuy = vector3(-58.1253, -1116.52, 26.434),
-        camCoords = vector3(-996.989, -2985.89, 13.945),
-        TestDriveCoords = vector3(-889.877, -3205.54, 13.944)
-    },
+    -- police = {
+    --     -- Blip
+    --     title = 'Police Dealership',
+    --     color = 38,
+    --     id = 227,
+    --     scale = 0.8,
+    --     coords = vector3(418.4895, -1021.34, 29.030),
+    --     -- Other
+    --     requiredJob = true,
+    --     jobName = 'police',
+    --     gradeBoss = 'boss',
+    --     bossMenu = vector3(-43.7882, -1116.28, 26.427),
+    --     actionjob = vector3(417.5868, -1004.78, 29.233),
+    --     showcase = vector3(421.2276, -1011.13, 29.129),
+    --     spawnShowCase = vector4(423.9533, -1022.07, 28.929, 92.051),
+    --     spawnVehicleBuy = vector3(-58.1253, -1116.52, 26.434),
+    --     camCoords = vector3(414.4416, -1021.23, 29.199),
+    --     TestDriveCoords = vector3(-889.877, -3205.54, 13.944)
+    -- },
+    -- boat = {
+    --     -- Blip
+    --     title = 'Boat Dealership',
+    --     color = 2,
+    --     id = 427,
+    --     scale = 0.8,
+    --     coords = vector3(-754.725, -1504.79, 5.0005),
+    --     -- Other
+    --     requiredJob = false,
+    --     jobName = '',
+    --     gradeBoss = '',
+    --     bossMenu = vector3(0, 0, 0),
+    --     actionjob = vector3(0, 0, 0),
+    --     showcase = vector3(-755.026, -1507.16, 5.0069),
+    --     spawnShowCase = vector4(-800.174, -1503.35, -0.474, 113.62),
+    --     spawnVehicleBuy = vector3(-58.1253, -1116.52, 26.434),
+    --     camCoords = vector3(-779.257, -1496.29, 1.7786),
+    --     TestDriveCoords = vector3(-832.4774, -1532.5023, -0.4745)
+    -- },
+    -- plane = {
+    --     -- Blip
+    --     title = 'Plane Dealership',
+    --     color = 30,
+    --     id = 423,
+    --     scale = 0.8,
+    --     coords = vector3(-1013.82, -3022.10, 13.945),
+    --     -- Other
+    --     requiredJob = false,
+    --     jobName = '',
+    --     gradeBoss = '',
+    --     bossMenu = vector3(0, 0, 0),
+    --     actionjob = vector3(0, 0, 0),
+    --     showcase = vector3(-1012.82, -3022.10, 13.945),
+    --     spawnShowCase = vector4(-977.132, -2995.10, 13.944, 60.736),
+    --     spawnVehicleBuy = vector3(-58.1253, -1116.52, 26.434),
+    --     camCoords = vector3(-996.989, -2985.89, 13.945),
+    --     TestDriveCoords = vector3(-889.877, -3205.54, 13.944)
+    -- },
 }
 
 Config.Categories = {
@@ -102,19 +102,19 @@ Config.Categories = {
         { label = 'Off-Road',       name = 'offroad' },
         { label = 'Vans',           name = 'vans' },
     },
-    police = {
-        { label = "Armored",    name = "armored" },
-        { label = "Car",        name = "car" },
-        { label = "Motorcycle", name = "motorcycle" },
-    },
-    boat = {
-        { label = "Luxury",  name = "luxury" },
-        { label = "Utility", name = "utility" },
-    },
-    plane = {
-        { label = "Luxury",  name = "luxury" },
-        { label = "Utility", name = "utility" },
-    }
+    -- police = {
+    --     { label = "Armored",    name = "armored" },
+    --     { label = "Car",        name = "car" },
+    --     { label = "Motorcycle", name = "motorcycle" },
+    -- },
+    -- boat = {
+    --     { label = "Luxury",  name = "luxury" },
+    --     { label = "Utility", name = "utility" },
+    -- },
+    -- plane = {
+    --     { label = "Luxury",  name = "luxury" },
+    --     { label = "Utility", name = "utility" },
+    -- }
 }
 
 Config.Vehicles = {
