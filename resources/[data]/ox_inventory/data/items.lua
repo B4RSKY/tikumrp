@@ -655,14 +655,15 @@ return {
 		}
 	},
 
-	["jerry_can"] = {
-		label = "Jerrycan 20L",
+	["jerrycan"] = {
+		label = "Jerrycan",
 		weight = 20000,
 		stack = true,
 		close = true,
 		description = "A can full of Fuel",
 		client = {
-			image = "jerry_can.png",
+			image = "jerrycan.png",
+			event = 'cdn-fuel:jerrycan:refuelmenu',
 		}
 	},
 
