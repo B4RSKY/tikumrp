@@ -48,9 +48,7 @@ RegisterNetEvent('hospital:client:UseIfaks', function()
     }, {}, {}, function() -- Done
         StopAnimTask(ped, 'mp_suicide', 'pill', 1.0)
         TriggerServerEvent('hospital:server:removeIfaks')
-		if Config.PrettyLib == false then
-			TriggerEvent('qb-inventory:client:ItemBox', QBCore.Shared.Items['ifaks'], 'remove')
-		end
+        TriggerEvent('qb-inventory:client:ItemBox', QBCore.Shared.Items['ifaks'], 'remove')
         TriggerServerEvent('hud:server:RelieveStress', math.random(12, 24))
         SetEntityHealth(ped, GetEntityHealth(ped) + 10)
         if painkillerAmount < 3 then
@@ -80,9 +78,7 @@ RegisterNetEvent('hospital:client:UseBandage', function()
     }, {}, {}, function() -- Done
         StopAnimTask(ped, 'anim@amb@business@weed@weed_inspecting_high_dry@', 'weed_inspecting_high_base_inspector', 1.0)
         TriggerServerEvent('hospital:server:removeBandage')
-		if Config.PrettyLib == false then
-			TriggerEvent('qb-inventory:client:ItemBox', QBCore.Shared.Items['bandage'], 'remove')
-		end
+        TriggerEvent('qb-inventory:client:ItemBox', QBCore.Shared.Items['bandage'], 'remove')
         SetEntityHealth(ped, GetEntityHealth(ped) + 10)
         if math.random(1, 100) < 50 then
             RemoveBleed(1)
@@ -110,9 +106,7 @@ RegisterNetEvent('hospital:client:UsePainkillers', function()
     }, {}, {}, function() -- Done
         StopAnimTask(ped, 'mp_suicide', 'pill', 1.0)
         TriggerServerEvent('hospital:server:removePainkillers')
-		if Config.PrettyLib == false then
-			TriggerEvent('qb-inventory:client:ItemBox', QBCore.Shared.Items['painkillers'], 'remove')
-		end
+        TriggerEvent('qb-inventory:client:ItemBox', QBCore.Shared.Items['painkillers'], 'remove')
         if painkillerAmount < 3 then
             painkillerAmount = painkillerAmount + 1
         end

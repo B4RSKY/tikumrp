@@ -440,7 +440,9 @@ local function escortPlayer(ped, id)
         id = NetworkGetPlayerIndexFromPed(ped)
     end
 
+    print('tes')
     TriggerServerEvent('tk-job:setPlayerEscort', GetPlayerServerId(id), not IsEntityAttachedToEntity(ped, cache.ped))
+    print(GetPlayerServerId(id))
 end
 
 local IsPedCuffed = IsPedCuffed

@@ -11,8 +11,8 @@ local CurrentDamageList = {}
 local cam = nil
 local playerArmor = nil
 local hospitalLocation = 1
-inBedDict = Config.HospitalBedAnimation.inBedDict
-inBedAnim = Config.HospitalBedAnimation.inBedAnim
+inBedDict = 'amb@world_human_bum_slumped@male@laying_on_left_side@idle_a'
+inBedAnim = 'idle_b'
 isInHospitalBed = false
 isBleeding = 0
 bleedTickTimer, advanceBleedTimer = 0, 0
@@ -728,16 +728,12 @@ CreateThread(function()
         local sleep = 1000
         if isInHospitalBed and canLeaveBed then
             sleep = 0
-			if Config.AutoLeaveBed then
-				LeaveBed()
-			else
-				exports['qb-core']:DrawText(Lang:t('text.bed_out'))
-				if IsControlJustReleased(0, 38) then
-					exports['qb-core']:KeyPressed(38)
-					LeaveBed()
-					exports['qb-core']:HideText()
-				end
-			end
+            exports['qb-core']:DrawText(Lang:t('text.bed_out'))
+            if IsControlJustReleased(0, 38) then
+                exports['qb-core']:KeyPressed(38)
+                LeaveBed()
+                exports['qb-core']:HideText()
+            end
         end
         Wait(sleep)
     end
@@ -854,38 +850,30 @@ RegisterNetEvent('qb-ambulancejob:checkin', function()
     for i = 1, #Config.Locations['hospital'] do
         local hospital = vector3(Config.Locations['hospital'][i]['location'].x, Config.Locations['hospital'][i]['location'].y, Config.Locations['hospital'][i]['location'].z)
         local distance = #(coords - hospital)
-        -- if distance < 3 then (Removed i have issues with it)
+        if distance < 3 then
             if doctorCount >= Config.MinimalDoctors then
-				if Config.Dispatch == "ps-dispatch" then
-					exports['ps-dispatch']:DeceasedPerson()
-				else
-					TriggerServerEvent('hospital:server:SendDoctorAlert', Config.Locations['hospital'][i]['name'])
-				end
+                TriggerServerEvent('hospital:server:SendDoctorAlert', Config.Locations['hospital'][i]['name'])
                 QBCore.Functions.Notify('Called a Doctor', 'primary')
             else
-                TriggerEvent('animations:client:EmoteCommandStart', { 'notepad' })
-                QBCore.Functions.Progressbar('hospital_checkin', Lang:t('progress.checking_in'), 2000, false, true, {
-                    disableMovement = true,
-                    disableCarMovement = true,
-                    disableMouse = false,
-                    disableCombat = true,
-                }, {
-                    animDict = 'missheistdockssetup1clipboard@base',
-                    anim = 'base',
-                    flags = 33,
-                }, {
-                    model = 'prop_notepad_01',
-                    bone = 18905,
-                    coords = { x = 0.1, y = 0.02, z = 0.05 },
-                    rotation = { x = 10.0, y = 0.0, z = 0.0 },
-                }, {
-                    model = 'prop_pencil_01',
-                    bone = 58866,
-                    coords = { x = 0.11, y = -0.02, z = 0.001 },
-                    rotation = { x = -120.0, y = 0.0, z = 0.0 },
-                }, function() -- Done
-                    TriggerEvent('animations:client:EmoteCommandStart', { 'c' })
-
+    
+                if lib.progressBar({
+                    duration = 2000,
+                    label = Lang:t('progress.checking_in'),
+                    useWhileDead = false,
+                    canCancel = true,
+                    disable = {
+                        car = true,
+                    },
+                    anim = {
+                        dict = 'missheistdockssetup1clipboard@base',
+                        clip = 'base'
+                    },
+                    prop = {
+                        model = `prop_notepad_01`,
+                        pos = vec3(0.1, 0.02, 0.05),
+                        rot = vec3(10.0, 0.0, 0.0)
+                    },
+                }) then
                     local bedId = getClosestAvailableBed(i)
                     if bedId then
                         TriggerServerEvent('hospital:server:SendToBed', bedId, true, i)
@@ -893,9 +881,9 @@ RegisterNetEvent('qb-ambulancejob:checkin', function()
                     else
                         QBCore.Functions.Notify(Lang:t('error.beds_taken'), 'error')
                     end
-                end)
+                end
             end
-        -- end
+        end
     end
 end)
 
@@ -913,41 +901,102 @@ if Config.UseTarget then
     CreateThread(function()
         for i = 1, #Config.Locations['checking'] do
             local v = Config.Locations['checking'][i]
-            exports.ox_target:addSphereZone({
-                coords = vec3(v.x, v.y, v.z),
-                size = vec3(2, 2, 2),
-                rotation = 45,
+            exports['qb-target']:AddBoxZone('checking' .. i, vector3(v.x, v.y, v.z), 3.5, 2, {
+                name = 'checking' .. i,
+                heading = -72,
+                debugPoly = false,
+                minZ = v.z - 2,
+                maxZ = v.z + 2,
+            }, {
                 options = {
                     {
+                        type = 'client',
                         icon = 'fa fa-clipboard',
                         event = 'qb-ambulancejob:checkin',
                         label = 'Check In',
-                    },
-                }
+                    }
+                },
+                distance = 1.5
             })
         end
 
-        
+        for hospitalKey = 1, #Config.Locations['hospital'] do
+            for bedKey = 1, #Config.Locations['hospital'][hospitalKey]['beds'] do
+                local v = Config.Locations['hospital'][hospitalKey]['beds'][bedKey]
+                exports['qb-target']:AddBoxZone('beds' .. bedKey, v.coords, 2.5, 2.3, {
+                    name = 'beds' .. bedKey .. Config.Locations['hospital'][hospitalKey]['name'],
+                    heading = -20,
+                    debugPoly = false,
+                    minZ = v.coords.z - 1,
+                    maxZ = v.coords.z + 1,
+                }, {
+                    options = {
+                        {
+                            type = 'client',
+                            event = 'qb-ambulancejob:beds',
+                            icon = 'fas fa-bed',
+                            label = 'Layin Bed',
+                        }
+                    },
+                    distance = 1.5
+                })
+            end
+        end
     end)
 else
     CreateThread(function()
+        local checkingPoly = {}
         for i = 1, #Config.Locations['checking'] do
             local v = Config.Locations['checking'][i]
-            exports.interact:AddInteraction({
-                coords = vector3(v.x, v.y, v.z),
-                distance = 8.0, -- optional
-                interactDst = 2.0, -- optional
-                id = 'checking' .. i, -- needed for removing interactions
-                name = 'checking' .. i, -- optional
-                options = {
-                     {
-                        label = 'Check In',
-                        action = function(entity, coords, args)
-                            TriggerEvent("qb-ambulancejob:checkin")
-                        end,
-                    },
-                }
+            checkingPoly[#checkingPoly + 1] = BoxZone:Create(vector3(v.x, v.y, v.z), 3.5, 2, {
+                heading = -72,
+                name = 'checkin' .. i,
+                debugPoly = false,
+                minZ = v.z - 2,
+                maxZ = v.z + 2,
             })
+            local checkingCombo = ComboZone:Create(checkingPoly, { name = 'checkingCombo', debugPoly = false })
+            checkingCombo:onPlayerInOut(function(isPointInside)
+                if isPointInside then
+                    if doctorCount >= Config.MinimalDoctors then
+                        exports['qb-core']:DrawText(Lang:t('text.call_doc'), 'left')
+                        CheckInControls('checkin')
+                    else
+                        exports['qb-core']:DrawText(Lang:t('text.check_in'), 'left')
+                        CheckInControls('checkin')
+                    end
+                else
+                    listen = false
+                    exports['qb-core']:HideText()
+                end
+            end)
+        end
+        local bedPoly = {}
+        for hospitalKey = 1, #Config.Locations['hospital'] do
+            for bedKey = 1, #Config.Locations['hospital'][hospitalKey]['beds'] do
+                local v = Config.Locations['hospital'][hospitalKey]['beds'][bedKey]
+                bedPoly[#bedPoly + 1] = BoxZone:Create(v.coords, 2.5, 2.3, {
+                    name = 'beds' .. bedKey .. Config.Locations['hospital'][hospitalKey]['name'],
+                    heading = -20,
+                    debugPoly = false,
+                    minZ = v.coords.z - 1,
+                    maxZ = v.coords.z + 1,
+                    data = {
+                        bedId = bedKey
+                    },
+                })
+                local bedCombo = ComboZone:Create(bedPoly, { name = 'bedCombo', debugPoly = false })
+                bedCombo:onPlayerInOut(function(isPointInside, _, zone)
+                    if isPointInside and not isInHospitalBed then
+                        exports['qb-core']:DrawText(Lang:t('text.lie_bed'), 'left')
+                        local bedId = zone.data.bedId
+                        CheckInControls('beds', hospitalKey, bedId)
+                    else
+                        listen = false
+                        exports['qb-core']:HideText()
+                    end
+                end)
+            end
         end
     end)
 end

@@ -218,4 +218,5 @@ RegisterServerEvent('tk-job:setPlayerEscort', function(target, state)
     if not target then return end
 
     target:set('isEscorted', state and source, true)
+    print('OKE KE ESCoret: ')
 end)

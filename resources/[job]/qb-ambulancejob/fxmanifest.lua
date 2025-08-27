@@ -6,6 +6,7 @@ description 'Player health, death, and wounding system with ems job'
 version '1.2.4'
 
 shared_scripts {
+	'@ox_lib/init.lua',
 	'@qb-core/shared/locale.lua',
 	'locales/en.lua',
 	'locales/*.lua',
@@ -18,7 +19,6 @@ client_scripts {
 	'client/laststand.lua',
 	'client/job.lua',
 	'client/dead.lua',
-	'client/aimedis.lua',
 	'@PolyZone/client.lua',
 	'@PolyZone/BoxZone.lua',
 	'@PolyZone/ComboZone.lua'
@@ -26,6 +26,5 @@ client_scripts {
 
 server_scripts {
 	'@oxmysql/lib/MySQL.lua',
-	'server/main.lua',
-	'server/aimedis.lua'
+	'server/main.lua'
 }

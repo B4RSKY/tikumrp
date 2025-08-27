@@ -1,60 +1,5 @@
 Config = {}
---PrettyPackets Changes
-Config.UseTarget = true -- if true will use QB-Target, if false will use Interact
-Config.Dispatch = "ps-dispatch" -- ps-dispatch/standalone
-Config.Fuel = "cdn-fuel" -- Change to your Export.
-Config.PS_EMS_Distress = true -- If you have exports['ps-dispatch']:EMSInDistress()
-Config.PS_UI = false -- If you use PS_UI and want Minigames Implemented otherwise it wont have any.
-Config.BankingExport = "qb-banking"
-Config.QSBanking = true -- If true will ignore the banking export above
-Config.AutoLeaveBed = true -- If you want them to auto get out of bed, or have to press button
-Config.PrettyLib = false -- If you want to use OX Inventory or other inventories otherwise it will use QB-Inventory
-
-Config.HospitalBedAnimation = {
-	--Preferred Animation
-	inBedDict = 'amb@world_human_bum_slumped@male@laying_on_left_side@idle_a',
-	inBedAnim = 'idle_b'
-	--Default Animation
-	--inBedDict = 'anim@gangops@morgue@table@',
-	--inBedAnim = 'body_search'
-}
-
---Elevators Removed
---Vehicle Spawners Removed
--- Removed Targetting on Beds
--- Changed Revive Event Logic (Kept getting false bans idk) Now requires to be EMS and have first aid KIT
--- Added Back armory (Only if using PrettyLib otherwise its ignored)
-
---Can be ignored if PS_UI Disabled
-Config.ReviveMinigame = {
-	numCircles = 3,
-	timeCircles = 8
-}
-Config.TreatWoundsMinigame = {
-	numCircles = 3,
-	timeCircles = 8
-}
-
-
---Can be ignored if not using PrettyLib
-
-Config.PrettyLibStash = {
-	slots = 50,
-	weight = 50000,
-	label = "Ambulance Stash"
-}
-
---Only if using PrettyLib otherwise will use QB-Shops
-Config.PrettyLibShop = {
-	{ name = 'radio',                   price = 0},
-    { name = 'bandage',                 price = 0},
-    { name = 'painkillers',             price = 0},
-    { name = 'firstaid',                price = 0},
-    { name = 'weapon_flashlight',       price = 0},
-    { name = 'weapon_fireextinguisher', price = 0},
-}
-
---
+Config.UseTarget = GetConvar('UseTarget', 'false') == 'true' -- Use qb-target interactions (don't change this, go to your server.cfg and add setr UseTarget true)
 Config.MinimalDoctors = 2                                    -- How many players with the ambulance job to prevent the hospital check-in system from being used
 Config.DocCooldown = 1                                       -- Cooldown between doctor calls allowed, in minutes
 Config.WipeInventoryOnRespawn = true                         -- Enable or disable removing all the players items when they respawn at the hospital
@@ -93,33 +38,43 @@ Config.AlertShowInfo = 2            -- How many injuries a player must have befo
 
 Config.Locations = {                -- Edit the various interaction points for players or create new ones
     ['checking'] = {
-        vector3(351.01, -1404.97, 32.42), -- Aldore
+        vector3(308.19, -595.35, 43.29),
+        vector3(-254.54, 6331.78, 32.43), -- paleto
     },
     ['duty'] = {
-        vector3(341.94, -1425.85, 36.49), -- Aldore
+        vector3(311.18, -599.25, 43.29),
+        vector3(-254.88, 6324.5, 32.58), -- paleto
     },
     ['vehicle'] = {
-        --vector4(294.578, -574.761, 43.179, 35.79),
-        --vector4(-234.28, 6329.16, 32.15, 222.5), -- paleto
+        vector4(294.578, -574.761, 43.179, 35.79),
+        vector4(-234.28, 6329.16, 32.15, 222.5), -- paleto
     },
     ['helicopter'] = {
-        --vector4(351.58, -587.45, 74.16, 160.5),
-        --vector4(-475.43, 5988.353, 31.716, 31.34), -- paleto
+        vector4(351.58, -587.45, 74.16, 160.5),
+        vector4(-475.43, 5988.353, 31.716, 31.34), -- paleto
+    },
+    ['roof'] = {
+        vector4(338.5, -583.85, 74.16, 245.5),
+    },
+    ['main'] = {
+        vector3(298.74, -599.33, 43.29),
     },
     ['stash'] = {
-        vector3(-467.0742, -1042.3833, 24.0501), -- Aldore
-    },
-	['armoury'] = {
-        vector3(-483.59, -1016.16, 33.43), -- Aldore
+        vector3(309.78, -596.6, 43.29),
     },
     ['beds'] = {
-		--Aldore
-            { coords = vector4(352.16, -1374.6, 33.72, 146.06), taken = false, model = -708683881 },
-            { coords = vector4(355.01, -1377.25, 33.72, 142.43), taken = false, model = -708683881 },
-            { coords = vector4(358.15, -1379.79, 33.72, 139.28),   taken = false, model = -708683881 },
-            { coords = vector4(361.26, -1382.23, 33.72, 143.5),   taken = false, model = -708683881 },
-            { coords = vector4(364.15, -1384.81, 33.72, 140.27),   taken = false, model = -708683881 },
-
+        { coords = vector4(353.1, -584.6, 43.11, 152.08),    taken = false, model = 1631638868 },
+        { coords = vector4(356.79, -585.86, 43.11, 152.08),  taken = false, model = 1631638868 },
+        { coords = vector4(354.12, -593.12, 43.1, 336.32),   taken = false, model = 2117668672 },
+        { coords = vector4(350.79, -591.8, 43.1, 336.32),    taken = false, model = 2117668672 },
+        { coords = vector4(346.99, -590.48, 43.1, 336.32),   taken = false, model = 2117668672 },
+        { coords = vector4(360.32, -587.19, 43.02, 152.08),  taken = false, model = -1091386327 },
+        { coords = vector4(349.82, -583.33, 43.02, 152.08),  taken = false, model = -1091386327 },
+        { coords = vector4(326.98, -576.17, 43.02, 152.08),  taken = false, model = -1091386327 },
+        --- paleto
+        { coords = vector4(-252.43, 6312.25, 32.34, 313.48), taken = false, model = 2117668672 },
+        { coords = vector4(-247.04, 6317.95, 32.34, 134.64), taken = false, model = 2117668672 },
+        { coords = vector4(-255.98, 6315.67, 32.34, 313.91), taken = false, model = 2117668672 },
     },
     ['jailbeds'] = {
         { coords = vector4(1761.96, 2597.74, 45.66, 270.14), taken = false, model = 2117668672 },
@@ -129,21 +84,31 @@ Config.Locations = {                -- Edit the various interaction points for p
     },
     ['hospital'] = {
         {
-            ['name'] = "Rumah Sakit",
-            ['location'] = vector3(-500.28, -1002.92, 22.99),
-            ['beds'] = {				
-            { coords = vector4(352.16, -1374.6, 33.72, 146.06), taken = false, model = -708683881 },
-            { coords = vector4(355.01, -1377.25, 33.72, 142.43), taken = false, model = -708683881 },
-            { coords = vector4(358.15, -1379.79, 33.72, 139.28),   taken = false, model = -708683881 },
-            { coords = vector4(361.26, -1382.23, 33.72, 143.5),   taken = false, model = -708683881 },
-            { coords = vector4(364.15, -1384.81, 33.72, 140.27),   taken = false, model = -708683881 },
-
-				
+            ['name'] = Lang:t('info.pb_hospital'),
+            ['location'] = vector3(308.36, -595.25, 43.28),
+            ['beds'] = {
+                { coords = vector4(353.1, -584.6, 43.11, 152.08),   taken = false, model = 1631638868 },
+                { coords = vector4(356.79, -585.86, 43.11, 152.08), taken = false, model = 1631638868 },
+                { coords = vector4(354.12, -593.12, 43.1, 336.32),  taken = false, model = 2117668672 },
+                { coords = vector4(350.79, -591.8, 43.1, 336.32),   taken = false, model = 2117668672 },
+                { coords = vector4(346.99, -590.48, 43.1, 336.32),  taken = false, model = 2117668672 },
+                { coords = vector4(360.32, -587.19, 43.02, 152.08), taken = false, model = -1091386327 },
+                { coords = vector4(349.82, -583.33, 43.02, 152.08), taken = false, model = -1091386327 },
+                { coords = vector4(326.98, -576.17, 43.02, 152.08), taken = false, model = -1091386327 },
+            },
+        },
+        {
+            ['name'] = Lang:t('info.paleto_hospital'),
+            ['location'] = vector3(-254.54, 6331.78, 32.43),
+            ['beds'] = {
+                { coords = vector4(-252.43, 6312.25, 32.34, 313.48), taken = false, model = 2117668672 },
+                { coords = vector4(-247.04, 6317.95, 32.34, 134.64), taken = false, model = 2117668672 },
+                { coords = vector4(-255.98, 6315.67, 32.34, 313.91), taken = false, model = 2117668672 },
             },
         },
     },
     ['stations'] = {
-        { label = "Rumah Sakit", coords = vector3(-500.28, -1002.92, 22.99) },
+        { label = Lang:t('info.pb_hospital'), coords = vector3(304.27, -600.33, 43.28) }
     }
 }
 

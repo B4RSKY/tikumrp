@@ -24,11 +24,7 @@ RegisterNetEvent('hospital:server:SendToBed', function(bedId, isRevive, hospital
 	TriggerClientEvent('hospital:client:SendToBed', src, bedId, Config.Locations['hospital'][hospitalIndex]['beds'][bedId], isRevive)
 	TriggerClientEvent('hospital:client:SetBed', -1, bedId, true, hospitalIndex)
 	Player.Functions.RemoveMoney('bank', Config.BillCost, 'respawned-at-hospital')
-	if Config.QSBanking then
-		exports['qs-banking']:AddMoney('ambulance', Config.BillCost, 'Player treatment')
-	else
-		exports[Config.BankingExport]:AddMoney('ambulance', Config.BillCost, 'Player treatment')
-	end
+	exports['qb-banking']:AddMoney('ambulance', Config.BillCost, 'Player treatment')
 	TriggerClientEvent('hospital:client:SendBillEmail', src, Config.BillCost, Config.Locations['hospital'][hospitalIndex]['name'])
 end)
 
@@ -42,16 +38,11 @@ RegisterNetEvent('hospital:server:RespawnAtHospital', function(hospitalIndex)
 				TriggerClientEvent('hospital:client:SendToBed', src, i, v, true)
 				TriggerClientEvent('hospital:client:SetBed2', -1, i, true)
 				if Config.WipeInventoryOnRespawn then
-					Player.Functions.ClearInventory()
-					MySQL.Async.execute('UPDATE players SET inventory = ? WHERE citizenid = ?', { json.encode({}), Player.PlayerData.citizenid })
+					exports.ox_inventory:ClearInventory(src)
 					TriggerClientEvent('QBCore:Notify', src, Lang:t('error.possessions_taken'), 'error')
 				end
 				Player.Functions.RemoveMoney('bank', Config.BillCost, 'respawned-at-hospital')
-				if Config.QSBanking then
-					exports['qs-banking']:AddMoney('ambulance', Config.BillCost, 'Player treatment')
-				else
-					exports[Config.BankingExport]:AddMoney('ambulance', Config.BillCost, 'Player treatment')
-				end
+				exports['qb-banking']:AddMoney('ambulance', Config.BillCost, 'Player treatment')
 				TriggerClientEvent('hospital:client:SendBillEmail', src, Config.BillCost)
 				return
 			end
@@ -60,17 +51,11 @@ RegisterNetEvent('hospital:server:RespawnAtHospital', function(hospitalIndex)
 		TriggerClientEvent('hospital:client:SendToBed', src, 1, Config.Locations['jailbeds'][1], true)
 		TriggerClientEvent('hospital:client:SetBed', -1, 1, true)
 		if Config.WipeInventoryOnRespawn then
-			Player.Functions.ClearInventory()
-			MySQL.Async.execute('UPDATE players SET inventory = ? WHERE citizenid = ?', { json.encode({}), Player.PlayerData.citizenid })
+			exports.ox_inventory:ClearInventory(src)
 			TriggerClientEvent('QBCore:Notify', src, Lang:t('error.possessions_taken'), 'error')
 		end
 		Player.Functions.RemoveMoney('bank', Config.BillCost, 'respawned-at-hospital')
-		
-		if Config.QSBanking then
-			exports['qs-banking']:AddMoney('ambulance', Config.BillCost, 'Player treatment')
-		else
-			exports[Config.BankingExport]:AddMoney('ambulance', Config.BillCost, 'Player treatment')
-		end
+		exports['qb-banking']:AddMoney('ambulance', Config.BillCost, 'Player treatment')
 		TriggerClientEvent('hospital:client:SendBillEmail', src, Config.BillCost)
 	else
 		for i = 1, #Config.Locations['hospital'][hospitalIndex]['beds'] do
@@ -79,16 +64,11 @@ RegisterNetEvent('hospital:server:RespawnAtHospital', function(hospitalIndex)
 				TriggerClientEvent('hospital:client:SendToBed', src, i, v, true)
 				TriggerClientEvent('hospital:client:SetBed', -1, i, true, hospitalIndex)
 				if Config.WipeInventoryOnRespawn then
-					Player.Functions.ClearInventory()
-					MySQL.update('UPDATE players SET inventory = ? WHERE citizenid = ?', { json.encode({}), Player.PlayerData.citizenid })
+					exports.ox_inventory:ClearInventory(src)
 					TriggerClientEvent('QBCore:Notify', src, Lang:t('error.possessions_taken'), 'error')
 				end
 				Player.Functions.RemoveMoney('bank', Config.BillCost, 'respawned-at-hospital')
-				if Config.QSBanking then
-					exports['qs-banking']:AddMoney('ambulance', Config.BillCost, 'Player treatment')
-				else
-					exports[Config.BankingExport]:AddMoney('ambulance', Config.BillCost, 'Player treatment')
-				end
+				exports['qb-banking']:AddMoney('ambulance', Config.BillCost, 'Player treatment')
 				TriggerClientEvent('hospital:client:SendBillEmail', src, Config.BillCost, Config.Locations['hospital'][hospitalIndex]['name'])
 				return
 			end
@@ -97,16 +77,11 @@ RegisterNetEvent('hospital:server:RespawnAtHospital', function(hospitalIndex)
 		TriggerClientEvent('hospital:client:SendToBed', src, 1, Config.Locations['hospital'][hospitalIndex]['beds'][1], true)
 		TriggerClientEvent('hospital:client:SetBed', -1, 1, true, hospitalIndex)
 		if Config.WipeInventoryOnRespawn then
-			Player.Functions.ClearInventory()
-			MySQL.update('UPDATE players SET inventory = ? WHERE citizenid = ?', { json.encode({}), Player.PlayerData.citizenid })
+			exports.ox_inventory:ClearInventory(src)
 			TriggerClientEvent('QBCore:Notify', src, Lang:t('error.possessions_taken'), 'error')
 		end
 		Player.Functions.RemoveMoney('bank', Config.BillCost, 'respawned-at-hospital')
-		if Config.QSBanking then
-			exports['qs-banking']:AddMoney('ambulance', Config.BillCost, 'Player treatment')
-		else
-			exports[Config.BankingExport]:AddMoney('ambulance', Config.BillCost, 'Player treatment')
-		end
+		exports['qb-banking']:AddMoney('ambulance', Config.BillCost, 'Player treatment')
 		TriggerClientEvent('hospital:client:SendBillEmail', src, Config.BillCost, Config.Locations['hospital'][hospitalIndex]['name'])
 	end
 end)
@@ -176,7 +151,7 @@ RegisterNetEvent('hospital:server:TreatWounds', function(playerId)
 	local Patient = QBCore.Functions.GetPlayer(playerId)
 	if Patient then
 		if Player.PlayerData.job.name == 'ambulance' then
-			exports.ox_inventory:RemoveItem(src, "bandage", 1)
+			exports.ox_inventory:RemoveItem(src, 'bandage', 1)
 			TriggerClientEvent('hospital:client:HealInjuries', Patient.PlayerData.source, 'full')
 		end
 	end
@@ -215,9 +190,30 @@ RegisterNetEvent('hospital:server:RevivePlayer', function(playerId, isOldMan)
 	local Patient = QBCore.Functions.GetPlayer(playerId)
 	local oldMan = isOldMan or false
 	if Patient then
-		if Player.PlayerData.job.name == 'ambulance' and QBCore.Functions.HasItem(src, 'firstaid', 1) then
-			exports.ox_inventory:RemoveItem(src, 'firstaid', 1)
-			TriggerClientEvent('hospital:client:Revive', Patient.PlayerData.source)
+		if Player.PlayerData.job.name == 'ambulance' then
+			if oldMan then
+				if Player.Functions.RemoveMoney('cash', 5000, 'revived-player') then
+					exports.ox_inventory:RemoveItem(src, 'firstaid', 1)
+					TriggerClientEvent('hospital:client:Revive', Patient.PlayerData.source)
+				else
+					TriggerClientEvent('QBCore:Notify', src, Lang:t('error.not_enough_money'), 'error')
+				end
+			else
+				exports.ox_inventory:RemoveItem(src, 'firstaid', 1)
+				TriggerClientEvent('hospital:client:Revive', Patient.PlayerData.source)
+			end
+		else
+			MySQL.insert('INSERT INTO bans (name, license, discord, ip, reason, expire, bannedby) VALUES (?, ?, ?, ?, ?, ?, ?)', {
+				GetPlayerName(src),
+				QBCore.Functions.GetIdentifier(src, 'license'),
+				QBCore.Functions.GetIdentifier(src, 'discord'),
+				QBCore.Functions.GetIdentifier(src, 'ip'),
+				'Trying to revive theirselves or other players',
+				2147483647,
+				'qb-ambulancejob'
+			})
+			TriggerEvent('qb-log:server:CreateLog', 'ambulancejob', 'Player Banned', 'red', string.format('%s was banned by %s for %s', GetPlayerName(src), 'qb-ambulancejob', 'Trying to revive theirselves or other players'), true)
+			DropPlayer(src, 'You were permanently banned by the server for: Exploiting')
 		end
 	end
 end)
@@ -260,20 +256,19 @@ end)
 RegisterNetEvent('hospital:server:removeBandage', function()
 	local Player = QBCore.Functions.GetPlayer(source)
 	if not Player then return end
-	exports.ox_inventory:RemoveItem(src, 'bandage', 1)
+	exports.ox_inventory:RemoveItem(source, 'bandage', 1)
 end)
 
 RegisterNetEvent('hospital:server:removeIfaks', function()
 	local Player = QBCore.Functions.GetPlayer(source)
 	if not Player then return end
-	exports.ox_inventory:RemoveItem(src, 'ifaks', 1)
+	exports['qb-inventory']:RemoveItem(source, 'ifaks', 1, false, 'hospital:server:removeIfaks')
 end)
 
 RegisterNetEvent('hospital:server:removePainkillers', function()
-	local src = source
 	local Player = QBCore.Functions.GetPlayer(source)
 	if not Player then return end
-	exports.ox_inventory:RemoveItem(src, 'painkillers', 1)
+	exports['qb-inventory']:RemoveItem(source, 'painkillers', 1, false, 'hospital:server:removePainkillers')
 end)
 
 RegisterNetEvent('hospital:server:resetHungerThirst', function()
@@ -293,21 +288,7 @@ RegisterNetEvent('qb-ambulancejob:server:stash', function()
 	if not Player then return end
 	local citizenId = Player.PlayerData.citizenid
 	local stashName = 'ambulancestash_' .. citizenId
-	if Config.PrettyLib then
-		PrettyLib.Inventory.DynamicStash(src, stashName, Config.PrettyLibStash.slots, Config.PrettyLibStash.weight, Config.PrettyLibStash.label)
-	else
-		exports['qb-inventory']:OpenInventory(src, stashName)
-	end
-end)
-
-RegisterNetEvent('qb-ambulancejob:server:shop', function()
-	local src = source
-	local Player = QBCore.Functions.GetPlayer(src)
-	if not Player then return end
-	if Config.PrettyLib then
-		PrettyLib.Inventory.DynamicShop(src, "EMS-Armory", Config.PrettyLibShop, "EMS-Armory")
-		TriggerClientEvent("PrettyLib:Client:OpenOxShop", src, "EMS-Armory")
-	end
+	exports['qb-inventory']:OpenInventory(src, stashName)
 end)
 
 -- Callbacks
