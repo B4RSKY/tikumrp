@@ -247,7 +247,7 @@ local function startAutoMining()
             
             if remainingTime > 0 then
                 local timeString = formatTime(remainingTime)
-                lib.showTextUI('[E] Stop Mining | Sisa Waktu: ' .. timeString, {
+                lib.showTextUI('[/stopmining] Stop Mining  \n\nSisa Waktu: ' .. timeString, {
                     position = "left-center",
                     icon = 'fa-solid fa-pickaxe',
                 })

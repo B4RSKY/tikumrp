@@ -85,7 +85,7 @@ local function tebangOtomatis()
     CreateThread(function()
         while isAutoChopping and GetGameTimer() < autoChopEndTime do
             local remaining = FormatTime(autoChopEndTime - GetGameTimer())
-            lib.showTextUI('[AUTO TEBANG] Waktu tersisa: ' .. remaining .. '\n[E] untuk berhenti', {
+            lib.showTextUI('[AUTO TEBANG] Waktu tersisa: ' .. remaining .. '\n\n[/stoptebang] untuk berhenti', {
                 position = "left-center",
                 icon = 'tree',
             })
