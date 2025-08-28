@@ -109,3 +109,19 @@ exports('getDisableControls', function() return disableControls end)
 exports('setDisplayAmmo', function(bool) displayAmmo = bool end)
 
 exports('getDisplayAmmo', function() return displayAmmo end)
+
+--Map Besar & Blur
+CreateThread(function()
+    local minimap = RequestScaleformMovie("minimap")
+    if not HasScaleformMovieLoaded(minimap) then
+        RequestScaleformMovie(minimap)
+        while not HasScaleformMovieLoaded(minimap) do
+            Wait(1)
+        end
+    end
+    while true do
+        SetRadarBigmapEnabled(false, false)
+        SetRadarZoom(1000)
+        Wait(500)
+    end
+end)

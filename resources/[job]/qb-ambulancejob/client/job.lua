@@ -183,7 +183,7 @@ RegisterNetEvent('hospital:client:CheckStatus', function()
                                 Lang:t('info.is_status', { status = Config.BleedingStates[v].label }) }
                         })
                     else
-                        QBCore.Functions.Notify(Lang:t('success.healthy_player'), 'success')
+                        lib.notify({ title = 'Notifikasi', description = Lang:t('success.healthy_player'), type = 'success'})
                     end
                 end
                 isStatusChecking = true
@@ -191,7 +191,7 @@ RegisterNetEvent('hospital:client:CheckStatus', function()
             end
         end, playerId)
     else
-        QBCore.Functions.Notify(Lang:t('error.no_player'), 'error')
+        lib.notify({ title = 'Notifikasi', description = Lang:t('error.no_player'), type = 'success'})
     end
 end)
 
@@ -215,13 +215,13 @@ RegisterNetEvent('hospital:client:RevivePlayer', function()
             cpr = false
             TaskPlayAnim(playerPed, lib2_char_a, anim_success, 8.0, 8.0, -1, 0, 0, false, false, false)
             Wait(33590)
-            QBCore.Functions.Notify(Lang:t('success.revived'), 'success')
+            lib.notify({ title = 'Notifikasi', description = Lang:t('success.revived'), type = 'success'})
             TriggerServerEvent('hospital:server:RevivePlayer', playerId)
         else
-            QBCore.Functions.Notify(Lang:t('error.no_player'), 'error')
+            lib.notify({ title = 'Notifikasi', description = Lang:t('error.no_player'), type = 'error'})
         end
     else
-        QBCore.Functions.Notify(Lang:t('error.no_firstaid'), 'error')
+        lib.notify({ title = 'Notifikasi', description = Lang:t('error.no_firstaid'), type = 'error'})
     end
 end)
 
@@ -244,16 +244,16 @@ RegisterNetEvent('hospital:client:TreatWounds', function()
                 },
                 anim = { dict = healAnimDict, clip = healAnim},
             }) then 
-                QBCore.Functions.Notify(Lang:t('success.helped_player'), 'success')
+                lib.notify({ title = 'Notifikasi', description = Lang:t('success.helped_player'), type = 'success'})
                 TriggerServerEvent('hospital:server:TreatWounds', playerId)
             else
-                QBCore.Functions.Notify(Lang:t('error.canceled'), 'error')
+                lib.notify({ title = 'Notifikasi', description = Lang:t('error.canceled'), type = 'error'})
             end
         else
-            QBCore.Functions.Notify(Lang:t('error.no_player'), 'error')
+            lib.notify({ title = 'Notifikasi', description = Lang:t('error.no_player'), type = 'error'})
         end
     else
-        QBCore.Functions.Notify(Lang:t('error.no_bandage'), 'error')
+        lib.notify({ title = 'Notifikasi', description = Lang:t('error.no_bandage'), type = 'error'})
     end
 end)
 

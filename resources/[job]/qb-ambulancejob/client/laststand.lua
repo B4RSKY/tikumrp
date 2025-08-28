@@ -79,7 +79,7 @@ function SetLaststand(bool)
                     LaststandTime = LaststandTime - 1
                     Config.DeathTime = LaststandTime
                 elseif LaststandTime - 1 <= 0 then
-                    QBCore.Functions.Notify(Lang:t('error.bled_out'), 'error')
+                    lib.notify({ title = 'Notifikasi', description = Lang:t('error.bled_out'), type = 'error'})
                     SetLaststand(false)
                     local killer_2, killerWeapon = NetworkGetEntityKillerOfPlayer(player)
                     local killer = GetPedSourceOfDeath(ped)
@@ -127,7 +127,7 @@ RegisterNetEvent('hospital:client:UseFirstAid', function()
             TriggerServerEvent('hospital:server:UseFirstAid', playerId)
         end
     else
-        QBCore.Functions.Notify(Lang:t('error.impossible'), 'error')
+        lib.notify({ title = 'Notifikasi', description = Lang:t('error.impossible'), type = 'error'})
     end
 end)
 
@@ -246,7 +246,7 @@ function SetLaststand(bool)
                     LaststandTime = LaststandTime - 1
                     Config.DeathTime = LaststandTime
                 elseif LaststandTime - 1 <= 0 then
-                    QBCore.Functions.Notify(Lang:t('error.bled_out'), 'error')
+                    lib.notify({ title = 'Notifikasi', description = Lang:t('error.bled_out'), type = 'error'})
                     SetLaststand(false)
                     local killer_2, killerWeapon = NetworkGetEntityKillerOfPlayer(player)
                     local killer = GetPedSourceOfDeath(ped)
@@ -330,7 +330,7 @@ RegisterNetEvent('hospital:client:UseFirstAid', function()
             TriggerServerEvent('hospital:server:UseFirstAid', playerId)
         end
     else
-        QBCore.Functions.Notify(Lang:t('error.impossible'), 'error')
+        lib.notify({ title = 'Notifikasi', description = Lang:t('error.impossible'), type = 'error'})
     end
 end)
 
@@ -361,9 +361,9 @@ RegisterNetEvent('hospital:client:HelpPerson', function(targetId)
         },
         anim = { dict = healAnimDict, clip = healAnim},
     }) then 
-        QBCore.Functions.Notify(Lang:t('success.revived'), 'success')
+        lib.notify({ title = 'Notifikasi', description = Lang:t('success.revived'), type = 'error'})
         TriggerServerEvent('hospital:server:RevivePlayer', targetId)
     else
-        QBCore.Functions.Notify(Lang:t('error.canceled'), 'error')
+        lib.notify({ title = 'Notifikasi', description = Lang:t('error.canceled'), type = 'error'})
     end
 end)
