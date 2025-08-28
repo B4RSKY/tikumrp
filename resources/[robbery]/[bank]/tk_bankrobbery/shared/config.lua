@@ -2,7 +2,7 @@ Config = {
     --- Compatibility Settings
     Resource = GetCurrentResourceName(),
     Logging = 'qb', -- 'ox_lib' or 'qb' or 'esx'
-    Debug = true, -- true | false, enable debug mode
+    Debug = false, -- true | false, enable debug mode
     Lang = 'en', -- Language, choose one of the prefixes from the locales folder
     Phone = 'QBCore', -- 'QBCore' or 'GKS' or 'Qs' or 'lb-phone' or edit utils files for others
 
