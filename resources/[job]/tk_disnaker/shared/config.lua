@@ -260,7 +260,7 @@ Config.Blips = {
     },
     {
         name = "Gudang", sprite = 473, color = 3, scale = 0.7,
-        coords = vector3(-515.1102, -2202.5713, 6.3940),
+        coords = vector3(903.07, 3586.16, 33.43),
         jobs = false
     },
     {

@@ -3,7 +3,7 @@ local Cfg = {
         Kota = {
             label  = "Gudang Kota",
             name   = "Kota",
-            coords = vec4(-515.1102, -2202.5713, 6.3940, 137.6360),
+            coords = vec4(-1607.43, -830.21, 10.08, 143.97),
             defaultWeight = 450000,
             defaultSlots  = 150,
             target = { label = "Gudang", icon = "fa-solid fa-warehouse" }
@@ -11,7 +11,7 @@ local Cfg = {
         SandyShores = {
             label  = "Gudang SS",
             name   = "SandyShores",
-            coords = vec4(-1607.43, -830.21, 10.08, 143.97),
+            coords = vec4(903.07, 3586.16, 33.43, 181.26),
             defaultWeight = 450000,
             defaultSlots  = 150,
             target = { label = "Gudang", icon = "fa-solid fa-warehouse" }
