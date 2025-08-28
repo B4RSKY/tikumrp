@@ -6,6 +6,7 @@ description 'Allows players to repair/customize vehicles through a specified job
 version '3.0.0'
 
 shared_scripts {
+    '@ox_lib/init.lua',
     '@qb-core/shared/locale.lua',
     'locales/en.lua',
     'locales/*.lua',

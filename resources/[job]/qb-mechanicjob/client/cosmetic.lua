@@ -25,140 +25,154 @@ local function GetHex(category, id)
     return hex
 end
 
+-- Fungsi ini tidak perlu diubah karena formatnya sudah kompatibel dengan ox_lib.
 local function GetPaints(category)
     local Paints = {}
-    Paints[#Paints + 1] = { value = 'none', text = Lang:t('menu.none') }
+    Paints[#Paints + 1] = { value = 'none', label = Lang:t('menu.none') } -- 'text' diganti 'label' agar lebih standar untuk ox_lib
     for i = 1, #Config.Paints[category] do
         Paints[#Paints + 1] = {
             value = Config.Paints[category][i].id,
-            text = Config.Paints[category][i].label
+            label = Config.Paints[category][i].label -- 'text' diganti 'label'
         }
     end
     return Paints
 end
 
+-- Diubah untuk menggunakan lib.inputDialog
 local function PaintList(category)
     local paintOptions = GetPaints(category)
-    local dialog = exports['qb-input']:ShowInput({
-        header = Lang:t('menu.paint_vehicle'),
-        submitText = Lang:t('menu.submit'),
-        inputs = {
-            {
-                text = Lang:t('menu.primary'),
-                name = 'primarypaint',
-                type = 'select',
-                options = paintOptions
-            },
-            {
-                text = Lang:t('menu.secondary'),
-                name = 'secondarypaint',
-                type = 'select',
-                options = paintOptions
-            },
-            {
-                text = Lang:t('menu.pearlescent'),
-                name = 'pearlescentpaint',
-                type = 'select',
-                options = paintOptions
-            },
-            {
-                text = Lang:t('menu.wheels'),
-                name = 'wheelpaint',
-                type = 'select',
-                options = paintOptions
-            }
+    local dialog = lib.inputDialog(Lang:t('menu.paint_vehicle'), {
+        {
+            label = Lang:t('menu.primary'),
+            name = 'primarypaint',
+            type = 'select',
+            options = paintOptions
+        },
+        {
+            label = Lang:t('menu.secondary'),
+            name = 'secondarypaint',
+            type = 'select',
+            options = paintOptions
+        },
+        {
+            label = Lang:t('menu.pearlescent'),
+            name = 'pearlescentpaint',
+            type = 'select',
+            options = paintOptions
+        },
+        {
+            label = Lang:t('menu.wheels'),
+            name = 'wheelpaint',
+            type = 'select',
+            options = paintOptions
         }
     })
+
     if not dialog then return end
-    if dialog.primarypaint and dialog.secondarypaint and dialog.pearlescentpaint and dialog.wheelpaint then
+
+    -- ox_lib mengembalikan tabel terindeks, bukan tabel dengan kunci nama.
+    local primarypaint = dialog[1]
+    local secondarypaint = dialog[2]
+    local pearlescentpaint = dialog[3]
+    local wheelpaint = dialog[4]
+
+    -- Pengecekan tetap sama, hanya variabelnya yang berbeda
+    if primarypaint and secondarypaint and pearlescentpaint and wheelpaint then
         local colors = {
-            primary = dialog.primarypaint ~= 'none' and HexToRGB(GetHex(category, dialog.primarypaint)) or nil,
-            secondary = dialog.secondarypaint ~= 'none' and HexToRGB(GetHex(category, dialog.secondarypaint)) or nil,
-            pearlescent = dialog.pearlescentpaint ~= 'none' and HexToRGB(GetHex(category, dialog.pearlescentpaint)) or nil,
-            wheel = dialog.wheelpaint ~= 'none' and HexToRGB(GetHex(category, dialog.wheelpaint)) or nil
+            primary = primarypaint ~= 'none' and HexToRGB(GetHex(category, primarypaint)) or nil,
+            secondary = secondarypaint ~= 'none' and HexToRGB(GetHex(category, secondarypaint)) or nil,
+            pearlescent = pearlescentpaint ~= 'none' and HexToRGB(GetHex(category, pearlescentpaint)) or nil,
+            wheel = wheelpaint ~= 'none' and HexToRGB(GetHex(category, wheelpaint)) or nil
         }
+
         local vehicle, distance = QBCore.Functions.GetClosestVehicle()
         if vehicle == 0 or distance > 5.0 then return end
         local netId = NetworkGetNetworkIdFromEntity(vehicle)
         if isPainting then return end
-        TriggerServerEvent('qb-mechanicjob:server:sprayVehicle', netId, dialog.primarypaint, dialog.secondarypaint, dialog.pearlescentpaint, dialog.wheelpaint, colors)
+
+        TriggerServerEvent('qb-mechanicjob:server:sprayVehicle', netId, primarypaint, secondarypaint, pearlescentpaint, wheelpaint, colors)
     end
 end
 
+-- Diubah untuk menggunakan lib.inputDialog dan pemilih warna bawaan ox_lib
 local function CustomColor()
-    local dialog = exports['qb-input']:ShowInput({
-        header = Lang:t('menu.custom_color'),
-        submitText = Lang:t('menu.submit'),
-        inputs = {
-            {
-                text = 'HEX',
-                name = 'hex',
-                type = 'text',
-                isRequired = false
+    local dialog = lib.inputDialog(Lang:t('menu.custom_color'), {
+        {
+            label = Lang:t('menu.color'),
+            name = 'colorpicker',
+            type = 'color', -- Tipe 'color' di ox_lib sudah termasuk input HEX
+            required = true
+        },
+        {
+            label = Lang:t('menu.section'),
+            name = 'section',
+            type = 'radio',
+            options = {
+                { value = 'primary',   label = Lang:t('menu.primary') },
+                { value = 'secondary', label = Lang:t('menu.secondary') }
             },
-            {
-                text = '',
-                name = 'colorpicker',
-                type = 'color',
-                isRequired = false
+            default = 'primary'
+        },
+        {
+            label = Lang:t('menu.type'),
+            name = 'paintType',
+            type = 'radio',
+            options = {
+                { value = 'metallic', label = Lang:t('menu.metallic') },
+                { value = 'matte',    label = Lang:t('menu.matte') },
+                { value = 'chrome',   label = Lang:t('menu.chrome') }
             },
-            {
-                text = Lang:t('menu.section'),
-                name = 'section',
-                type = 'radio',
-                options = {
-                    { value = 'primary',   text = Lang:t('menu.primary') },
-                    { value = 'secondary', text = Lang:t('menu.secondary') }
-                }
-            },
-            {
-                text = Lang:t('menu.type'),
-                name = 'paintType',
-                type = 'radio',
-                options = {
-                    { value = 'metallic', text = Lang:t('menu.metallic') },
-                    { value = 'matte',    text = Lang:t('menu.matte') },
-                    { value = 'chrome',   text = Lang:t('menu.chrome') }
-                }
-            }
+            default = 'metallic'
         }
     })
+
     if not dialog then return end
-    if (dialog.hex or dialog.colorpicker) and dialog.section then
-        local color = (dialog.hex and dialog.hex ~= '') and dialog.hex or dialog.colorpicker
+
+    -- ox_lib mengembalikan tabel terindeks
+    local color = dialog[1]
+    local section = dialog[2]
+    local paintType = dialog[3]
+
+    if color and section and paintType then
         local vehicle, distance = QBCore.Functions.GetClosestVehicle()
         if vehicle == 0 or distance > 5.0 then return end
         local netId = NetworkGetNetworkIdFromEntity(vehicle)
         if isPainting then return end
-        TriggerServerEvent('qb-mechanicjob:server:sprayVehicleCustom', netId, dialog.section, dialog.paintType, HexToRGB(color))
+
+        TriggerServerEvent('qb-mechanicjob:server:sprayVehicleCustom', netId, section, paintType, HexToRGB(color))
     end
 end
 
+-- Fungsi untuk mendaftarkan dan membuka menu ox_lib
 function PaintCategories()
-    local Paints = { { header = Lang:t('menu.paints'), isMenuHeader = true, icon = 'fas fa-fill' } }
-    Paints[#Paints + 1] = {
-        header = Lang:t('menu.custom_color'),
-        params = {
-            isAction = true,
-            event = function()
+    local options = {
+        {
+            title = Lang:t('menu.custom_color'),
+            icon = 'fas fa-palette',
+            onSelect = function()
                 CustomColor()
-            end,
-            args = {}
+            end
         }
     }
-    for k in pairs(Config.Paints) do
-        Paints[#Paints + 1] = {
-            header = k,
-            params = {
-                isAction = true,
-                event = function()
-                    PaintList(k)
-                end,
-                args = {}
-            }
-        }
+
+    -- Membuat opsi untuk setiap kategori cat dari Config
+    for categoryName, _ in pairs(Config.Paints) do
+        table.insert(options, {
+            title = categoryName,
+            icon = 'fas fa-fill-drip',
+            onSelect = function()
+                PaintList(categoryName)
+            end
+        })
     end
-    exports['qb-menu']:openMenu(Paints)
+
+    -- Mendaftarkan dan menampilkan menu konteks
+    lib.registerContext({
+        id = 'mechanic_paint_menu',
+        title = Lang:t('menu.paints'),
+        options = options
+    })
+    lib.showContext('mechanic_paint_menu')
 end
 
 -- Interior
