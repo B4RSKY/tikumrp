@@ -1,19 +1,6 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 local OutsideVehicles = {}
 
--- Handler
-
-AddEventHandler('onResourceStart', function(resource)
-    if resource == GetCurrentResourceName() then
-        Wait(100)
-        if Config['AutoRespawn'] then
-            MySQL.update('UPDATE player_vehicles SET state = 1 WHERE state = 0', {})
-        else
-            MySQL.update('UPDATE player_vehicles SET depotprice = 50 WHERE state = 0', {})
-        end
-    end
-end)
-
 -- Functions
 
 local vehicleClasses = {
@@ -67,6 +54,109 @@ local function filterVehiclesByCategory(vehicles, category)
     return filtered
 end
 
+local DepotCfg = {
+    percent  = Config.priceAsuransi,   -- 2%
+    min      = Config.minAsuransi,      -- batas bawah
+    fallback = Config.defaultAsuransi, -- jika harga tak ditemukan
+}
+
+local vehiclePriceCache = {}
+
+local function getSharedVehicleData(model)
+    if not model or model == '' then return nil end
+    local ml = string.lower(model)
+
+    if vehiclePriceCache[ml] ~= nil then
+        return vehiclePriceCache[ml]
+    end
+
+    local direct = QBCore.Shared.Vehicles[ml] or QBCore.Shared.Vehicles[model]
+    if direct then
+        vehiclePriceCache[ml] = direct
+        return direct
+    end
+
+    local j = joaat(ml)
+    for k, v in pairs(QBCore.Shared.Vehicles) do
+        if type(v) == 'table' then
+            if (v.model and string.lower(v.model) == ml)
+            or (v.hash and (v.hash == j or string.lower(tostring(v.hash)) == tostring(j)))
+            or (type(k) == 'number' and k == j)
+            then
+                vehiclePriceCache[ml] = v
+                return v
+            end
+        end
+    end
+
+    vehiclePriceCache[ml] = false
+    return nil
+end
+
+local function calcDepotPrice(model)
+    local data = getSharedVehicleData(model)
+    local base = data and tonumber(data.price) or nil
+    if base and base > 0 then
+        local val = math.floor((base * (DepotCfg.percent / 100)) + 0.5)
+        if val < DepotCfg.min then val = DepotCfg.min end
+        return val
+    end
+    return DepotCfg.fallback
+end
+
+local function pruneOutside(plate)
+    local entry = OutsideVehicles[plate]
+    if entry and not DoesEntityExist(entry.entity) then
+        OutsideVehicles[plate] = nil
+        return true
+    end
+    return false
+end
+
+local function reconcileDepotForPlayer(citizenId)
+    local rows = MySQL.rawExecute.await(
+        'SELECT plate, depotprice, vehicle FROM player_vehicles WHERE citizenid = ? AND state = 0',
+        { citizenId }
+    )
+    if not rows or #rows == 0 then return false end
+
+    local updated = false
+    for _, row in ipairs(rows) do
+        pruneOutside(row.plate)
+        local tracked = OutsideVehicles[row.plate]
+        local entityExists = tracked and DoesEntityExist(tracked.entity)
+
+        if (not entityExists) and (not row.depotprice or row.depotprice <= 0) then
+            local price = calcDepotPrice(row.vehicle)
+            MySQL.update.await(
+                'UPDATE player_vehicles SET depotprice = ? WHERE plate = ? AND citizenid = ? AND state = 0',
+                { price, row.plate, citizenId }
+            )
+            updated = true
+        end
+    end
+    return updated
+end
+
+-- Handler
+
+AddEventHandler('onResourceStart', function(resource)
+    if resource ~= GetCurrentResourceName() then return end
+    Wait(100)
+
+    if Config['AutoRespawn'] then
+        MySQL.update('UPDATE player_vehicles SET state = 1 WHERE state = 0', {})
+    else
+        local rows = MySQL.rawExecute.await('SELECT plate, vehicle FROM player_vehicles WHERE state = 0', {})
+        if rows and #rows > 0 then
+            for _, r in ipairs(rows) do
+                local price = calcDepotPrice(r.vehicle)
+                MySQL.update.await('UPDATE player_vehicles SET depotprice = ? WHERE plate = ?', { price, r.plate })
+            end
+        end
+    end
+end)
+
 -- Callbacks
 
 QBCore.Functions.CreateCallback('qb-garages:server:getHouseGarage', function(_, cb, house)
@@ -82,6 +172,7 @@ QBCore.Functions.CreateCallback('qb-garages:server:GetGarageVehicles', function(
     local vehicles
 
     if type == 'depot' then
+        reconcileDepotForPlayer(citizenId)
         vehicles = MySQL.rawExecute.await('SELECT * FROM player_vehicles WHERE citizenid = ? AND depotprice > 0', { citizenId })
     elseif Config.SharedGarages then
         vehicles = MySQL.rawExecute.await('SELECT * FROM player_vehicles WHERE citizenid = ?', { citizenId })
@@ -135,6 +226,10 @@ end)
 
 -- Checks if a vehicle can be spawned based on its type and location.
 QBCore.Functions.CreateCallback('qb-garages:server:IsSpawnOk', function(_, cb, plate, type)
+    if pruneOutside(plate) then
+        cb(true)
+        return
+    end
     if OutsideVehicles[plate] and DoesEntityExist(OutsideVehicles[plate].entity) then
         cb(false)
         return
@@ -174,14 +269,26 @@ RegisterNetEvent('qb-garages:server:updateVehicleState', function(state, plate)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
     if not Player then return end
-    MySQL.update('UPDATE player_vehicles SET state = ?, depotprice = ? WHERE plate = ? AND citizenid = ?', { state, 0, plate, Player.PlayerData.citizenid })
+
+    if state == 1 then OutsideVehicles[plate] = nil end
+
+    MySQL.update('UPDATE player_vehicles SET state = ?, depotprice = ? WHERE plate = ? AND citizenid = ?', 
+        { state, 0, plate, Player.PlayerData.citizenid })
 end)
 
+
 RegisterNetEvent('qb-garages:server:UpdateOutsideVehicle', function(plate, vehicleNetID)
-    OutsideVehicles[plate] = {
-        netID = vehicleNetID,
-        entity = NetworkGetEntityFromNetworkId(vehicleNetID)
-    }
+    if not plate or plate == '' then return end
+    if not vehicleNetID then
+        OutsideVehicles[plate] = nil
+        return
+    end
+    local entity = NetworkGetEntityFromNetworkId(vehicleNetID)
+    if entity and entity ~= 0 then
+        OutsideVehicles[plate] = { netID = vehicleNetID, entity = entity }
+    else
+        OutsideVehicles[plate] = nil
+    end
 end)
 
 RegisterNetEvent('qb-garages:server:trackVehicle', function(plate)
@@ -200,19 +307,25 @@ RegisterNetEvent('qb-garages:server:PayDepotPrice', function(data)
     local Player = QBCore.Functions.GetPlayer(src)
     local cashBalance = Player.PlayerData.money['cash']
     local bankBalance = Player.PlayerData.money['bank']
-    MySQL.scalar('SELECT depotprice FROM player_vehicles WHERE plate = ?', { data.plate }, function(result)
-        if result then
-            local depotPrice = result
 
-            if cashBalance >= depotPrice then
-                Player.Functions.RemoveMoney('cash', depotPrice, 'paid-depot')
-                TriggerClientEvent('qb-garages:client:takeOutGarage', src, data)
-            elseif bankBalance >= depotPrice then
-                Player.Functions.RemoveMoney('bank', depotPrice, 'paid-depot')
-                TriggerClientEvent('qb-garages:client:takeOutGarage', src, data)
-            else
-                TriggerClientEvent('QBCore:Notify', src, Lang:t('error.not_enough'), 'error')
-            end
+    MySQL.scalar('SELECT depotprice FROM player_vehicles WHERE plate = ?', { data.plate }, function(result)
+        if not result then return end
+        local depotPrice = result
+
+        local function succeed()
+            MySQL.update('UPDATE player_vehicles SET depotprice = 0 WHERE plate = ? AND citizenid = ?', { data.plate, Player.PlayerData.citizenid })
+            OutsideVehicles[data.plate] = nil
+            TriggerClientEvent('qb-garages:client:takeOutGarage', src, data)
+        end
+
+        if cashBalance >= depotPrice then
+            Player.Functions.RemoveMoney('cash', depotPrice, 'paid-depot')
+            succeed()
+        elseif bankBalance >= depotPrice then
+            Player.Functions.RemoveMoney('bank', depotPrice, 'paid-depot')
+            succeed()
+        else
+            TriggerClientEvent('QBCore:Notify', src, Lang:t('error.not_enough'), 'error')
         end
     end)
 end)

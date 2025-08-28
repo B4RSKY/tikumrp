@@ -305,20 +305,20 @@ RegisterNetEvent('qb-garages:client:trackVehicle', function(coords)
     SetNewWaypoint(coords.x, coords.y)
 end)
 
-local function CheckPlate(vehicle, plateToSet)
-    local vehiclePlate = promise.new()
+local function CheckPlate(vehicle, plateToSet, maxAttempts)
+    maxAttempts = maxAttempts or 20
+    local p = promise.new()
     CreateThread(function()
-        while true do
-            Wait(500)
+        for i = 1, maxAttempts do
             if GetVehicleNumberPlateText(vehicle) == plateToSet then
-                vehiclePlate:resolve(true)
-                return
-            else
-                SetVehicleNumberPlateText(vehicle, plateToSet)
+                p:resolve(true); return
             end
+            SetVehicleNumberPlateText(vehicle, plateToSet)
+            Wait(250)
         end
+        p:resolve(false)
     end)
-    return vehiclePlate
+    return p
 end
 
 RegisterNetEvent('qb-garages:client:takeOutGarage', function(data)
@@ -329,7 +329,10 @@ RegisterNetEvent('qb-garages:client:takeOutGarage', function(data)
             QBCore.Functions.TriggerCallback('qb-garages:server:spawnvehicle', function(netId, properties, vehPlate)
                 while not NetworkDoesNetworkIdExist(netId) do Wait(10) end
                 local veh = NetworkGetEntityFromNetworkId(netId)
-                Citizen.Await(CheckPlate(veh, vehPlate))
+                local ok = Citizen.Await(CheckPlate(veh, vehPlate))
+                if not ok then
+                    QBCore.Functions.Notify('Plate sync timeout, continuing...', 'error', 2000)
+                end
                 QBCore.Functions.SetVehicleProperties(veh, properties)
                 exports[Config.FuelResource]:SetFuel(veh, data.stats.fuel)
                 TriggerServerEvent('qb-garages:server:updateVehicleState', 0, vehPlate)
