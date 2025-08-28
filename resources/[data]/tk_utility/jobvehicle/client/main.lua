@@ -138,34 +138,30 @@ local function previwVehicle(veh, coords, label)
                 title = vehLabel,
                 description = 'Beli Kendaraan?',
                 onSelect = function(args)
-                    if exports["qb-core"]:HasItem("money", price) then
+                   local playerData = QBCore.Functions.GetPlayerData()
+                    if playerData.money.cash < price then
                         lib.notify({
                             title = 'DEALER',
-                            description = 'Uang anda tidak cukup',
+                            description = 'Uang tunai Anda tidak cukup.',
                             type = 'error'
                         })
                         return destroyPreviewVehicle()
                     end
+
                     destroyPreviewVehicle()
                     Wait(100)
                     local newVeh = createPlyVeh(model, coords)
                     TaskWarpPedIntoVehicle(cache.ped, newVeh, -1)
                     SetVehicleFixed(newVeh)
-                    --local plate = exports["vehicleshop"]:GeneratePlate()
-                    SetVehicleNumberPlateText(newVeh, prefixPlate .. ' ' .. lib.string.random('111'))
-                    -- SetVehicleNumberPlateText(newVeh, plate)
-                    -- utils.setFuel(newVeh, 100)
+                    local plate = exports["vehicleshop"]:GeneratePlate()
+                    SetVehicleNumberPlateText(newVeh, plate)
+                    exports["cdn-fuel"]:SetFuel(newVeh, 100)
 
-                    local data = {
-                        label = vehLabel,
-                        price = price,
-                        model = model,
-                        job = QBCore.Functions.GetPlayerData().job.name,
-                        plate = getPlate(newVeh),
-                        props = lib.getVehicleProperties(newVeh),
-                    }
+                    local jobName = playerData.job.name
+                    local vehicleModel = model
+                    local getplate = getPlate(newVeh)
 
-                    TriggerServerEvent('tk_job:veh', data)
+                    TriggerServerEvent('tk_job:veh', jobName, vehicleModel, getplate)
                 end,
                 metadata = {
                     Price = 'TK$' .. lib.math.groupdigits(price, '.')
