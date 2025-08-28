@@ -2356,4 +2356,15 @@ return {
 			image = "laptop_gold.png",
 		}
 	},
+
+	["jerry_can"] = {
+		label = "Jerrycan 20L",
+		weight = 20000,
+		stack = true,
+		close = true,
+		description = "A can full of Fuel",
+		client = {
+			image = "jerry_can.png",
+		}
+	},
 }
