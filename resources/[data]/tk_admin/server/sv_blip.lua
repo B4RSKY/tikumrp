@@ -2,7 +2,7 @@ RegisterNetEvent('admin:server:refreshBlips', function()
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
 
-    if not Player or not QBCore.Functions.HasPermission(src, 'admin') or QBCore.Functions.HasPermission(src, 'god')  then
+    if not Player or (not QBCore.Functions.HasPermission(src, 'admin') and not QBCore.Functions.HasPermission(src, 'god')) then
         return
     end
 
@@ -18,7 +18,7 @@ RegisterNetEvent('admin:server:refreshBlips', function()
             local targetCoords = GetEntityCoords(targetPed)
             
             local playerData = {
-                id = GetPlayerServerId(targetPlayerId),
+                id = targetPlayerId,
                 name = targetPlayer.PlayerData.charinfo.firstname .. ' ' .. targetPlayer.PlayerData.charinfo.lastname,
                 job = targetPlayer.PlayerData.job.name,
                 coords = targetCoords,
@@ -29,4 +29,4 @@ RegisterNetEvent('admin:server:refreshBlips', function()
     end
 
     TriggerClientEvent('admin:client:UpdatePlayerBlips', src, blipData)
-end)    
+end)

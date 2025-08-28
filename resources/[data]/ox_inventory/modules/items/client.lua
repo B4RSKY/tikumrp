@@ -207,14 +207,8 @@ function BatteryLoop()
     end
 end
 
-Item('phone', function(data, slot)
-	local success, result = pcall(function()
-		return exports.npwd:isPhoneVisible()
-	end)
-
-	if success then
-		exports.npwd:setPhoneVisible(not result)
-	end
+Item('jerrycan', function(data, slot)
+	TriggerEvent('cdn-fuel:jerrycan:refuelmenu', slot)
 end)
 
 Item('clothing', function(data, slot)

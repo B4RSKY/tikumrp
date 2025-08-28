@@ -663,7 +663,6 @@ return {
 		description = "A can full of Fuel",
 		client = {
 			image = "jerrycan.png",
-			event = 'cdn-fuel:jerrycan:refuelmenu',
 		}
 	},
 
