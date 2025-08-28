@@ -530,6 +530,11 @@ local function leburBatu()
         return
     end
 
+    if not exports['qb-core']:HasItem('washed_stone', 1) then
+        lib.notify({ title = 'DISNAKER', description = 'Tidak cukup batu bersih!', type = 'error', duration = 3500})
+        return
+    end
+
     if sibukMining then return end
     sibukMining = true
 
