@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>TIKUM VIP Admin By @barssky_</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div id="scrim" class="scrim hidden"></div>
+  <div id="app" class="container hidden">
+    <header class="header">
+      <h1>VIP Admin Panel</h1>
+      <button id="btnClose" class="btn secondary">Tutup (Esc)</button>
+    </header>
+
+    <section class="card">
+      <h2>Pembuatan VIP</h2>
+      <div class="form">
+        <label>Jenis/Tier
+          <select id="jenis"></select>
+        </label>
+        <label>Durasi (hari)
+          <input type="number" id="days" min="1" placeholder="mis. 30" />
+        </label>
+        <label id="targetWrap" class="hidden">Target ID (opsional)
+          <input type="number" id="targetId" min="1" placeholder="ID player (opsional)"/>
+        </label>
+        <button id="btnCreate" class="btn">Buat Kode</button>
+      </div>
+      <div id="createResult" class="result hidden">
+        <span>Kode VIP:</span>
+        <code id="codeBox"></code>
+        <button id="btnCopy" class="btn small">Copy</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>List VIP Aktif</h2>
+      <div class="toolbar">
+        <input id="search" type="text" placeholder="Cari citizenid / license..." />
+        <button id="btnSearch" class="btn small">Cari</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>CitizenID</th>
+              <th>Nama Steam</th>
+              <th>Jenis</th>
+              <th>Expired</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="vipRows"></tbody>
+        </table>
+      </div>
+      <div class="pager">
+        <button id="prevPage" class="btn small">Prev</button>
+        <span id="pageInfo">1 / 1</span>
+        <button id="nextPage" class="btn small">Next</button>
+      </div>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

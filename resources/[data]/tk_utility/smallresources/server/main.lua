@@ -34,3 +34,20 @@ end, {
     print = false,
     itemFilter = {money = true},
 })
+
+RegisterCommand('cekvipsv', function(src, args, raw)
+    if src <= 0 then
+        print('[tk_vip] Jalankan in-game, bukan dari console.')
+        return
+    end
+
+    -- Pastikan nama resource yang punya export benar
+    local ok = exports.tk_vip:getVip(src)   -- ganti tk_modul sesuai NAMA FOLDER resource VIP kamu
+    print(('[tk_vip] cekvipsv src=%s getVip=%s'):format(src, tostring(ok)))
+
+    if ok then
+        print('OKE Saya VIP')
+    else
+        print('Ga VIP')
+    end
+end, false)
