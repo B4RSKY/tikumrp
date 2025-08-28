@@ -4,7 +4,7 @@ Config = {
     Logging = 'qb', -- 'ox_lib' or 'qb' or 'esx'
     Debug = false, -- true | false, enable debug mode
     Lang = 'en', -- Language, choose one of the prefixes from the locales folder
-    Phone = 'QBCore', -- 'QBCore' or 'GKS' or 'Qs' or 'lb-phone' or edit utils files for others
+    Phone = 'lb-phone', -- 'QBCore' or 'GKS' or 'Qs' or 'lb-phone' or edit utils files for others
 
     --- MLO Settings
     FleecaBanks = 'default', -- 'default', 'gabz' or 'K4MB1' for fleeca bank MLO

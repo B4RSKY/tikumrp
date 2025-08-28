@@ -72,27 +72,26 @@ CreateThread(function()
         {
             name = 'carry',
             icon = 'fa-solid fa-person',
-            label = 'Gendong',
+            label = 'Carry 1',
             distance = 2.5,
             canInteract = function(entity)
                 return not carry.InProgress
             end,
-            submenu = {
-                {
-                    icon = 'fa-solid fa-person',
-                    label = 'Carry 1',
-                    onSelect = function(data)
-                        StartCarry('default', NetworkGetPlayerIndexFromPed(data.entity))
-                    end
-                },
-                {
-                    icon = 'fa-solid fa-person',
-                    label = 'Carry 2',
-                    onSelect = function(data)
-                        StartCarry('piggyback', NetworkGetPlayerIndexFromPed(data.entity))
-                    end
-                },
-            }
+            onSelect = function(data)
+                StartCarry('default', NetworkGetPlayerIndexFromPed(data.entity))
+            end
+        },
+        {
+            name = 'carry',
+            icon = 'fa-solid fa-person',
+            label = 'Carry 2',
+            distance = 2.5,
+            canInteract = function(entity)
+                return not carry.InProgress
+            end,
+            onSelect = function(data)
+                StartCarry('piggyback', NetworkGetPlayerIndexFromPed(data.entity))
+            end
         }
     })
 end)
