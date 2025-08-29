@@ -17,6 +17,8 @@ server_scripts {
     '**/server/*.lua',
 }
 
+ui_page 'vipsystem/html/index.html'
+
 files {
     'vipsystem/html/index.html',
     'vipsystem/html/style.css',
