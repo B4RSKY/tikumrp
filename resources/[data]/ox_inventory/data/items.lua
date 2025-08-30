@@ -2388,4 +2388,14 @@ return {
 			image = "jerry_can.png",
 		}
 	},
+	["boombox"] = {
+		label = "Music Box",
+		weight = 20000,
+		stack = true,
+		close = true,
+		description = "Untuk Mendengarkan Musik",
+		client = {
+			image = "boombox.png",
+		}
+	},
 }
