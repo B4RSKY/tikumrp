@@ -1,8 +1,7 @@
--- SERVER SIDE
 local function getIdentifier(src)
     local ids = GetPlayerIdentifiers(src)
     if not ids or #ids == 0 then return ('src:%s'):format(src) end
-    for _, id in ipairs(ids) do if id:find('license:') then return id end end
+    for _, id in ipairs(ids) do if id:find('steam:') then return id end end
     for _, id in ipairs(ids) do if id:find('discord:') then return id end end
     return ids[1]
 end
@@ -25,18 +24,18 @@ AddEventHandler('playerDropped', function(reason)
             local pp = GetPlayerPed(pid)
             if pp ~= 0 then
                 local dist = #(crds - GetEntityCoords(pp))
-                if dist <= 70.0 then -- Reduced trigger distance
-                    TriggerClientEvent('tk:res:cl:exit:spawnLabel', pid, {
+                if dist <= 50.0 then
+                    TriggerClientEvent('tk_exiting:cl:spawnLabel', pid, {
                         id = src,
                         coords = crds,
                         identifier = identifier,
                         reason = tostring(reason or 'Unknown'),
-                        duration = 25000, -- Shorter duration
-                        maxDrawDist = 50.0, -- Reduced draw distance
+                        duration = 25000,
+                        maxDrawDist = 50.0,
                         timeText = timeText,
                         title = name,
-                        scale = 2.5, -- Larger scale
-                        fontScale = 1.2, -- Larger font
+                        scale = 2.5,
+                        fontScale = 1.2,
                     })
                 end
             end

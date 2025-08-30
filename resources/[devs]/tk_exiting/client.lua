@@ -1,16 +1,13 @@
--- CLIENT SIDE
 local labels     = {}
 local drawThread = nil
 local baseTxd    = 'tk_exitdui_txd'
 local rtxdHandle = nil
 
--- ===== Utils =====
 local function now() return GetGameTimer() end
 
 local function ensureTxd()
     if not rtxdHandle then
         rtxdHandle = CreateRuntimeTxd(baseTxd)
-        print(('[tk_exitdui] RTXD created: %s handle=%s'):format(baseTxd, tostring(rtxdHandle)))
     end
 end
 
@@ -26,18 +23,15 @@ local function getClockText()
     return ('%02d:%02d'):format(GetClockHours(), GetClockMinutes())
 end
 
--- Skala sprite yang lebih proporsional
 local function getScaleForDistance(world, baseW, baseH)
     local cam = GetGameplayCamCoords()
     local dist = #(world - cam)
     local fov  = GetGameplayCamFov()
-    local scale = (1.0 / math.max(dist, 0.01)) * (85.0 / fov) * 1.5 -- Increased scale multiplier
+    local scale = (1.0 / math.max(dist, 0.01)) * (85.0 / fov) * 1.5
     return baseW * scale, baseH * scale, dist
 end
 
--- ===== DUI compat (ox_lib -> native fallback) =====
 local function newDUI(url, width, height, debug)
-    -- 1) ox_lib dulu
     if lib and lib.dui and lib.dui.new then
         local o = lib.dui:new({ url = url, width = width, height = height, debug = debug or false })
         local handle
@@ -59,7 +53,6 @@ local function newDUI(url, width, height, debug)
         end
     end
 
-    -- 2) Native fallback
     local obj = CreateDui(url, width, height)
     if not obj then return nil end
     local handle
@@ -81,7 +74,6 @@ local function newDUI(url, width, height, debug)
     }
 end
 
--- Kirim message ke DUI dengan retry
 local function sendWithRetry(dui, data, tries, delay)
     tries = tries or 10
     delay = delay or 80
@@ -96,7 +88,6 @@ local function setDisplay(dui, visible)
     dui:send({ action = 'display', value = visible and true or false })
 end
 
--- ===== Render loop dengan animasi yang lebih smooth =====
 local function startDrawLoop()
     if drawThread then return end
     drawThread = CreateThread(function()
@@ -106,10 +97,9 @@ local function startDrawLoop()
 
             for key, lb in pairs(labels) do
                 if t >= lb.expire then
-                    -- Animasi keluar yang lebih halus
                     if not lb.closing then
                         lb.closing  = true
-                        lb.closeAt  = t + 400 -- Extended close animation
+                        lb.closeAt  = t + 400
                         setDisplay(lb.dui, false)
                     elseif t >= (lb.closeAt or t) then
                         if lb.dui then lb.dui:remove() end
@@ -120,20 +110,17 @@ local function startDrawLoop()
                     tw = tw * (lb.scale or 1.0)
                     th = th * (lb.scale or 1.0)
 
-                    -- Lerp yang lebih responsif untuk animasi scale
-                    local lerpSpeed = 0.15 -- Faster lerp for smoother animation
+                    local lerpSpeed = 0.15
                     lb._w = lb._w and (lb._w + (tw - lb._w) * lerpSpeed) or tw
                     lb._h = lb._h and (lb._h + (th - lb._h) * lerpSpeed) or th
 
-                    -- Fade in animation untuk label baru
                     if not lb.fadeStarted then
                         lb.fadeStarted = true
                         lb.fadeStart = t
                         lb.alpha = 0
                     end
 
-                    -- Calculate fade alpha
-                    local fadeTime = 600 -- 600ms fade in
+                    local fadeTime = 600
                     if lb.fadeStart and t < lb.fadeStart + fadeTime then
                         lb.alpha = math.min(255, (t - lb.fadeStart) / fadeTime * 255)
                     else
@@ -141,7 +128,7 @@ local function startDrawLoop()
                     end
 
                     if dist <= (lb.maxDrawDist or 50.0) then
-                        SetDrawOrigin(lb.coords.x, lb.coords.y, lb.coords.z + 1.0, 0) -- Slightly lower
+                        SetDrawOrigin(lb.coords.x, lb.coords.y, lb.coords.z + 1.0, 0)
                         DrawSprite(lb.txd, lb.txn, 0.0, 0.0, lb._w, lb._h, 0.0, 255, 255, 255, math.floor(lb.alpha or 255))
                         ClearDrawOrigin()
                         anyDraw = true
@@ -159,7 +146,6 @@ local function startDrawLoop()
     end)
 end
 
--- ===== Spawn 1 label (ukuran lebih kecil) =====
 local function createExitLabel(payload)
     ensureTxd()
 
@@ -167,13 +153,13 @@ local function createExitLabel(payload)
     local coords     = payload.coords
     local identifier = payload.identifier
     local reason     = payload.reason
-    local duration   = tonumber(payload.duration) or 25000 -- Slightly shorter default
-    local maxDraw    = tonumber(payload.maxDrawDist) or 50.0 -- Reduced draw distance
+    local duration   = tonumber(payload.duration) or 25000
+    local maxDraw    = tonumber(payload.maxDrawDist) or 50.0
     local timeText   = payload.timeText or getClockText()
     local titleText  = payload.title or ('ID %s'):format(id)
     local subText    = identifier
     local reasonText = tostring(reason or 'Unknown')
-    local fontScale  = payload.fontScale or 1.1 -- Increased default font scale
+    local fontScale  = payload.fontScale or 1.1
 
     local url = ('nui://%s/web/index.html?time=%s&title=%s&sub=%s&rt=%s&reason=%s&fs=%s&ts=%d')
         :format(GetCurrentResourceName(),
@@ -186,19 +172,15 @@ local function createExitLabel(payload)
             math.random(100000, 999999)
         )
 
-    -- Ukuran DUI yang lebih besar: 1600x800 (ratio 2:1)
     local dui = newDUI(url, 1600, 800, false)
-    if not dui or not dui.handle then
-        print('^1[tk_exit_dui]^0 gagal membuat DUI (lib & native).')
-        return
-    end
+    if not dui or not dui.handle then return end
 
     sendWithRetry(dui, {
         header = 'DISCONNECTED',
         time = timeText,
         title = titleText,
         subtitle = subText,
-        reasonTitle = 'DISCONNECT REASON',
+        reasonTitle = 'Alasan',
         reason = reasonText,
         fontScale = fontScale
     }, 12, 80)
@@ -210,50 +192,18 @@ local function createExitLabel(payload)
         dui = dui, txd = baseTxd, txn = txn,
         coords = vector3(coords.x, coords.y, coords.z),
         expire = now() + duration,
-        w = 0.28, h = 0.14,         -- Larger dimensions (ratio 2:1)
+        w = 0.28, h = 0.14,
         maxDrawDist = maxDraw,
-        scale = payload.scale or 1.5 -- Increased scale
+        scale = payload.scale or 1.5
     }
 
     setDisplay(dui, true)
     startDrawLoop()
 end
 
--- ===== Net event =====
-RegisterNetEvent('tk:res:cl:exit:spawnLabel', function(payload)
+RegisterNetEvent('tk_exiting:cl:spawnLabel', function(payload)
     if type(payload) ~= 'table' or not payload.coords then return end
     local me = PlayerPedId()
     if #(GetEntityCoords(me) - payload.coords) > (payload.maxDrawDist or 50.0) + 15.0 then return end
     createExitLabel(payload)
 end)
-
--- ===== DEBUG =====
-RegisterCommand('exitdui', function(_, args)
-    local ped = PlayerPedId()
-    local p = GetEntityCoords(ped)
-    local f = GetEntityForwardVector(ped)
-    local coords = vector3(p.x + f.x * 2.0, p.y + f.y * 2.0, p.z)
-
-    TriggerEvent('tk:res:cl:exit:spawnLabel', {
-        id = GetPlayerServerId(PlayerId()),
-        coords = coords,
-        identifier = 'steam:110000xxxxxxx',
-        reason = 'Connection timeout - Server did not respond',
-        duration = tonumber(args[1]) or 20000,
-        maxDrawDist = 20.0,
-        timeText = getClockText(),
-        title = 'B4RSKY GACOR',
-        scale = tonumber(args[2]) or 3.5,
-        fontScale = tonumber(args[3]) or 1.5
-    })
-end, false)
-
-RegisterCommand('tk_exitdui_clear', function()
-    local n = 0
-    for k, lb in pairs(labels) do
-        if lb.dui then lb.dui:remove() end
-        labels[k] = nil
-        n = n + 1
-    end
-    print(('[tk_exit_dui] cleared %d labels'):format(n))
-end, false)

@@ -16,7 +16,7 @@
       --danger: #ef4444;
       --danger-glow: rgba(239, 68, 68, 0.4);
       --border: rgba(99, 102, 241, 0.2);
-      --fs: 1.1; /* Slightly larger base font scale */
+      --fs: 1.1;
     }
 
     * {
@@ -35,7 +35,6 @@
       overflow: hidden;
     }
 
-    /* ===== KEYFRAME ANIMATIONS ===== */
     @keyframes slideIn {
       0% {
         opacity: 0;
@@ -103,7 +102,6 @@
       }
     }
 
-    /* ===== MAIN CONTAINER ===== */
     .container {
       position: absolute;
       inset: 0;
@@ -115,13 +113,13 @@
 
     .card {
       width: 100%;
-      max-width: 620px; /* Increased max-width */
+      max-width: 620px;
       background: 
         linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(168, 85, 247, 0.06)),
         linear-gradient(180deg, var(--bg2), var(--bg));
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 28px; /* Increased padding */
+      padding: 28px;
       position: relative;
       box-shadow: 
         0 20px 40px rgba(0, 0, 0, 0.4),
@@ -134,8 +132,6 @@
     .card.closing {
       animation: slideOut 0.4s cubic-bezier(0.55, 0.06, 0.68, 0.19) forwards;
     }
-
-    /* Subtle animated border */
     .card::before {
       content: '';
       position: absolute;
@@ -148,7 +144,6 @@
       background-size: 200% 200%;
     }
 
-    /* ===== HEADER ===== */
     .header {
       display: flex;
       align-items: center;
@@ -186,14 +181,13 @@
       animation: fadeInUp 0.8s ease-out 0.3s both;
     }
 
-    /* ===== PLAYER INFO ===== */
     .player-info {
       margin-bottom: 16px;
     }
 
     .player-name {
       color: var(--fg);
-      font-size: calc(var(--fs) * 26px); /* Increased from 24px */
+      font-size: calc(var(--fs) * 26px);
       font-weight: 700;
       margin-bottom: 4px;
       animation: fadeInUp 0.8s ease-out 0.4s both;
@@ -201,13 +195,12 @@
 
     .player-id {
       color: var(--accent-light);
-      font-size: calc(var(--fs) * 14px); /* Increased from 13px */
+      font-size: calc(var(--fs) * 14px);
       font-weight: 500;
       opacity: 0.9;
       animation: fadeInUp 0.8s ease-out 0.5s both;
     }
 
-    /* ===== REASON SECTION ===== */
     .reason-section {
       margin-top: 8px;
     }
@@ -228,16 +221,16 @@
         var(--bg3);
       border: 1px solid rgba(99, 102, 241, 0.25);
       border-radius: 12px;
-      padding: 14px 18px; /* Increased padding */
+      padding: 14px 18px;
       color: var(--fg);
-      font-size: calc(var(--fs) * 15px); /* Increased from 14px */
+      font-size: calc(var(--fs) * 15px);
       line-height: 1.4;
       font-weight: 500;
       position: relative;
       overflow: hidden;
       animation: fadeInUp 0.8s ease-out 0.7s both;
       word-wrap: break-word;
-      max-height: 90px; /* Increased from 80px */
+      max-height: 90px;
       overflow-y: auto;
     }
 
@@ -252,7 +245,6 @@
       animation: shimmer 2.5s ease-in-out infinite;
     }
 
-    /* ===== SCROLLBAR STYLING ===== */
     .reason-text::-webkit-scrollbar {
       width: 4px;
     }
@@ -270,7 +262,6 @@
       background: rgba(99, 102, 241, 0.5);
     }
 
-    /* ===== RESPONSIVE FONT SCALING ===== */
     @media (max-width: 1100px) {
       :root { --fs: 0.9; }
     }
@@ -284,7 +275,6 @@
       .card { padding: 20px; }
     }
 
-    /* ===== PERFORMANCE OPTIMIZATIONS ===== */
     .card, .reason-text {
       will-change: transform, opacity;
     }
@@ -312,7 +302,7 @@
       </div>
 
       <div class="reason-section">
-        <div class="reason-title" id="reasonTitle">DISCONNECT REASON</div>
+        <div class="reason-title" id="reasonTitle">Alasan</div>
         <div class="reason-text" id="reasonText">Waiting for data...</div>
       </div>
     </div>
@@ -322,7 +312,6 @@
     (function() {
       'use strict';
 
-      // DOM elements
       const elements = {
         card: document.getElementById('card'),
         timestamp: document.getElementById('timestamp'),
@@ -332,7 +321,6 @@
         reasonText: document.getElementById('reasonText')
       };
 
-      // Responsive scaling based on viewport
       function updateScale() {
         const vw = Math.max(800, Math.min(1600, window.innerWidth));
         const vh = Math.max(400, Math.min(800, window.innerHeight));
@@ -342,33 +330,27 @@
           String(baseScale * parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--fs'))));
       }
 
-      // Sanitize text input
       function sanitize(str) {
         return String(str || '').replace(/[<>]/g, '').trim();
       }
 
-      // Apply data to UI elements
       function applyData(data) {
         if (!data) return;
 
-        // Update font scale if provided
         if (data.fontScale && typeof data.fontScale === 'number') {
           document.documentElement.style.setProperty('--fs', String(data.fontScale));
         }
 
-        // Update UI elements
         if (data.time) elements.timestamp.textContent = sanitize(data.time);
         if (data.title) elements.playerName.textContent = sanitize(data.title);
         if (data.subtitle) elements.playerId.textContent = sanitize(data.subtitle);
         if (data.reasonTitle) elements.reasonTitle.textContent = sanitize(data.reasonTitle);
         if (data.reason) {
           elements.reasonText.textContent = sanitize(data.reason);
-          // Auto-scroll to top for long reasons
           elements.reasonText.scrollTop = 0;
         }
       }
 
-      // Handle display state
       function setDisplay(visible) {
         if (visible) {
           elements.card.classList.remove('closing');
@@ -377,7 +359,6 @@
         }
       }
 
-      // Parse URL parameters as fallback
       function parseUrlParams() {
         try {
           const params = new URLSearchParams(location.search);
@@ -387,7 +368,7 @@
               time: params.get('time') || undefined,
               title: params.get('title') || undefined,
               subtitle: params.get('sub') || undefined,
-              reasonTitle: params.get('rt') || 'DISCONNECT REASON',
+              reasonTitle: params.get('rt') || 'Alasan',
               reason: params.get('reason') || undefined
             };
           }
@@ -397,7 +378,6 @@
         return null;
       }
 
-      // Message event handler
       function handleMessage(event) {
         const data = event.data;
         if (!data) return;
@@ -412,32 +392,26 @@
         }
       }
 
-      // Initialize
       function init() {
-        // Set initial scale
         updateScale();
         
-        // Apply URL params as fallback
         const urlData = parseUrlParams();
         if (urlData) {
           applyData(urlData);
         } else {
-          // Default placeholder data
           applyData({
             time: '--:--',
             title: 'Player',
             subtitle: 'identifier:n/a',
-            reasonTitle: 'DISCONNECT REASON',
+            reasonTitle: 'Alasan',
             reason: 'Waiting for data...'
           });
         }
 
-        // Event listeners
         window.addEventListener('message', handleMessage);
         window.addEventListener('resize', updateScale);
       }
 
-      // Start when DOM is ready
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
       } else {

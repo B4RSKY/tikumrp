@@ -22,17 +22,6 @@ local function isVip()
     return ok and (res == true) or false
 end
 
-
--- local function ytIdFromUrl(u)
---     if not u then return nil end
---     return u:match("[?&]v=([%w-_]+)") or u:match("youtu%.be/([%w-_]+)") or u:match("youtube%.com/shorts/([%w-_]+)") or u:match("youtube%.com/embed/([%w-_]+)")
--- end
-
--- local function ytThumb(u)
---     local id = ytIdFromUrl(u)
---     if id then return ('https://img.youtube.com/vi/%s/hqdefault.jpg'):format(id) end
--- end
-
 local placing = false
 local Boxes = {}
 local Carried = {}

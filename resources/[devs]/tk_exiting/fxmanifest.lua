@@ -2,8 +2,8 @@ fx_version 'cerulean'
 game 'gta5'
 lua54 'yes'
 
-name 'tk_exit_dui'
-author 'TK'
+name 'tk_exiting'
+author '@barssky_'
 version '1.1.0'
 
 shared_scripts {
@@ -21,6 +21,3 @@ server_scripts {
 files {
     'web/**',
 }
-
--- DUI memakai lib.dui atau fallback native
-dependencies { 'ox_lib' }
