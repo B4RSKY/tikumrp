@@ -29,7 +29,7 @@ Config.Cooldowns = {
 -- Discord Webhook
 Config.Discord = {
     Enabled = true, -- Set to true to enable Discord integration
-    Webhook = 'https://discord.com/api/webhooks/1345955044276830239/7cakaXqTZAv1ZSO37S28ieEKgDePbQ0ceiyqQKOujxEFIHjd1Pv_MY88ciTCOYyTDf7m', -- Replace with your actual webhook URL
+    Webhook = 'https://discord.com/api/webhooks/1410901543984566342/EtKvJ59araKUknYbX76z398OcpIMshPXeyNKfrpDVZgLgTvZzLFBgTIOCMQgDgpmBn1m', -- Replace with your actual webhook URL
     ImageUrl = 'https://files.fivemerr.com/images/a437452f-5f0d-4550-aa83-2ac7e4aaa394.png', 
     ReportEmbedColor = 16711680, -- Red
     CreateEmebedColor = 65280, -- Green
