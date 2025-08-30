@@ -7,6 +7,7 @@ local Webhooks = {
     ['drug_sale'] = 'https://discord.com/api/webhooks/1405470600465481751/mCIw9rXAcw_ekjTzok9cMHi8BNktRYWsohTymMrER-Eyg9fk5x9v4yDi4CcCvh7Zns7B',
     ['default'] = '',
     ['exploit'] = 'https://discord.com/api/webhooks/1408377031988609144/w75t4Eva41YeePRegErVksF6Mcj4Au-4mAjPQUI4QX3oBVfnM3xvAyaMPdAG8K263eS7',
+    ['jobmanagement'] = 'https://discord.com/api/webhooks/1411349556641398909/oLDcSpVEPet-kujZtQvGgVtQiMU7i_RHQpIfTGejirg1sGs50SZCiyESTnLfjDTUAuEU',
     ['testwebhook'] = '',
     ['playermoney'] = '',
     ['playerinventory'] = '',
