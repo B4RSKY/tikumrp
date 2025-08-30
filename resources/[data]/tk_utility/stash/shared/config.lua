@@ -1,19 +1,5 @@
 local Cfg = {
     Stash = {
-        ['police_evidence'] = {
-            label = 'Police Evidence Locker',
-            slots = 200,
-            weight = 1000000,
-            withdraw_grade = 2,
-            deposit_grade = 0,
-            jobs = 'police',
-            target = {
-                coords = vec3(451.5, -993.1, 30.7),
-                label = 'Open Evidence Locker',
-                icon = 'fas fa-archive',
-                group = 'police'
-            }
-        },
         ['brankas_polisi'] = {
             label = 'Brankas Polisi',
             slots = 200,
@@ -22,6 +8,34 @@ local Cfg = {
             withdraw_grade = 0,
             deposit_grade = 0,
             target = false
+        },
+        ['brankas_ems'] = {
+            label = 'Brankas Medis',
+            slots = 200,
+            weight = 1000000,
+            jobs = 'ambulance',
+            withdraw_grade = 1,
+            deposit_grade = 0,
+            target = {
+                coords = vec3(-478.38, -997.72, 34.34),
+                label = 'Brankas',
+                icon = 'fas fa-archive',
+                group = 'mechanic'
+            }
+        },
+        ['brankas_mechanic'] = {
+            label = 'Brankas Tikum Speed',
+            slots = 200,
+            weight = 1000000,
+            jobs = 'mechanic',
+            withdraw_grade = 1,
+            deposit_grade = 0,
+            target = {
+                coords = vec3(-926.75, -2025.5, 14.45),
+                label = 'Brankas',
+                icon = 'fas fa-archive',
+                group = 'mechanic'
+            }
         }
     }
 }
