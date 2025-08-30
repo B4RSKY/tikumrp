@@ -1,6 +1,6 @@
 return {
 	General = {
-		name = 'Shop',
+		name = 'Warung Madura',
 		blip = {
 			id = 59, colour = 69, scale = 0.8
 		}, inventory = {
@@ -60,15 +60,16 @@ return {
 
 	YouTool = {
 		name = 'YouTool',
-		blip = {
-			id = 402, colour = 69, scale = 0.8
-		}, inventory = {
-			{ name = 'lockpick', price = 10 }
+		groups = {
+			['mechanic'] = 1
+		},
+		inventory = {
+			{ name = 'toolkit', price = 10 },
+			{ name = 'kanebo', price = 10 }
 		}, locations = {
-			vec3(2748.0, 3473.0, 55.67),
-			vec3(342.99, -1298.26, 32.51)
+			vec3(-947.8, -2066.59, 10.61)
 		}, targets = {
-			{ loc = vec3(2746.8, 3473.13, 55.67), length = 0.6, width = 3.0, heading = 65.0, minZ = 55.0, maxZ = 56.8, distance = 3.0 }
+			{ loc = vec3(-947.8, -2066.59, 10.61), length = 0.6, width = 3.0, heading = 65.0, minZ = 55.0, maxZ = 56.8, distance = 3.0 }
 		}
 	},
 
@@ -124,20 +125,17 @@ return {
 		}
 	},
 
-	Medicine = {
+	Apotek = {
 		name = 'Medicine Cabinet',
 		groups = {
-			['ambulance'] = 0
-		},
-		blip = {
-			id = 403, colour = 69, scale = 0.8
+			['ambulance'] = 1
 		}, inventory = {
 			{ name = 'medikit', price = 26 },
 			{ name = 'bandage', price = 5 }
 		}, locations = {
-			vec3(306.3687, -601.5139, 43.28406)
+			vec3(-459.79, -1015.66, 23.74)
 		}, targets = {
-
+			{ loc = vec3(-459.79, -1015.66, 23.74), length = 0.5, width = 3.0, heading = 270.0, minZ = 30.5, maxZ = 32.0, distance = 6 }
 		}
 	},
 

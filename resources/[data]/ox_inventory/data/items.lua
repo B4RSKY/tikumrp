@@ -1458,6 +1458,28 @@ return {
 		}
 	},
 
+	["toolkit"] = {
+		label = "Toolkit",
+		weight = 1000,
+		stack = true,
+		close = true,
+		description = "A nice toolbox with stuff to repair your vehicle",
+		client = {
+			image = "advancedkit.png",
+		}
+	},
+
+	["kanebo"] = {
+		label = "kanebo",
+		weight = 500,
+		stack = true,
+		close = true,
+		description = "Untuk Membersihkan Kendaraan",
+		client = {
+			image = "kanebo.png",
+		}
+	},
+
 	["advancedrepairkit"] = {
 		label = "Advanced Repairkit",
 		weight = 4000,
