@@ -24,7 +24,7 @@ Config.Locations = {
         logoImage = "ems.png",
         locations = {
             {
-                coords = vector3(-490.03, -980.43, 34.3), -- Main Hospital
+                coords = vector3(-490.33, -981.13, 34.02), -- Main Hospital
                 width = 1.0,
                 length = 1.0,
                 heading = 0,
@@ -38,7 +38,7 @@ Config.Locations = {
         logoImage = "mechanic.png",
         locations = {
             {
-                coords = vector3(-921.31, -2044.38, 15.28), -- Mechanic Shop
+                coords = vector3(-921.82, -2044.7, 14.25), -- Mechanic Shop
                 width = 1.0,
                 length = 1.0,
                 heading = 0,

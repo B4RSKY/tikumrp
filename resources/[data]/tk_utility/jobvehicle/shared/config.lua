@@ -197,5 +197,32 @@ return {
                 },
             }
         },
+        {
+            job = 'mechanic',
+            label = 'Dealer Mechanic',
+            ped = {
+                model = 'mp_m_waremech_01',
+                coords = vector4(-984.72, -2047.99, 9.41, 140.52)
+            },
+            spawn = vector4(-987.8, -2053.61, 9.41, 209.0),
+            vehicle = {
+                flatbed = {
+                    price = 5000,
+                    label = 'flatbed',
+                    prefixPlate = 'MECH',
+                    forRank = {
+                        [0] = true, [1] = true, [2] = true, [3] = true, [4] = true
+                    }
+                },
+                towtruck = {
+                    price = 5000,
+                    label = 'tow truck',
+                    prefixPlate = 'MECH',
+                    forRank = {
+                        [0] = true, [1] = true, [2] = true, [3] = true, [4] = true
+                    }
+                },
+            }
+        },
     }
 }

@@ -63,14 +63,10 @@ return {
             includeOffDuty = false,
         },
         {
-            label = 'Mechanics',
-            groups = {'lsc', 'bennys', 'hayes'},
+            label = 'Tikum SPEED',
+            groups = {'mechanic', 'bennys', 'hayes'},
             includeOffDuty = true,
             icon = 'mdi:wrench',
-        },
-        {
-            label = 'Taxi',
-            groups = {'taxi'},
         },
     },
 
