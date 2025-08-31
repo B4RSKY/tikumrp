@@ -48,7 +48,7 @@ Config = {
     HandsupEnabled = true,
     HandsupKeybind = 'X',
     HandsupKeybindEnabled = true,
-    HandsupInCar = true,
+    HandsupInCar = false,
     ReplayEmoteAfterHandsup = true,
     HoldToHandsUp = false,
 
