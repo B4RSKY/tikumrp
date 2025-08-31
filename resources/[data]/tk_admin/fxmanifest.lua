@@ -1,43 +1,38 @@
 fx_version 'cerulean'
-game 'gta5'
-ui_page "nui/index.html"
 
-shared_scripts {
-    'shared/sh_config.lua',
-    'locale.lua',
-    'locales/en.lua', -- Change this to your desired language.
+game "gta5"
+
+author "Project Sloth & OK1ez"
+version '1.1.7'
+description 'Admin Menu'
+repository 'https://github.com/Project-Sloth/ps-adminmenu'
+
+lua54 'yes'
+
+ui_page 'html/index.html'
+-- ui_page 'http://localhost:5173/' --for dev
+
+client_script {
+  'client/**',
 }
 
-client_scripts {
-    '@qb-core/shared/items.lua',
-    '@qb-core/shared/gangs.lua',
-    '@qb-core/shared/jobs.lua',
-    '@qb-core/shared/vehicles.lua',
-    'client/**/cl_*.lua',
-    'shared/sh_commands.lua',
+server_script {
+  "server/**",
+  "@oxmysql/lib/MySQL.lua",
 }
 
-server_scripts {
-    '@oxmysql/lib/MySQL.lua',
-    'server/**/sv_*.lua',
+shared_script {
+  '@ox_lib/init.lua',
+  "shared/**",
 }
 
 files {
-    "nui/index.html",
-    "nui/js/**.js",
-    "nui/css/**.css",
-    "nui/webfonts/*.css",
-    "nui/webfonts/*.otf",
-    "nui/webfonts/*.ttf",
-    "nui/webfonts/*.woff2",
+  'html/**',
+  'data/ped.lua',
+  'data/object.lua',
+  'data/locations.lua',
+
+  'locales/*.json',
 }
 
-exports {
-    'CreateLog',
-    'ToggleDev',
-}
-
-server_exports {
-    'CreateLog'
-} 
-lua54 'yes'
+ox_lib 'locale' -- v3.8.0 or above
