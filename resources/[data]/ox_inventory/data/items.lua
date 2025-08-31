@@ -14,30 +14,6 @@ return {
 		label = 'Uang Kotor',
 	},
 
-	['burger'] = {
-		label = 'Burger',
-		weight = 220,
-		client = {
-			status = { hunger = 200000 },
-			anim = 'eating',
-			prop = 'burger',
-			usetime = 2500,
-			notification = 'You ate a delicious burger'
-		},
-	},
-
-	['sprunk'] = {
-		label = 'Sprunk',
-		weight = 350,
-		client = {
-			status = { thirst = 200000 },
-			anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
-			prop = { model = `prop_ld_can_01`, pos = vec3(0.01, 0.01, 0.06), rot = vec3(5.0, 5.0, -180.5) },
-			usetime = 2500,
-			notification = 'You quenched your thirst with a sprunk'
-		}
-	},
-
 	['parachute'] = {
 		label = 'Parachute',
 		weight = 8000,
@@ -91,18 +67,6 @@ return {
 		}
 	},
 
-	['panties'] = {
-		label = 'Knickers',
-		weight = 10,
-		consume = 0,
-		client = {
-			status = { thirst = -100000, stress = -25000 },
-			anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
-			prop = { model = `prop_cs_panties_02`, pos = vec3(0.03, 0.0, 0.02), rot = vec3(0.0, -13.5, -1.5) },
-			usetime = 2500,
-		}
-	},
-
 	['lockpick'] = {
 		label = 'Lockpick',
 		weight = 160,
@@ -131,29 +95,98 @@ return {
 	['money'] = {
 		label = 'Uang',
 	},
-
-	['mustard'] = {
-		label = 'Mustard',
-		weight = 500,
+	--Makanan
+	['burger'] = {
+		label = 'Burger',
+		weight = 220,
+		degrade = 4320,
 		client = {
-			status = { hunger = 25000, thirst = 25000 },
-			anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
-			prop = { model = `prop_food_mustard`, pos = vec3(0.01, 0.0, -0.07), rot = vec3(1.0, 1.0, -1.5) },
+			status = { hunger = 20 },
+			anim = 'eating',
+			prop = 'burger',
 			usetime = 2500,
-			notification = 'You.. drank mustard'
-		}
+			notification = 'You ate a delicious burger'
+		},
+	},
+	['bakso'] = {
+		label = 'Bakso',
+		weight = 220,
+		degrade = 4320,
+		client = {
+			status = { hunger = 60 },
+			anim = 'eatingb',
+			prop = 'beansoup',
+			usetime = 3000,
+		},
+	},
+	['naspad'] = {
+		label = 'Nasi Padang',
+		weight = 220,
+		degrade = 4320,
+		client = {
+			status = { hunger = 65 },
+			anim = 'eatingb',
+			prop = 'beansoup',
+			usetime = 3000,
+		},
+	},
+	['indomie'] = {
+		label = 'Indomie Telor',
+		weight = 220,
+		degrade = 4320,
+		client = {
+			status = { hunger = 65 },
+			anim = 'eatingb',
+			prop = 'beansoup',
+			usetime = 3000,
+		},
 	},
 
+	--Minuman
 	['water'] = {
-		label = 'Water',
+		label = 'Air Mineral',
 		weight = 500,
+		degrade = 4320,
 		client = {
-			status = { thirst = 200000 },
+			status = { thirst = 20 },
 			anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
 			prop = { model = `prop_ld_flow_bottle`, pos = vec3(0.03, 0.03, 0.02), rot = vec3(0.0, 0.0, -1.5) },
 			usetime = 2500,
 			cancel = true,
 			notification = 'You drank some refreshing water'
+		}
+	},
+	['esteh'] = {
+		label = 'Es Teh',
+		weight = 100,
+		degrade = 4320,
+		client = {
+			status = { thirst = 65 },
+			anim = 'drinking',
+			prop = 'boba2',
+			usetime = 3000,
+		}
+	},
+	['esjeruk'] = {
+		label = 'Es Jeruk',
+		weight = 100,
+		degrade = 4320,
+		client = {
+			status = { thirst = 65 },
+			anim = 'drinking',
+			prop = 'esjeruk',
+			usetime = 3000,
+		}
+	},
+	['sogem'] = {
+		label = 'Soda Gembira',
+		weight = 100,
+		degrade = 4320,
+		client = {
+			status = { thirst = 65 },
+			anim = 'drinking',
+			prop = 'boba2',
+			usetime = 3000,
 		}
 	},
 

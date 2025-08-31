@@ -13,7 +13,6 @@ return {
 
         Items = {
             { name = 'phone',  count = 1 },
-            { name = 'radio',  count = 1 },
             { name = 'burger', count = 3 },
             { name = 'water',  count = 3 },
         },
@@ -34,11 +33,11 @@ return {
         Rules = {
             header = 'Konfirmasi Starter Pack',
             text = "Selamat datang di kota TITIK KUMPUL! Silakan baca dan setujui aturan di bawah ini.:\n\n" ..
-                    "1. **No RDM & VDM:** Do not kill or ram others without a valid RP reason.\n\n" ..
-                    "2. **Fear RP:** Value your life. Act afraid when threatened.\n\n" ..
-                    "3. **Metagaming & Powergaming:** Do not use out-of-character (OOC) information in-character (IC).\n\n" ..
-                    "By clicking 'Claim', you confirm you will comply with all city rules.",
-            button = { submit = 'Claim', cancel = 'Batal' }
+                    "1. **No RDM & VDM:** Jangan membunuh atau menabrak orang lain tanpa alasan RP yang sah.\n\n" ..
+                    "2. **Fear RP:** Hargai hidupmu. Bertindaklah takut saat terancam.\n\n" ..
+                    "3. **Metagaming & Powergaming:** Jangan gunakan informasi di luar karakter (OOC) di dalam karakter (IC).\n\n" ..
+                    "Dengan mengklik 'Klaim', Anda mengonfirmasi bahwa Anda akan mematuhi semua peraturan kota.",
+            button = { submit = 'Klaim', cancel = 'Batal' }
         },
         RateLimitSeconds = 5,
     }
