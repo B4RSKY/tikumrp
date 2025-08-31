@@ -13,8 +13,8 @@ return {
 
         Items = {
             { name = 'phone',  count = 1 },
-            { name = 'burger', count = 3 },
-            { name = 'water',  count = 3 },
+            { name = 'naspad', count = 10 },
+            { name = 'esjeruk',  count = 10 },
         },
 
         Target = {
