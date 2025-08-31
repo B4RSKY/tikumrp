@@ -23,5 +23,6 @@ SetRelationshipBetweenGroups(1, `COP`, `PLAYER`)
 SetRelationshipBetweenGroups(1, `PRISONER`, `PLAYER`)
 
 CreateThread(function ()
+    AddTextEntry('FE_THDR_GTAO', 'TITIK KUMPUL ROLEPLAY')
     AddTextEntry('PM_PANE_CFX', 'TITIK KUMPUL ROLEPLAY')
 end)
