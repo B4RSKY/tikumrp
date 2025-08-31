@@ -18,6 +18,7 @@ client_scripts {
 	'client/wounding.lua',
 	'client/laststand.lua',
 	'client/job.lua',
+	'client/oplas.lua',
 	'client/dead.lua',
 	'@PolyZone/client.lua',
 	'@PolyZone/BoxZone.lua',

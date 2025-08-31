@@ -215,7 +215,10 @@ return {
 		weight = 1,
 		stack = true,
 		close = true,
-		description = ''
+		description = '',
+		client = {
+			event = 'tk_job:oplas'
+		}
 	},
     ['radio'] = {
         label = 'Radio',
