@@ -2,10 +2,10 @@ Config = {}
 
 Config.Debug = false
 
-Config.ClothingCost = 100
-Config.BarberCost = 100
-Config.TattooCost = 100
-Config.SurgeonCost = 100
+Config.ClothingCost = 5000
+Config.BarberCost = 10000
+Config.TattooCost = 25000
+Config.SurgeonCost = 100000
 
 Config.ChargePerTattoo = true -- Charge players per tattoo. Config.TattooCost will become the cost of 1 tattoo. The cost can be overridden by adding `cost` key in shared/tattoos.lua for specific tattoos
 
@@ -100,17 +100,17 @@ Config.Aces = {} -- list of ace permissions used for blacklisting
 Config.Blips = {
     ["clothing"] = {
         Show = true,
-        Sprite = 366,
+        Sprite = 73,
         Color = 47,
         Scale = 0.7,
-        Name = "Clothing Store",
+        Name = "Toko Pakaian",
     },
     ["barber"] = {
         Show = true,
         Sprite = 71,
         Color = 0,
         Scale = 0.7,
-        Name = "Barber",
+        Name = "Pangkas Rambut",
     },
     ["tattoo"] = {
         Show = true,
@@ -120,7 +120,7 @@ Config.Blips = {
         Name = "Tattoo Shop",
     },
     ["surgeon"] = {
-        Show = true,
+        Show = false,
         Sprite = 102,
         Color = 4,
         Scale = 0.7,
@@ -541,40 +541,40 @@ Config.Stores = {
             vector3(-294.1501159668, 6203.2700195312, 31.49)
         }
     },
-    {
-        type = "surgeon",
-        coords = vector4(298.78, -572.81, 43.26, 114.27),
-        size = vector3(4, 4, 4),
-        rotation = 45,
-        usePoly = false,
-        points = {
-            vector3(298.84417724609, -572.92205810547, 43.26),
-            vector3(296.39556884766, -575.65942382812, 43.26),
-            vector3(293.56317138672, -572.60675048828, 43.26),
-            vector3(296.28656005859, -570.330078125, 43.26)
-        }
-    }
+    -- {
+    --     type = "surgeon",
+    --     coords = vector4(298.78, -572.81, 43.26, 114.27),
+    --     size = vector3(4, 4, 4),
+    --     rotation = 45,
+    --     usePoly = false,
+    --     points = {
+    --         vector3(298.84417724609, -572.92205810547, 43.26),
+    --         vector3(296.39556884766, -575.65942382812, 43.26),
+    --         vector3(293.56317138672, -572.60675048828, 43.26),
+    --         vector3(296.28656005859, -570.330078125, 43.26)
+    --     }
+    -- }
 }
 
 
 Config.ClothingRooms = {
-    {
-        job = "police",
-        coords = vector4(454.91, -990.89, 30.69, 193.4),
-        size = vector3(4, 4, 4),
-        rotation = 45,
-        usePoly = false,
-        points = {
-            vector3(460.41918945312, -993.11444091797, 30.69),
-            vector3(449.39508056641, -993.60614013672, 30.69),
-            vector3(449.88696289062, -990.23779296875, 30.69),
-            vector3(450.97882080078, -989.71411132812, 30.69),
-            vector3(451.0325012207, -987.89904785156, 30.69),
-            vector3(453.47863769531, -987.76928710938, 30.69),
-            vector3(454.35513305664, -988.46459960938, 30.69),
-            vector3(460.4231262207, -987.94573974609, 30.69)
-        }
-    }
+    -- {
+    --     job = "police",
+    --     coords = vector4(454.91, -990.89, 30.69, 193.4),
+    --     size = vector3(4, 4, 4),
+    --     rotation = 45,
+    --     usePoly = false,
+    --     points = {
+    --         vector3(460.41918945312, -993.11444091797, 30.69),
+    --         vector3(449.39508056641, -993.60614013672, 30.69),
+    --         vector3(449.88696289062, -990.23779296875, 30.69),
+    --         vector3(450.97882080078, -989.71411132812, 30.69),
+    --         vector3(451.0325012207, -987.89904785156, 30.69),
+    --         vector3(453.47863769531, -987.76928710938, 30.69),
+    --         vector3(454.35513305664, -988.46459960938, 30.69),
+    --         vector3(460.4231262207, -987.94573974609, 30.69)
+    --     }
+    -- }
 }
 
 
