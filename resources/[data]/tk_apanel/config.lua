@@ -20,7 +20,7 @@ Config.AdminPanelKey                        = ""
 Config.ShowNamesKey                         = ""
 
 Config.EnableAdminPanelCommand              = true                  -- Whether to enable the admin panel command (/a by default)
-Config.AdminPanelCommand                    = "adminmenu"
+Config.AdminPanelCommand                    = "adminpanel"
 
 Config.NoClipType                           = 1                     -- 1 (default) NEW txAdmin-like NoClip system, or 2 for old style 919Admin NoClip system, or 3 for default qbcore NoClip system
 
@@ -139,7 +139,7 @@ Config.Permissions = {
             "deletecharacter", -- Delete a character
             "messageall", -- Message all players
             "leaderboardinfo", --Check the leaderboards
-            "vehiclesinfo", -- Access the vehicle spawn code list page
+            --"vehiclesinfo", -- Access the vehicle spawn code list page
             "noclip", -- Noclip
             "teleport", -- Teleport yourself, others, to location
             "kill", -- Kill yourself, others
