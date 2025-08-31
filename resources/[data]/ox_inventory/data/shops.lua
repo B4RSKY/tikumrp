@@ -14,6 +14,7 @@ return {
 			{ name = 'sogem', price = 1000 },
 			{ name = 'phone', price = 15000 },
 			{ name = 'radio', price = 12000 },
+			{ name = 'boombox', price = 250000 },
 		}, locations = {
 			vec3(25.7, -1347.3, 29.49),
 			vec3(-3038.71, 585.9, 7.9),
