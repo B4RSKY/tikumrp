@@ -15,6 +15,7 @@ return {
             { name = 'phone',  count = 1 },
             { name = 'naspad', count = 10 },
             { name = 'esjeruk',  count = 10 },
+            { name = 'tiketoplas',  count = 1 },
         },
 
         Target = {
