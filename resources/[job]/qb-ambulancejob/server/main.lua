@@ -193,13 +193,13 @@ RegisterNetEvent('hospital:server:RevivePlayer', function(playerId, isOldMan)
 		if Player.PlayerData.job.name == 'ambulance' then
 			if oldMan then
 				if Player.Functions.RemoveMoney('cash', 5000, 'revived-player') then
-					exports.ox_inventory:RemoveItem(src, 'firstaid', 1)
+					exports.ox_inventory:RemoveItem(src, 'medikit', 1)
 					TriggerClientEvent('hospital:client:Revive', Patient.PlayerData.source)
 				else
 					TriggerClientEvent('QBCore:Notify', src, Lang:t('error.not_enough_money'), 'error')
 				end
 			else
-				exports.ox_inventory:RemoveItem(src, 'firstaid', 1)
+				exports.ox_inventory:RemoveItem(src, 'medikit', 1)
 				TriggerClientEvent('hospital:client:Revive', Patient.PlayerData.source)
 			end
 		else

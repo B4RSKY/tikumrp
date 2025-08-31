@@ -196,7 +196,7 @@ RegisterNetEvent('hospital:client:CheckStatus', function()
 end)
 
 RegisterNetEvent('hospital:client:RevivePlayer', function()
-    local hasItem = exports['qb-core']:HasItem('firstaid', 1)
+    local hasItem = exports['qb-core']:HasItem('medikit', 1)
     if hasItem then
         local player, distance = GetClosestPlayer()
         if player ~= -1 and distance < 5.0 then
