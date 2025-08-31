@@ -8,6 +8,7 @@ local Webhooks = {
     ['default'] = '',
     ['exploit'] = 'https://discord.com/api/webhooks/1408377031988609144/w75t4Eva41YeePRegErVksF6Mcj4Au-4mAjPQUI4QX3oBVfnM3xvAyaMPdAG8K263eS7',
     ['jobmanagement'] = 'https://discord.com/api/webhooks/1411349556641398909/oLDcSpVEPet-kujZtQvGgVtQiMU7i_RHQpIfTGejirg1sGs50SZCiyESTnLfjDTUAuEU',
+    ['ps-adminmenu'] = 'https://discord.com/api/webhooks/1411632697213849620/w-lrvKxtBOLFOIGjD06a2aS91ethTP10Zri2tlppryb1mtwbQ-_fz-p7TLvnq0nRLxk5',
     ['testwebhook'] = '',
     ['playermoney'] = '',
     ['playerinventory'] = '',
