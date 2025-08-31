@@ -7,7 +7,7 @@ local timeToSafe = Config.TimeToSave
 
 RegisterNetEvent("QBCore:Client:OnPlayerLoaded")
 AddEventHandler("QBCore:Client:OnPlayerLoaded", function()
-    TriggerServerEvent("knxr-antitroll:onjoin", false)
+    TriggerServerEvent("tk_antitroll:onjoin", false)
 end)
 
 local function setUiShow(bool)
@@ -28,7 +28,7 @@ local function updateUiTime(timeLeft)
 end
 
 local function updateTimeToDatabase(overrideTime)
-    TriggerServerEvent("knxr-antitroll:updateTime", overrideTime or timeLeft)
+    TriggerServerEvent("tk_antitroll:updateTime", overrideTime or timeLeft)
 end
 
 local function startTimer()
@@ -140,7 +140,7 @@ local function stopAntiTroll()
     isTimerRunning = false -- stop the Timer thread
 end
 
-RegisterNetEvent("knxr-antitroll:toggle", function(toggle, timeOverride)
+RegisterNetEvent("tk_antitroll:toggle", function(toggle, timeOverride)
     local jam = 5
     local menit = 60
     hasProtection = toggle or not hasProtection

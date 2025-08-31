@@ -24,17 +24,17 @@ lib.addCommand('troll', {
 end)
 
 function ToggleTrollProtection(target, toogleOverride, timeOverride)
-    TriggerClientEvent("knxr-antitroll:toggle", target, timeOverride)
+    TriggerClientEvent("tk_antitroll:toggle", target, timeOverride)
 end
 
-RegisterNetEvent("knxr-antitroll:updateTime", function(time)
+RegisterNetEvent("tk_antitroll:updateTime", function(time)
     local timeLeft = time
     local identifier = QBCore.Functions.GetIdentifier(source, 'steam')
 
     updateOrInsert(identifier, timeLeft)
 end)
 
-RegisterNetEvent("knxr-antitroll:onjoin", function()
+RegisterNetEvent("tk_antitroll:onjoin", function()
     local source = source
     local identifier = QBCore.Functions.GetIdentifier(source, 'steam')
     local isNew = isNewPlayer(identifier)
@@ -50,7 +50,7 @@ function onJoin(source, identifier, isNew)
     local time = getTimeLeft(identifier)
 
     if time > 0 then
-        TriggerClientEvent("knxr-antitroll:toggle", source, true, time)
+        TriggerClientEvent("tk_antitroll:toggle", source, true, time)
         return
     end
 
