@@ -23,7 +23,7 @@ exports('registerKeyMapping', function(description, onKeyDownCommand, onKeyUpCom
 end)
 
 CreateThread(function()
-    RegisterKeyMapping('+isKunci', 'Kunci kendaraan', 'keyboard', '')
+    RegisterKeyMapping('+isKunci', 'Kunci kendaraan', 'keyboard', 'U')
     RegisterKeyMapping('+isshowIDPlayer', 'Show ID Players', 'keyboard', 'U')
     RegisterKeyMapping("oprenradial", "Radial Menu", "keyboard", 'F1')
     RegisterKeyMapping("+tk_bb_place", "Boombox: letakkan di tanah", "keyboard", 'G')
