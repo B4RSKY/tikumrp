@@ -55,7 +55,8 @@ local function filterVehiclesByCategory(vehicles, category)
 end
 
 local DepotCfg = {
-    percent  = Config.priceAsuransi,   -- 2%
+    percent_nonvip  = Config.priceAsuransi,   -- 2%
+    percent_vip    =  1, -- VIP 1%
     min      = Config.minAsuransi,      -- batas bawah
     fallback = Config.defaultAsuransi, -- jika harga tak ditemukan
 }
@@ -67,7 +68,7 @@ local function getSharedVehicleData(model)
     local ml = string.lower(model)
 
     if vehiclePriceCache[ml] ~= nil then
-        return vehiclePriceCache[ml]
+        return vehiclePriceCache[ml] or nil
     end
 
     local direct = QBCore.Shared.Vehicles[ml] or QBCore.Shared.Vehicles[model]
@@ -93,15 +94,23 @@ local function getSharedVehicleData(model)
     return nil
 end
 
-local function calcDepotPrice(model)
+local function calcDepotPrice(model, percentOverride)
     local data = getSharedVehicleData(model)
     local base = data and tonumber(data.price) or nil
+    local pct  = percentOverride or DepotCfg.percent_nonvip
     if base and base > 0 then
-        local val = math.floor((base * (DepotCfg.percent / 100)) + 0.5)
+        local val = math.floor((base * (pct / 100)) + 0.5)
         if val < DepotCfg.min then val = DepotCfg.min end
         return val
     end
     return DepotCfg.fallback
+end
+
+local function isVip(src)
+    if not src then return false end
+    if GetResourceState('tk_modul') ~= 'started' then return false end
+    local ok, res = pcall(function() return exports['tk_modul']:getVip(src) end)
+    return ok and res == true
 end
 
 local function pruneOutside(plate)
@@ -113,7 +122,7 @@ local function pruneOutside(plate)
     return false
 end
 
-local function reconcileDepotForPlayer(citizenId)
+local function reconcileDepotForPlayer(citizenId, src)
     local rows = MySQL.rawExecute.await(
         'SELECT plate, depotprice, vehicle FROM player_vehicles WHERE citizenid = ? AND state = 0',
         { citizenId }
@@ -121,18 +130,30 @@ local function reconcileDepotForPlayer(citizenId)
     if not rows or #rows == 0 then return false end
 
     local updated = false
+    local vip = isVip(src)
+    local pct = vip and DepotCfg.percent_vip or DepotCfg.percent_nonvip
+
     for _, row in ipairs(rows) do
         pruneOutside(row.plate)
         local tracked = OutsideVehicles[row.plate]
         local entityExists = tracked and DoesEntityExist(tracked.entity)
 
-        if (not entityExists) and (not row.depotprice or row.depotprice <= 0) then
-            local price = calcDepotPrice(row.vehicle)
-            MySQL.update.await(
-                'UPDATE player_vehicles SET depotprice = ? WHERE plate = ? AND citizenid = ? AND state = 0',
-                { price, row.plate, citizenId }
-            )
-            updated = true
+        if not entityExists then
+            local desired = calcDepotPrice(row.vehicle, pct)
+
+            if not row.depotprice or row.depotprice <= 0 then
+                MySQL.update.await(
+                    'UPDATE player_vehicles SET depotprice = ? WHERE plate = ? AND citizenid = ? AND state = 0',
+                    { desired, row.plate, citizenId }
+                )
+                updated = true
+            elseif vip and row.depotprice > desired then
+                MySQL.update.await(
+                    'UPDATE player_vehicles SET depotprice = ? WHERE plate = ? AND citizenid = ? AND state = 0',
+                    { desired, row.plate, citizenId }
+                )
+                updated = true
+            end
         end
     end
     return updated
@@ -146,14 +167,14 @@ AddEventHandler('onResourceStart', function(resource)
 
     if Config['AutoRespawn'] then
         MySQL.update('UPDATE player_vehicles SET state = 1 WHERE state = 0', {})
-    else
-        local rows = MySQL.rawExecute.await('SELECT plate, vehicle FROM player_vehicles WHERE state = 0', {})
-        if rows and #rows > 0 then
-            for _, r in ipairs(rows) do
-                local price = calcDepotPrice(r.vehicle)
-                MySQL.update.await('UPDATE player_vehicles SET depotprice = ? WHERE plate = ?', { price, r.plate })
-            end
-        end
+    -- else
+    --     local rows = MySQL.rawExecute.await('SELECT plate, vehicle FROM player_vehicles WHERE state = 0', {})
+    --     if rows and #rows > 0 then
+    --         for _, r in ipairs(rows) do
+    --             local price = calcDepotPrice(r.vehicle)
+    --             MySQL.update.await('UPDATE player_vehicles SET depotprice = ? WHERE plate = ?', { price, r.plate })
+    --         end
+    --     end
     end
 end)
 
@@ -172,7 +193,7 @@ QBCore.Functions.CreateCallback('qb-garages:server:GetGarageVehicles', function(
     local vehicles
 
     if type == 'depot' then
-        reconcileDepotForPlayer(citizenId)
+        reconcileDepotForPlayer(citizenId, source)
         vehicles = MySQL.rawExecute.await('SELECT * FROM player_vehicles WHERE citizenid = ? AND depotprice > 0', { citizenId })
     elseif Config.SharedGarages then
         vehicles = MySQL.rawExecute.await('SELECT * FROM player_vehicles WHERE citizenid = ?', { citizenId })
@@ -305,29 +326,46 @@ end)
 RegisterNetEvent('qb-garages:server:PayDepotPrice', function(data)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
+    if not Player then return end
+
     local cashBalance = Player.PlayerData.money['cash']
     local bankBalance = Player.PlayerData.money['bank']
 
-    MySQL.scalar('SELECT depotprice FROM player_vehicles WHERE plate = ?', { data.plate }, function(result)
-        if not result then return end
-        local depotPrice = result
+    -- Ambil data kendaraan + harga depot saat ini
+    local row = MySQL.single.await('SELECT citizenid, vehicle, depotprice FROM player_vehicles WHERE plate = ?', { data.plate })
+    if not row then return end
+    if row.citizenid ~= Player.PlayerData.citizenid then
+        TriggerClientEvent('QBCore:Notify', src, Lang:t('error.not_owned') or 'Not your vehicle.', 'error')
+        return
+    end
 
-        local function succeed()
-            MySQL.update('UPDATE player_vehicles SET depotprice = 0 WHERE plate = ? AND citizenid = ?', { data.plate, Player.PlayerData.citizenid })
-            OutsideVehicles[data.plate] = nil
-            TriggerClientEvent('qb-garages:client:takeOutGarage', src, data)
-        end
+    -- Hitung harga ideal berdasar status VIP saat ini
+    local vip = isVip(src)
+    local desired = calcDepotPrice(row.vehicle, vip and DepotCfg.percent_vip or DepotCfg.percent_nonvip)
+    local depotPrice = row.depotprice or desired
 
-        if cashBalance >= depotPrice then
-            Player.Functions.RemoveMoney('cash', depotPrice, 'paid-depot')
-            succeed()
-        elseif bankBalance >= depotPrice then
-            Player.Functions.RemoveMoney('bank', depotPrice, 'paid-depot')
-            succeed()
-        else
-            TriggerClientEvent('QBCore:Notify', src, Lang:t('error.not_enough'), 'error')
-        end
-    end)
+    -- Turunkan harga jika sekarang VIP dan harga tersimpan lebih tinggi
+    if vip and depotPrice > desired then
+        depotPrice = desired
+        MySQL.update.await('UPDATE player_vehicles SET depotprice = ? WHERE plate = ? AND citizenid = ?', { depotPrice, data.plate, Player.PlayerData.citizenid })
+    end
+
+    local function succeed()
+        -- reset depot & untrack
+        MySQL.update.await('UPDATE player_vehicles SET depotprice = 0 WHERE plate = ? AND citizenid = ?', { data.plate, Player.PlayerData.citizenid })
+        OutsideVehicles[data.plate] = nil
+        TriggerClientEvent('qb-garages:client:takeOutGarage', src, data)
+    end
+
+    if cashBalance >= depotPrice then
+        Player.Functions.RemoveMoney('cash', depotPrice, 'paid-depot')
+        succeed()
+    elseif bankBalance >= depotPrice then
+        Player.Functions.RemoveMoney('bank', depotPrice, 'paid-depot')
+        succeed()
+    else
+        TriggerClientEvent('QBCore:Notify', src, Lang:t('error.not_enough'), 'error')
+    end
 end)
 
 -- House Garages

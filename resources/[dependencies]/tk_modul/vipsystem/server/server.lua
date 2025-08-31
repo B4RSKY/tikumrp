@@ -1,6 +1,7 @@
 local Config = require 'vipsystem.shared.config'
 local Vs = Config.VipSystem
 local QBCore = exports['qb-core']:GetCoreObject()
+local TZ = '+07:00'
 
 local function getIdentifier(src, typ)
     if not src then return nil end
@@ -31,6 +32,43 @@ local function isAuthedAdmin(src)
         if hex == steam then return true end
     end
     return false
+end
+
+local function nowUtcSec()
+    return os.time(os.date('!*t'))
+end
+
+local _vipTimerGen = {}
+local function cleanupExpiredFor(license)
+    if not license then return 0 end
+    return MySQL.update.await(([[DELETE FROM %s WHERE identifier = ? AND expires_at <= UTC_TIMESTAMP()]])
+        :format(Vs.SQL.vipTable), { license }) or 0
+end
+
+local function scheduleNextExpiryRefresh(src)
+    local license = getLicense(src)
+    if not license then return end
+
+    -- cari expiry paling dekat untuk player ini
+    local row = MySQL.single.await(([[SELECT UNIX_TIMESTAMP(expires_at) AS exp
+        FROM %s WHERE identifier = ? AND expires_at > UTC_TIMESTAMP()
+        ORDER BY expires_at ASC LIMIT 1]])
+        :format(Vs.SQL.vipTable), { license })
+
+    if not row or not row.exp then return end
+    local delayMs = math.max(0, (tonumber(row.exp) - nowUtcSec() + 1) * 1000)
+    local gen = (_vipTimerGen[src] or 0) + 1
+    _vipTimerGen[src] = gen
+
+    SetTimeout(delayMs, function()
+        -- jika sudah ada timer baru, abaikan yang lama
+        if _vipTimerGen[src] ~= gen then return end
+        -- bersihkan yang lewat waktu, lalu refresh statebag
+        cleanupExpiredFor(license)
+        refreshPlayerVip(src)
+        -- lanjut jadwalkan lagi untuk expiry berikutnya (jika ada)
+        scheduleNextExpiryRefresh(src)
+    end)
 end
 
 local function sendDiscord(title, fields)
@@ -79,17 +117,48 @@ end
 AddEventHandler('QBCore:Server:PlayerLoaded', function(PlayerObj)
     local src = type(PlayerObj) == 'table' and PlayerObj.PlayerData and PlayerObj.PlayerData.source or PlayerObj
     if not src then return end
-    refreshPlayerVip(src)
 
     local license = getLicense(src)
+    if license then
+        -- bersihkan yang sudah expired untuk pemain ini
+        cleanupExpiredFor(license)
+    end
+
+    refreshPlayerVip(src)
+    scheduleNextExpiryRefresh(src)
+
+    -- Notifikasi kadaluarsa: pakai detik agar tidak muncul "0 hari" menipu
     if license and Vs.ExpiryWarnDays and Vs.ExpiryWarnDays > 0 then
-        local rows = MySQL.query.await(([[SELECT jenis, TIMESTAMPDIFF(DAY, UTC_TIMESTAMP(), expires_at) AS days_left
-            FROM %s WHERE identifier = ? AND expires_at > UTC_TIMESTAMP()]])
+        local rows = MySQL.query.await(([[SELECT jenis,
+                 TIMESTAMPDIFF(SECOND, UTC_TIMESTAMP(), expires_at) AS sec_left
+            FROM %s
+            WHERE identifier = ? AND expires_at > UTC_TIMESTAMP()]])
             :format(Vs.SQL.vipTable), { license })
+
         for _, r in ipairs(rows or {}) do
-            if r.days_left and tonumber(r.days_left) <= Vs.ExpiryWarnDays then
-                TriggerClientEvent('ox_lib:notify', src, { type = 'inform',
-                    description = ('VIP %s sisa %d hari'):format(Vs.VipJenis[tonumber(r.jenis)] or r.jenis, r.days_left) })
+            local s = tonumber(r.sec_left) or 0
+            if s <= 0 then
+                -- ini hampir gak kejadian karena WHERE > UTC_TIMESTAMP(), tapi jaga-jaga
+                cleanupExpiredFor(license)
+                refreshPlayerVip(src)
+            else
+                local days = math.floor(s / 86400)
+                if days >= 1 and days <= Vs.ExpiryWarnDays then
+                    TriggerClientEvent('ox_lib:notify', src, {
+                        type='inform',
+                        description = ('VIP %s sisa %d hari'):format(Vs.VipJenis[tonumber(r.jenis)] or r.jenis, days)
+                    })
+                elseif days < 1 then
+                    -- tampilkan jam/menit kalau < 1 hari
+                    local hrs = math.floor((s % 86400) / 3600)
+                    local mins = math.floor((s % 3600) / 60)
+                    if hrs > 0 or mins > 0 then
+                        TriggerClientEvent('ox_lib:notify', src, {
+                            type='inform',
+                            description = ('VIP %s sisa %dj %dm'):format(Vs.VipJenis[tonumber(r.jenis)] or r.jenis, hrs, mins)
+                        })
+                    end
+                end
             end
         end
     end
@@ -115,23 +184,49 @@ RegisterCommand('vipinfo', function(src)
         TriggerClientEvent('ox_lib:notify', src, { type='error', description='Tidak ditemukan identifier.' })
         return
     end
-    local rows = MySQL.query.await(([[SELECT jenis, DATE_FORMAT(expires_at, '%%Y-%%m-%%d %%H:%%i:%%s') AS expiry
-        FROM %s WHERE identifier = ? AND expires_at > UTC_TIMESTAMP() ORDER BY expires_at DESC]])
-        :format(Vs.SQL.vipTable), { license })
 
-    if not rows or #rows == 0 then
-        TriggerClientEvent('ox_lib:notify', src, { type='inform', description='Kamu tidak memiliki VIP aktif.' })
-        return
-    end
+    -- bersihkan expired lalu tampilkan
+    cleanupExpiredFor(license)
+
+    local rows = MySQL.query.await(([[SELECT jenis,
+            DATE_FORMAT(CONVERT_TZ(expires_at,'+00:00','%s'), '%%Y-%%m-%%d %%H:%%i:%%s') AS expiry_wib,
+            TIMESTAMPDIFF(SECOND, UTC_TIMESTAMP(), expires_at) AS sec_left
+        FROM %s
+        WHERE identifier = ? AND expires_at > UTC_TIMESTAMP()
+        ORDER BY expires_at DESC]]):format(TZ, Vs.SQL.vipTable), { license })
+
+        if not rows or #rows == 0 then
+            TriggerClientEvent('ox_lib:notify', src, { type='inform', description='Kamu tidak memiliki VIP aktif.' })
+            return
+        end
 
     for _, r in ipairs(rows) do
-        TriggerClientEvent('ox_lib:notify', src, {
-            type='success',
-            description = ('%s (jenis %d) aktif s/d %s UTC')
-                :format(Vs.VipJenis[tonumber(r.jenis)] or r.jenis, r.jenis, r.expiry)
-        })
+        local s = tonumber(r.sec_left) or 0
+        local expiry = r.expiry_wib or '-'
+        local msg
+        if s >= 86400 then
+            msg = ('VIP %s aktif s/d %s WIB (%d hari lagi)')
+                :format(Vs.VipJenis[tonumber(r.jenis)] or r.jenis, expiry, math.floor(s/86400))
+        else
+            local h = math.floor((s % 86400) / 3600)
+            local m = math.floor((s % 3600) / 60)
+            msg = ('VIP %s aktif s/d %s WIB (%dj %dm lagi)')
+                :format(Vs.VipJenis[tonumber(r.jenis)] or r.jenis, expiry, h, m)
+        end
+        TriggerClientEvent('ox_lib:notify', src, { type='success', description=msg })
     end
 end, false)
+
+RegisterCommand('vipclean', function(src)
+    if src > 0 and not isAuthedAdmin(src) then return end
+    local affected = MySQL.update.await(([[DELETE FROM %s WHERE expires_at <= UTC_TIMESTAMP()]])
+        :format(Vs.SQL.vipTable), {})
+    if src > 0 then
+        TriggerClientEvent('ox_lib:notify', src, { type='success', description=('Hapus %d VIP expired'):format(affected or 0) })
+    else
+        print(('[tk_vip] vipclean removed %d rows'):format(affected or 0))
+    end
+end)
 
 exports('getVip', function(srcId)
     if not srcId then return false end
@@ -212,27 +307,31 @@ ON DUPLICATE KEY UPDATE
   expires_at = DATE_ADD(GREATEST(expires_at, UTC_TIMESTAMP()), INTERVAL ? SECOND)]])
         :format(Vs.SQL.vipTable), { license, jenis, durSec, durSec })
 
-    local newExpiry = MySQL.scalar.await(
-        ([[SELECT DATE_FORMAT(expires_at, '%%Y-%%m-%%d %%H:%%i:%%s') FROM %s WHERE identifier = ? AND jenis = ?]])
-            :format(Vs.SQL.vipTable), { license, jenis }
-    )
+        local newExpiryWIB = MySQL.scalar.await(
+    ([[SELECT DATE_FORMAT(CONVERT_TZ(expires_at,'+00:00','%s'), '%%Y-%%m-%%d %%H:%%i:%%s')
+        FROM %s WHERE identifier = ? AND jenis = ?]]):format(TZ, Vs.SQL.vipTable),
+    { license, jenis }
+)
 
     MySQL.update.await(([[UPDATE %s
         SET used_by = ?, used_by_name = ?, used_at = UTC_TIMESTAMP()
         WHERE code = ?]]):format(Vs.SQL.codesTable), { license, playerName, code })
 
     refreshPlayerVip(src)
+    scheduleNextExpiryRefresh(src)
 
-    TriggerClientEvent('ox_lib:notify', src, { type = 'success',
-        description = ('VIP %s aktif sampai %s'):format(Vs.VipJenis[jenis] or jenis, newExpiry) })
+TriggerClientEvent('ox_lib:notify', src, {
+    type = 'success',
+    description = ('VIP %s aktif sampai %s WIB'):format(Vs.VipJenis[jenis] or jenis, newExpiryWIB)
+})
 
-    sendDiscord('VIP Redeemed', {
-        ['Code']     = code,
-        ['Jenis']    = ('%d (%s)'):format(jenis, Vs.VipJenis[jenis]),
-        ['Redeemer'] = ('%s (%s)'):format(playerName, steam),
-        ['License']  = license or '-',
-        ['Expires']  = newExpiry,
-    })
+sendDiscord('VIP Redeemed', {
+    ['Code']     = code,
+    ['Jenis']    = ('%d (%s)'):format(jenis, Vs.VipJenis[jenis]),
+    ['Redeemer'] = ('%s (%s)'):format(playerName, steam),
+    ['License']  = license or '-',
+    ['Expires']  = (newExpiryWIB .. ' WIB'),
+})
 end, false)
 
 lib.callback.register('tk_vip:server:isAdmin', function(src)
@@ -341,13 +440,13 @@ lib.callback.register('tk_vip:server:list', function(src, payload)
 
         local sql = ( [[
             SELECT v.identifier, v.jenis,
-                   DATE_FORMAT(v.expires_at, '%%Y-%%m-%%d %%H:%%i:%%s') AS expiry,
-                   p.citizenid, p.charinfo
+                DATE_FORMAT(CONVERT_TZ(v.expires_at,'+00:00','%s'), '%%Y-%%m-%%d %%H:%%i:%%s') AS expiry_wib,
+                p.citizenid, p.charinfo
             FROM %s v
             LEFT JOIN %s p ON p.license = v.identifier
             WHERE %s
             ORDER BY v.expires_at DESC
-            LIMIT ? OFFSET ?]] ):format(Vs.SQL.vipTable, Vs.SQL.players, where)
+            LIMIT ? OFFSET ?]] ):format(TZ, Vs.SQL.vipTable, Vs.SQL.players, where)
 
         params[#params+1] = limit
         params[#params+1] = offset
@@ -378,7 +477,7 @@ lib.callback.register('tk_vip:server:list', function(src, payload)
                 steam     = name or '-',
                 jenis     = tonumber(r.jenis),
                 jenisLabel= Vs.VipJenis[tonumber(r.jenis)] or tostring(r.jenis),
-                expiry    = (r.expiry or '') .. ' UTC',
+                expiry    = (r.expiry_wib or '') .. ' WIB',
             }
         end
 
@@ -405,6 +504,7 @@ RegisterNetEvent('tk_vip:server:revoke', function(payload)
         local lic = getLicense(id)
         if lic == license then
             refreshPlayerVip(id)
+            scheduleNextExpiryRefresh(id)
             break
         end
     end
