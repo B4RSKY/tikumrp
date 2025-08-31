@@ -2064,7 +2064,7 @@ return {
 	},
 	["diamond"] = {
 		label = "Diamond",
-		weight = 1000,
+		weight = 50,
 		stack = true,
 		close = true,
 		description = "A diamond seems like the jackpot to me!",
