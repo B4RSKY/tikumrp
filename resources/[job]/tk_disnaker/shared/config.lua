@@ -234,7 +234,7 @@ Config.Blips = {
     },
     {
         name = "[PENAMBANG] - CUCI BATU", sprite = 68, color = 5, scale = 0.7,
-        coords = vector3(2408.96, 4412.94, 30.78),
+        coords = vector3(1906.05, 346.65, 162.23),
         jobs = {"miner"}
     },
     {

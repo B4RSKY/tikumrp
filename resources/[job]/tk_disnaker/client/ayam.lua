@@ -256,11 +256,11 @@ exports.ox_target:addBoxZone({
             label = 'Potong Ayam',
             groups = 'slaughterer',
             onSelect = function()
-                local hasAyam = exports['qb-core']:HasItem('death_chicken', 1)
+                local hasAyam = exports['qb-core']:HasItem('death_chicken', Lokasi.Ayam.PotongKurang)
                 if not hasAyam then 
                     lib.notify({
                         title = 'DISNAKER',
-                        description = 'Tidak Cukup Ayam Mati!',
+                        description = 'Tidak Cukup Ayam Mati! Minimal: '..Lokasi.Ayam.PotongKurang,
                         type = 'error'
                     })
                     return
@@ -282,11 +282,11 @@ exports.ox_target:addBoxZone({
             label = 'Bunuh Ayam',
             groups = 'slaughterer',
             onSelect = function()
-                local hasAyam = exports['qb-core']:HasItem('alive_chicken', 1)
+                local hasAyam = exports['qb-core']:HasItem('alive_chicken', Lokasi.Ayam.bunuhKurang)
                 if not hasAyam then 
                     lib.notify({
                         title = 'DISNAKER',
-                        description = 'Tidak Cukup Ayam!',
+                        description = 'Tidak Cukup Ayam! Minimal: '..Lokasi.Ayam.bunuhKurang,
                         type = 'error'
                     })
                     return
@@ -308,11 +308,11 @@ exports.ox_target:addBoxZone({
             label = 'Kemas Ayam',
             groups = 'slaughterer',
             onSelect = function()
-                local hasAyam = exports['qb-core']:HasItem('slaughtered_chicken', 1)
+                local hasAyam = exports['qb-core']:HasItem('slaughtered_chicken', Lokasi.Ayam.kemasAyamKurang)
                 if not hasAyam then 
                     lib.notify({
                         title = 'DISNAKER',
-                        description = 'Tidak Cukup Ayam Potong!',
+                        description = 'Tidak Cukup Ayam Potong! Minimal: '..Lokasi.Ayam.kemasAyamKurang,
                         type = 'error'
                     })
                     return

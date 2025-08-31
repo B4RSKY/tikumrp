@@ -400,7 +400,7 @@ local function potongKayu()
         return
     end
 
-    if not exports['qb-core']:HasItem('wood', 1) then
+    if not exports['qb-core']:HasItem('wood', Lokasi.Lumberjack.ProsesKurang) then
         lib.notify({ title = 'DISNAKER', description = 'Tidak Memiliki Cukup Kayu', type = 'error', duration = 3500})
         return
     end
@@ -451,7 +451,7 @@ local function kemasKayu()
         return
     end
 
-    if not exports['qb-core']:HasItem('cutted_wood', 1) then
+    if not exports['qb-core']:HasItem('cutted_wood', Lokasi.Lumberjack.kemasKurang) then
         lib.notify({ title = 'DISNAKER', description = 'Tidak Memiliki Cukup Potongan Kayu', type = 'error', duration = 3500})
         return
     end

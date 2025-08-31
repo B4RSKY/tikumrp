@@ -52,7 +52,7 @@ local function ProsesBenang()
         return
     end
 
-    if not exports['qb-core']:HasItem('wool', 1) then
+    if not exports['qb-core']:HasItem('wool', Lokasi.Penjahit.prosesBenangKurang) then
         lib.notify({ title = 'DISNAKER', description = 'Tidak Memiliki Cukup Benang', type = 'error', duration = 3500})
         return
     end
@@ -92,7 +92,7 @@ local function KemasBenang()
         return
     end
 
-    if not exports['qb-core']:HasItem('fabric', 1) then
+    if not exports['qb-core']:HasItem('fabric', Lokasi.Penjahit.kemasJahitKurang) then
         lib.notify({ title = 'DISNAKER', description = 'Tidak Memiliki Cukup Kain', type = 'error', duration = 3500})
         return
     end

@@ -466,7 +466,7 @@ CreateThread(function()
     for k,v in pairs(cucibatu) do
         lib.points.new({
             coords = Lokasi.Miner.cuciBatu,
-            distance = 2,
+            distance = 10,
             onEnter = function()
                 if not sibukMining and QBCore.Functions.GetPlayerData().job.name == 'miner' and QBCore.Functions.GetPlayerData().metadata['disnakerDuty'] then
                 lib.showTextUI('[E] - Cuci Batu', {
@@ -487,11 +487,11 @@ CreateThread(function()
                         if not QBCore.Functions.GetPlayerData().metadata['disnakerDuty'] then return lib.notify({ title = 'DISNAKER', description = 'Ganti Baju Terlebih dahulu!', type = 'error', duration = 3500}) end
 
                         if not sibukMining then
-                            if batu >= 3 then
+                            if batu >= Lokasi.Miner.cuciKurang then
                                 local success = lib.skillCheck({'easy'}, {'w', 'a', 's', 'd'})
                                 if success then
                                     sibukMining = true
-                                    FreezeEntityPosition(cache.ped, 1)
+                                    FreezeEntityPosition(cache.ped, true)
                                     if lib.progressBar({
                                         duration = 6000,
                                         label = 'Mencuci Batu',
@@ -501,13 +501,13 @@ CreateThread(function()
                                         anim = { scenario = "PROP_HUMAN_BUM_BIN"},
                                         prop = { bone = 60309, model = 'prop_rock_5_smash1', pos = vec3(0.09, -0.05, -0.02), rot = vec3(-78.0, 13.0, 28.0) }
                                     }) then 
-                                        FreezeEntityPosition(cache.ped, 0)
+                                        FreezeEntityPosition(cache.ped, false)
                                         disnaker('cuci', 'tambang', Lokasi.Miner.cuciKurang, Lokasi.Miner.cuciDapat)
                                         sibukMining = false
                                         ClearPedTasks(cache.ped)
                                     else 
                                         ClearPedTasks(cache.ped)
-                                        FreezeEntityPosition(cache.ped, 0)
+                                        FreezeEntityPosition(cache.ped, false)
                                         sibukMining = false
                                     end
                                 else
@@ -530,7 +530,7 @@ local function leburBatu()
         return
     end
 
-    if not exports['qb-core']:HasItem('washed_stone', 1) then
+    if not exports['qb-core']:HasItem('washed_stone', Lokasi.Miner.cuciKurang) then
         lib.notify({ title = 'DISNAKER', description = 'Tidak cukup batu bersih!', type = 'error', duration = 3500})
         return
     end
