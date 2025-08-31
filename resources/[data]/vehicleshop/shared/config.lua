@@ -188,32 +188,4 @@ Config.Vehicles = {
     { name = "Burrito 3",         model = "burrito3",    category = "vans",           price = 1270000,      dealership = "cardealer" },
     { name = "Rumpo",             model = "rumpo",       category = "vans",           price = 1503000,      dealership = "cardealer" },
     { name = "Gburrito 2",        model = "gburrito2",   category = "vans",           price = 1860250,      dealership = "cardealer" },
-
-    -- Police Armored
-    { name = "riot",              model = "Riot",        category = "armored",       price = 1000, dealership = "police" },
-    { name = "riot2",             model = "Riot2",       category = "armored",       price = 1000, dealership = "police" },
-
-    -- Police Car
-    { name = "Police",            model = "police",      category = "car",           price = 1000, dealership = "police" },
-    { name = "Police 2",          model = "police2",     category = "car",           price = 1000, dealership = "police" },
-    { name = "Police 3",          model = "police3",     category = "car",           price = 1000, dealership = "police" },
-
-    --Police Motorcycle
-    { name = "Police Motorcycle", model = "policeb",     category = "motorcycle",    price = 1000, dealership = "police" },
-
-    --Boat Luxury
-    { name = "Marquis",           model = "marquis",     category = "luxury",        price = 1000, dealership = "boat" },
-    { name = "Toro",              model = "toro",        category = "luxury",        price = 1000, dealership = "boat" },
-
-    --Boat Utility
-    { name = "Dinghy2",           model = "dinghy2",     category = "utility",       price = 1000, dealership = "boat" },
-    { name = "Squalo",            model = "squalo",      category = "utility",       price = 1000, dealership = "boat" },
-
-    --Plane Luxury
-    { name = "Luxor",             model = "luxor",       category = "luxury",        price = 1000, dealership = "plane" },
-    { name = "Luxor2",            model = "luxor2",      category = "luxury",        price = 1000, dealership = "plane" },
-
-    --Plane Utility
-    { name = "Mammatus",          model = "mammatus",    category = "utility",       price = 1000, dealership = "plane" },
-    { name = "Cuban800",          model = "cuban800",    category = "utility",       price = 1000, dealership = "plane" },
 }
