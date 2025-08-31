@@ -189,7 +189,34 @@ return {
 			usetime = 3000,
 		}
 	},
+	--oBAT
+	['sertraline'] = {
+		label = 'Sertraline',
+		weight = 100,
+		client = {
+			status = { drunk = -20 },
+			anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
+			usetime = 3000,
+		}
+	},
+	['alprazolam'] = {
+		label = 'Alprazolam',
+		weight = 100,
+		degrade = 7200,
+		client = {
+			status = { stress = -30 },
+			anim = { dict = 'mp_player_intdrink', clip = 'loop_bottle' },
+			usetime = 3000,
+		}
+	},
 
+	['tiketoplas'] = {
+		label = 'Tiket Oplas',
+		weight = 1,
+		stack = true,
+		close = true,
+		description = ''
+	},
     ['radio'] = {
         label = 'Radio',
         weight = 500,
@@ -1511,6 +1538,12 @@ return {
 		client = {
 			image = "kanebo.png",
 		}
+	},
+	["medikit"] = {
+		label = "Medikit",
+		weight = 2,
+		stack = true,
+		close = true,
 	},
 
 	["advancedrepairkit"] = {
