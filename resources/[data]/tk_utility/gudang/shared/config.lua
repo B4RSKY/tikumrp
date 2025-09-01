@@ -4,7 +4,7 @@ local Cfg = {
             label  = "Gudang Kota",
             name   = "Kota",
             coords = vec4(-1607.43, -830.21, 10.08, 143.97),
-            defaultWeight = 450000,
+            defaultWeight = 500000,
             defaultSlots  = 150,
             target = { label = "Gudang", icon = "fa-solid fa-warehouse" }
         },
@@ -12,7 +12,7 @@ local Cfg = {
             label  = "Gudang SS",
             name   = "SandyShores",
             coords = vec4(903.07, 3586.16, 33.43, 181.26),
-            defaultWeight = 450000,
+            defaultWeight = 500000,
             defaultSlots  = 150,
             target = { label = "Gudang", icon = "fa-solid fa-warehouse" }
         },
@@ -26,20 +26,20 @@ local Cfg = {
 
     GracePeriod = 2 * 24 * 60 * 60,
     UpgradePlans = {
-        u500  = { label = "Upgrade +500 KG & +50 Slot",  addWeight = 500000,  addSlots = 50  },
-        u750  = { label = "Upgrade +750 KG & +75 Slot",  addWeight = 750000,  addSlots = 75  },
-        u1000 = { label = "Upgrade +1000 KG & +100 Slot", addWeight = 1000000, addSlots = 100 },
+        u500  = { label = "Upgrade +250 KG & +50 Slot",  addWeight = 250000,  addSlots = 50  },
+        u750  = { label = "Upgrade +400 KG & +75 Slot",  addWeight = 400000,  addSlots = 75  },
+        u1000 = { label = "Upgrade +550 KG & +100 Slot", addWeight = 550000, addSlots = 100 },
     },
 }
 
 if IsDuplicityVersion() then
-    Cfg.RentOptions["1w"].harga = 20000
-    Cfg.RentOptions["2w"].harga = 25000
-    Cfg.RentOptions["1m"].harga = 30000
+    Cfg.RentOptions["1w"].harga = 150000
+    Cfg.RentOptions["2w"].harga = 300000
+    Cfg.RentOptions["1m"].harga = 500000
 
-    Cfg.UpgradePlans.u500.harga  = 50000
-    Cfg.UpgradePlans.u750.harga  = 75000
-    Cfg.UpgradePlans.u1000.harga = 100000
+    Cfg.UpgradePlans.u500.harga  = 750000
+    Cfg.UpgradePlans.u750.harga  = 1000000
+    Cfg.UpgradePlans.u1000.harga = 1500000
 
     return {
         Lokasi = Cfg.Lokasi,
