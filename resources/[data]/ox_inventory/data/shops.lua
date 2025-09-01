@@ -73,7 +73,9 @@ return {
 		},
 		inventory = {
 			{ name = 'toolkit', price = 10 },
-			{ name = 'kanebo', price = 10 }
+			{ name = 'kanebo', price = 10 },
+			{ name = 'WEAPON_WRENCH', price = 10000 },
+			{ name = 'WEAPON_FIREEXTINGUISHER', price = 15000 },
 		}, locations = {
 			vec3(-947.8, -2066.59, 10.61)
 		}, targets = {
@@ -186,15 +188,4 @@ return {
 
 	-- 	}
 	-- },
-
-	VendingMachineDrinks = {
-		name = 'Vending Machine',
-		inventory = {
-			{ name = 'water', price = 10 },
-			{ name = 'cola', price = 10 },
-		},
-		model = {
-			`prop_vend_soda_02`, `prop_vend_fridge01`, `prop_vend_water_01`, `prop_vend_soda_01`
-		}
-	}
 }

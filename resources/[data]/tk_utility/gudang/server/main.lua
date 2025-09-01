@@ -294,14 +294,14 @@ RegisterNetEvent('sky-gudang:server:cancel', function(locationKey)
     local locCfg = Config.Lokasi[locationKey]
     if not locCfg then return end
 
-    local row = MySQL.single.await('SELECT id, stash_id, expire_at FROM tk_warehouses WHERE owner = ? AND location = ?', { license, locationKey })
+    local row = MySQL.single.await('SELECT id, stash_id, expire_at FROM sky_gudang WHERE owner = ? AND location = ?', { license, locationKey })
     if not row then
         return lib.notify(src, { title = 'Batal Sewa', description = 'Tidak ada data sewa di lokasi ini.', type = 'error' })
     end
 
     -- Hapus isi & kontrak
     exports.ox_inventory:ClearInventory(row.stash_id)
-    MySQL.query.await('DELETE FROM tk_warehouses WHERE id = ?', { row.id })
+    MySQL.query.await('DELETE FROM sky_gudang WHERE id = ?', { row.id })
 
     lib.notify(src, { title = 'Batal Sewa', description = ('Gudang %s berhasil dibatalkan & dihapus.'):format(locCfg.label), type = 'success' })
 
