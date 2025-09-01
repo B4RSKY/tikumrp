@@ -21,13 +21,13 @@ local menu = {
 }
 
 local function main()
-    if GetVehicleBodyHealth(vehicle) < 1000.0 then
-        return {{
-            label = 'Repair',
-            description = ('%s%d'):format(Config.Currency, math.ceil(1000 - GetVehicleBodyHealth(vehicle))),
-            close = true,
-        }}
-    end
+    -- if GetVehicleBodyHealth(vehicle) < 1000.0 then
+    --     return {{
+    --         label = 'Repair',
+    --         description = ('%s%d'):format(Config.Currency, math.ceil(1000 - GetVehicleBodyHealth(vehicle))),
+    --         close = true,
+    --     }}
+    -- end
 
     local options = {
         {

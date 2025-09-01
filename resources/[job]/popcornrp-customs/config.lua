@@ -23,7 +23,9 @@ Config.Zones = {
 
 -- Default GTA 5 Customs and Benny's Locations
     {
+    job = { 'mechanic' },
 	blipLabel = "Bengkel",
+    hideBlip = true,
 	blipColor = 5,
         points = {
             vec3(-933.0, -2048.0, 9.0),
@@ -33,7 +35,9 @@ Config.Zones = {
         }
     },
     {
+    job = { 'mechanic' },
 	blipLabel = "Bengkel",
+    hideBlip = true,
 	blipColor = 5,
         points = {
             vec3(-938.0, -2053.0, 9.0),
