@@ -2467,4 +2467,24 @@ return {
 			image = "boombox.png",
 		}
 	},
+	["speaker_small"] = {
+		label = "speaker_small",
+		weight = 20000,
+		stack = true,
+		close = true,
+		description = "Untuk Mendengarkan Musik",
+		client = {
+			image = "boombox.png",
+		}
+	},
+	["speaker_stand_01a"] = {
+		label = "speaker_stand_01a",
+		weight = 20000,
+		stack = true,
+		close = true,
+		description = "Untuk Mendengarkan Musik",
+		client = {
+			image = "boombox.png",
+		}
+	},
 }
