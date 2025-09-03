@@ -2,16 +2,16 @@ QBShared = QBShared or {}
 QBShared.ForceJobDefaultDutyAtLogin = true -- true: Force duty state to jobdefaultDuty | false: set duty state from database last saved
 QBShared.Jobs = {
 	--Non WL
-	unemployed = { label = 'Civilian', defaultDuty = true, offDutyPay = false, grades = { ['0'] = { name = 'Freelancer', payment = 10 } } },
-	bus = { label = 'Bus', defaultDuty = true, offDutyPay = false, grades = { ['0'] = { name = 'Driver', payment = 50 } } },
-	tailor = { label = 'Penjahit', defaultDuty = true, offDutyPay = false, grades = { ['0'] = { name = 'Pekerja', payment = 100 } } },
-	miner = { label = 'Penambang', defaultDuty = true, offDutyPay = false, grades = { ['0'] = { name = 'Pekerja', payment = 50 } } },
-	slaughterer = { label = 'T.Ayam', defaultDuty = true, offDutyPay = false, grades = { ['0'] = { name = 'Pekerja', payment = 50 } } },
-	lumberjack = { label = 'T.Kayu', defaultDuty = true, offDutyPay = false, grades = { ['0'] = { name = 'Pekerja', payment = 50 } } },
-	reporter = { label = 'Reporter', defaultDuty = true, offDutyPay = false, grades = { ['0'] = { name = 'Journalist', payment = 50 } } },
-	trucker = { label = 'Trucker', defaultDuty = true, offDutyPay = false, grades = { ['0'] = { name = 'Driver', payment = 50 } } },
-	garbage = { label = 'Garbage', defaultDuty = true, offDutyPay = false, grades = { ['0'] = { name = 'Collector', payment = 50 } } },
-	hotdog = { label = 'Hotdog', defaultDuty = true, offDutyPay = false, grades = { ['0'] = { name = 'Sales', payment = 50 } } },
+	unemployed = { label = 'Warga', defaultDuty = true, offDutyPay = false, grades = { ['0'] = { name = 'Freelancer', payment = 1500 } } },
+	bus = { label = 'Bus', defaultDuty = true, offDutyPay = false, grades = { ['0'] = { name = 'Driver', payment = 2000 } } },
+	tailor = { label = 'Penjahit', defaultDuty = true, offDutyPay = false, grades = { ['0'] = { name = 'Pekerja', payment = 2000 } } },
+	miner = { label = 'Penambang', defaultDuty = true, offDutyPay = false, grades = { ['0'] = { name = 'Pekerja', payment = 2000 } } },
+	slaughterer = { label = 'Peternak Ayam', defaultDuty = true, offDutyPay = false, grades = { ['0'] = { name = 'Pekerja', payment = 2000 } } },
+	lumberjack = { label = 'T.Kayu', defaultDuty = true, offDutyPay = false, grades = { ['0'] = { name = 'Pekerja', payment = 2000 } } },
+	reporter = { label = 'Reporter', defaultDuty = true, offDutyPay = false, grades = { ['0'] = { name = 'Journalist', payment = 2000 } } },
+	trucker = { label = 'Trucker', defaultDuty = true, offDutyPay = false, grades = { ['0'] = { name = 'Driver', payment = 2000 } } },
+	garbage = { label = 'Garbage', defaultDuty = true, offDutyPay = false, grades = { ['0'] = { name = 'Collector', payment = 2000 } } },
+	hotdog = { label = 'Hotdog', defaultDuty = true, offDutyPay = false, grades = { ['0'] = { name = 'Sales', payment = 2000 } } },
 
 	police = {
 		label = 'Polisi',
@@ -39,7 +39,7 @@ QBShared.Jobs = {
 		},
 	},
 	ambulance = {
-		label = 'EMS',
+		label = 'Medis',
 		type = 'ems',
 		defaultDuty = true,
 		offDutyPay = false,
@@ -95,7 +95,7 @@ QBShared.Jobs = {
 		},
 	},
 	mechanic = {
-		label = 'LS Customs',
+		label = 'Tikum Speed',
 		type = 'mechanic',
 		defaultDuty = true,
 		offDutyPay = false,

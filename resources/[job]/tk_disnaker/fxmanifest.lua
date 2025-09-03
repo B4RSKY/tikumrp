@@ -4,7 +4,7 @@ lua54 'yes'
 
 shared_scripts {
 	'@ox_lib/init.lua',
-	--'@fs-guard/guard.lua',
+	'@fs-guard/guard.lua',
 	'shared/*.lua'
 }
 
