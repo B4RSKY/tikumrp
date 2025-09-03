@@ -1,4 +1,5 @@
 PlayerData = {}
+local onDuty = false
 
 -- Handlers
 
@@ -17,6 +18,11 @@ end)
 
 RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
     PlayerData = {}
+end)
+
+RegisterNetEvent('mek:Duty', function()
+    onDuty = not onDuty
+    TriggerServerEvent('QBCore:ToggleDuty')
 end)
 
 -- Global Functions
@@ -132,7 +138,7 @@ CreateThread(function()
             options = {
                 {
                     name = k .. '_duty',
-                    event = 'QBCore:ToggleDuty',
+                    event = 'mek:Duty',
                     label = Lang:t('target.duty'),
                     icon = 'fas fa-user-clock',
                     groups = v.managed and k or nil
