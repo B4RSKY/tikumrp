@@ -530,7 +530,7 @@ CreateThread(function()
     if Config.ExpressionsEnabled then
         AddFaceMenu(mainMenu)
     end
-    AddInfoMenu(mainMenu)
+    --AddInfoMenu(mainMenu)
 
     _menuPool:RefreshIndex()
 

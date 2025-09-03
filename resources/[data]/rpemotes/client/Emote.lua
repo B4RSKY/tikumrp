@@ -644,7 +644,14 @@ local function playScenario(emoteData)
     runAnimationThread()
 end
 
+local lagiCooldwon = 0
 function OnEmotePlay(name, textureVariation)
+    if lagiCooldwon > 0 and (GetGameTimer() - lagiCooldwon) < 2000 then
+        SimpleNotify('COOLDOWN: Anda tidak dapat memainkan emote lain selama 2 detik!')
+        return
+    end
+    lagiCooldwon = GetGameTimer()
+
     local emoteData = EmoteData[name]
     if not emoteData then
         EmoteChatMessage("'" .. name .. "' " .. Translate('notvalidemote') .. "")

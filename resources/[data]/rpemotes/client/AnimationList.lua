@@ -3020,6 +3020,63 @@ RP.Dances = {
             onFootFlag = AnimFlag.LOOP
         }
     },
+    --ADDON TIKum
+    ["sadbor"] = {
+        "psadbor1@animations",
+        "psadbor1clip",
+        "Joget Sadbor",
+        AnimationOptions = {
+            onFootFlag = AnimFlag.LOOP
+        }
+    },
+    ["tembaklangit"] = {
+        "pazeeetembaklangit@animations",
+        "pazeeetembaklangitclip",
+        "Tembak Langit",
+        AnimationOptions = {
+            onFootFlag = AnimFlag.LOOP
+        }
+    },
+    ["onthefloordance"] = {
+        "ponthefloordance@animations",
+        "ponthefloordanceclip",
+        "PUBG On The Floor Dance",
+        AnimationOptions = {
+            onFootFlag = AnimFlag.LOOP
+        }
+    },
+    ["ciscis"] = {
+        "cisciscis@anim",
+        "cis_clip",
+        "TIKTOK Cis cis Dance",
+        AnimationOptions = {
+            onFootFlag = AnimFlag.LOOP
+        }
+    },
+    ["pubgnastygirl"] = {
+        "nastygirl@animations",
+        "nastygirlclip",
+        "PUBG Nasty Girl",
+        AnimationOptions = {
+            onFootFlag = AnimFlag.LOOP
+        }
+    },
+    ["nastygirl"] = {
+        "nasty@animations",
+        "nastyclip",
+        "TIKTOK Nasty Girl",
+        AnimationOptions = {
+            onFootFlag = AnimFlag.LOOP
+        }
+    },
+    ["itsmylife"] = {
+        "danceitsmylife@animations",
+        "danceitsmylife_clip",
+        "PUBG Its My Life",
+        AnimationOptions = {
+            onFootFlag = AnimFlag.LOOP
+        }
+    }
 }
 
 
@@ -10518,8 +10575,7 @@ RP.Emotes = {
         AnimationOptions = {
             onFootFlag = AnimFlag.LOOP,
         }
-    },
-
+    }
 }
 
 --- PROP EMOTES GO HERE. CURRENTLY SUPPORTS UP TO ONE OR TWO PROPS  ---
