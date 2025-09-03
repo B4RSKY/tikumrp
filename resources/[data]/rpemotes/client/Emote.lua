@@ -286,6 +286,7 @@ end
 
 ---@param data table
 ---@return boolean
+local MAX_PROPS = 5
 local function addProp(data)
     assert(data.prop1, 'no prop1 passed')
     assert(data.bone, 'no bone passed')
@@ -296,38 +297,55 @@ local function addProp(data)
     data.rot2 = data.rot2 or 0.0
     data.rot3 = data.rot3 or 0.0
     assert(data.noCollision == nil or type(data.noCollision) == "boolean", 'noCollision must be a boolean')
-
-    local target = data.isClone and ClonedPed or PlayerPedId()
-    local x, y, z = table.unpack(GetEntityCoords(target))
-
-    if not IsModelValid(data.prop1) then
-        DebugPrint(tostring(data.prop1) .. " is not a valid model!")
+    if not data.isClone and #PlayerProps >= MAX_PROPS then
         return false
     end
 
-    LoadPropDict(data.prop1)
+    local target = data.isClone and ClonedPed or PlayerPedId()
+    if not DoesEntityExist(target) or IsEntityDead(target) or IsPedRagdoll(target) then
+        return false
+    end
+    if type(data.prop1) ~= 'string' then
+        return false
+    end
 
-    attachedProp = CreateObject(GetHashKey(data.prop1), x, y, z + 0.2, not data.isClone, true, true)
+    local modelHash = GetHashKey(data.prop1)
+    if not IsModelValid(modelHash) then
+        return false
+    end
+
+    RequestModel(modelHash)
+    while not HasModelLoaded(modelHash) do
+        Wait(10)
+    end
+
+    local x, y, z = table.unpack(GetEntityCoords(target))
+    local prop = CreateObject(modelHash, x, y, z + 0.2, not data.isClone, true, true)
 
     if data.textureVariation ~= nil then
-        SetObjectTextureVariation(attachedProp, data.textureVariation)
+        SetObjectTextureVariation(prop, data.textureVariation)
     end
 
     if data.noCollision then
-        SetEntityCollision(attachedProp, false, false)
+        SetEntityCollision(prop, false, false)
     end
 
-    AttachEntityToEntity(attachedProp, target, GetPedBoneIndex(target, data.bone), data.off1, data.off2, data.off3, data.rot1, data.rot2, data.rot3,
-        true, true, false, true, 1, true)
+    AttachEntityToEntity(
+        prop,
+        target,
+        GetPedBoneIndex(target, data.bone),
+        data.off1, data.off2, data.off3,
+        data.rot1, data.rot2, data.rot3,
+        false, true, false, false, 2, true
+    )
 
     if data.isClone then
-        PreviewPedProps[#PreviewPedProps+1] = attachedProp
+        PreviewPedProps[#PreviewPedProps+1] = prop
     else
-        PlayerProps[#PlayerProps+1] = attachedProp
+        PlayerProps[#PlayerProps+1] = prop
     end
 
-    SetModelAsNoLongerNeeded(data.prop1)
-    DebugPrint("Added prop to " .. (data.isClone and "clone" or "player"))
+    SetModelAsNoLongerNeeded(modelHash)
     return true
 end
 
@@ -335,11 +353,19 @@ end
 ---@param textureVariation? integer
 ---@param isClone? boolean
 local function addProps(animOption, textureVariation, isClone)
-    PropPl1, PropPl2, PropPl3, PropPl4, PropPl5, PropPl6 = table.unpack(animOption.PropPlacement)
+    if not animOption or not animOption.Prop or not animOption.PropPlacement then
+        return
+    end
 
-    Wait(animOption and animOption.EmoteDuration or 0)
+    if not type(animOption.PropPlacement) == "table" or #animOption.PropPlacement < 6 then
+        return
+    end
 
-    if not addProp({
+    local PropPl1, PropPl2, PropPl3, PropPl4, PropPl5, PropPl6 = table.unpack(animOption.PropPlacement)
+
+    Wait(animOption.EmoteDuration or 0)
+
+    local success = addProp({
         prop1 = animOption.Prop,
         bone = animOption.PropBone,
         off1 = PropPl1, off2 = PropPl2, off3 = PropPl3,
@@ -347,19 +373,31 @@ local function addProps(animOption, textureVariation, isClone)
         textureVariation = textureVariation,
         isClone = isClone,
         noCollision = animOption.PropNoCollision
-    }) then return end
+    })
+
+    if not success then
+        return
+    end
 
     if animOption.SecondProp then
-        SecondPropPl1, SecondPropPl2, SecondPropPl3, SecondPropPl4, SecondPropPl5, SecondPropPl6 = table.unpack(animOption.SecondPropPlacement)
-        if not addProp({
+        if not animOption.SecondPropPlacement or #animOption.SecondPropPlacement < 6 then
+            DestroyAllProps()
+            return
+        end
+
+        local S1, S2, S3, S4, S5, S6 = table.unpack(animOption.SecondPropPlacement)
+
+        local secondSuccess = addProp({
             prop1 = animOption.SecondProp,
             bone = animOption.SecondPropBone,
-            off1 = SecondPropPl1, off2 = SecondPropPl2, off3 = SecondPropPl3,
-            rot1 = SecondPropPl4, rot2 = SecondPropPl5, rot3 = SecondPropPl6,
+            off1 = S1, off2 = S2, off3 = S3,
+            rot1 = S4, rot2 = S5, rot3 = S6,
             textureVariation = textureVariation,
             isClone = isClone,
             noCollision = animOption.SecondPropNoCollision
-        }) then
+        })
+
+        if not secondSuccess then
             DestroyAllProps()
             return
         end
