@@ -18,9 +18,9 @@ return {
 		groups = shared.police
 	},
 	{
-		coords = vec3(-489.99, -978.17, 35.45),
+		coords = vec3(-489.99, -978.17, 34.45),
 		target = {
-			loc = vec3(-489.99, -978.17, 35.45),
+			loc = vec3(-489.99, -978.17, 34.45),
 			length = 0.6,
 			width = 1.8,
 			heading = 340,
