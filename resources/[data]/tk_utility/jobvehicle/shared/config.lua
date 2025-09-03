@@ -149,7 +149,7 @@ return {
                     label = 'Helikopter',
                     prefixPlate = 'EMS',
                     forRank = {
-                        [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true, [9] = true, [10] = true, [11] = true, [12] = true, [13] = true, [14] = true, [15] = true, [16] = true,
+                        [6] = true, [7] = true, [8] = true, [9] = true, [10] = true, [11] = true, [12] = true, [13] = true, [14] = true, [15] = true, [16] = true,
                     }
                 },
             }
@@ -168,7 +168,7 @@ return {
                     label = 'Ambulance',
                     prefixPlate = 'EMS',
                     forRank = {
-                        [0] = true, [1] = true, [2] = true, [3] = true
+                        [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true, [9] = true, [10] = true, [11] = true
                     }
                 },
                 gsemsrj = {
@@ -176,7 +176,7 @@ return {
                     label = 'BMR R 1200 SG',
                     prefixPlate = 'EMS',
                     forRank = {
-                        [0] = true, [1] = true, [2] = true, [3] = true
+                        [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true, [9] = true, [10] = true, [11] = true
                     }
                 },
                 hiluxamb = {
@@ -184,7 +184,7 @@ return {
                     label = 'Toyata Hulix',
                     prefixPlate = 'EMS',
                     forRank = {
-                        [0] = true, [1] = true, [2] = true, [3] = true
+                        [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true, [9] = true, [10] = true, [11] = true
                     }
                 },
                 sanchezems = {
@@ -192,7 +192,7 @@ return {
                     label = 'Sanchez',
                     prefixPlate = 'EMS',
                     forRank = {
-                        [0] = true, [1] = true, [2] = true, [3] = true
+                        [0] = true, [1] = true, [2] = true, [3] = true, [4] = true, [5] = true, [6] = true, [7] = true, [8] = true, [9] = true, [10] = true, [11] = true
                     }
                 },
             }
