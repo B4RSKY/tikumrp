@@ -4,17 +4,16 @@ lua54 'yes'
 
 shared_scripts {
 	'@ox_lib/init.lua',
+	--'@fs-guard/guard.lua',
 	'shared/*.lua'
 }
 
 client_scripts {
-	'@fs-guard/cl_guard.lua',
 	'client/*.lua'
 }
 
 server_scripts {
 	'@oxmysql/lib/MySQL.lua',
-	'@fs-guard/sv_guard.lua',
 	'server/*.lua'
 }
 

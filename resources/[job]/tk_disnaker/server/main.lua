@@ -9,14 +9,14 @@ RegisterNetEvent('tk-jobs:duty', function(kantong, duty)
 end)
 
 RegisterNetEvent('tk-disnaker:status')
-GuardEventHandler('tk-disnaker:status', function(data)
+AddEventHandler('tk-disnaker:status', function(data)
     local src = source
 	local Player = QBCore.Functions.GetPlayer(src)
 
     --Data Penjahit
 	if data.meta.tipe == 'jahit' and data.jenis == 'item' and data.model == 'add' then
         if data.meta.jenis == 'dapat' and data.meta.tipe == 'jahit' then
-            if data.meta.dapat == 1 then
+            if data.meta.dapat == 4 then
                 if exports.ox_inventory:CanCarryItem(src, 'wool', data.meta.dapat) then
                     exports.ox_inventory:AddItem(src, 'wool', data.meta.dapat)
                 else
@@ -64,7 +64,7 @@ GuardEventHandler('tk-disnaker:status', function(data)
     --Data Ayam
     if data.meta.tipe == 'tayam' and data.jenis == 'item' and data.model == 'add' then
         if data.meta.jenis == 'dapat' and data.meta.tipe == 'tayam' then
-            if data.meta.dapat == 1 then
+            if data.meta.dapat == 2 then
                 if exports.ox_inventory:CanCarryItem(src, 'alive_chicken', data.meta.dapat) then
                     exports.ox_inventory:AddItem(src, 'alive_chicken', data.meta.dapat)
                 else

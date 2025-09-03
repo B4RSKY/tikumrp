@@ -254,7 +254,7 @@ Config.Blips = {
         jobs = false
     },
     {
-        name = "Bengkel | Mekanik", sprite = 643, color = 2, scale = 0.7,
+        name = "Tikum Speed | Bengkel", sprite = 643, color = 2, scale = 0.7,
         coords = vector3(-908.26, -2057.04, 9.3),
         jobs = false
     },

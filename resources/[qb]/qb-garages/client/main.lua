@@ -116,7 +116,7 @@ local function CreateZone(index, garage, zoneType)
         name = zoneType .. '_' .. index,
         minZ = garage.zone.minZ,
         maxZ = garage.zone.maxZ,
-        debugPoly = false,
+        debugPoly = true,
         data = {
             indexgarage = index,
             type = garage.type,
@@ -151,7 +151,7 @@ local function CreateBlipsZones()
         end
     end
 
-    local comboZone = ComboZone:Create(garageZones, { name = 'garageCombo', debugPoly = false })
+    local comboZone = ComboZone:Create(garageZones, { name = 'garageCombo', debugPoly = true })
 
     comboZone:onPlayerInOut(function(isPointInside, _, zone)
         if isPointInside then
