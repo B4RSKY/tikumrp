@@ -73,8 +73,8 @@ if not IsDuplicityVersion() then
         {
             id = 'ktp_mandiri',
             mode = 'ped',
-            coords = vector3(-446.87, 1102.15, 329.77),
-            heading = 260.31,
+            coords = vector3(-430.85, 1096.46, 326.77),
+            heading = 340.1,
             pedModel = `a_m_y_business_01`,
             scenario = 'WORLD_HUMAN_STAND_MOBILE',
             label = 'Request KTP',
