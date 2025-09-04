@@ -212,25 +212,36 @@ end)
 RegisterNetEvent('qb-mechanicjob:client:cleanVehicle', function()
     local vehicle, distance = QBCore.Functions.GetClosestVehicle()
     if vehicle == 0 or distance > 5.0 then return end
-    QBCore.Functions.Progressbar('cleaning_vehicle', Lang:t('progress.cleaning'), 10000, false, true, {
-        disableMovement = true,
-        disableCarMovement = true,
-        disableMouse = false,
-        disableCombat = true,
-    }, {
-        animDict = 'amb@world_human_maid_clean@',
-        anim = 'base',
-        flags = 1,
-    }, {
-        model = 'prop_sponge_01',
-        bone = 28422,
-        coords = vec3(0.0, 0.0, -0.01),
-        rotation = vec3(90.0, 0.0, 0.0),
-    }, {}, function()
+        if not exports["qb-core"]:HasItem("kanebo", 1) then 
+            QBCore.Functions.Notify('SISTEM', 'Anda tidak memilik kanebo', 'error') 
+            return 
+        end
+        if lib.progressBar({
+        duration = 10000,
+        label = 'Membersihkan kendaraan',
+        useWhileDead = false,
+        canCancel = true,
+        disable = {
+            car = true,
+            move = true,
+            combat = true,
+            mouse = false
+        },
+        anim = {
+            dict = 'amb@world_human_maid_clean@',
+            clip = 'base'
+        },
+        prop = {
+            model = `prop_sponge_01`,
+            bone = 28422,
+            pos = vec3(0.0, 0.0, -0.01),
+            rot = vec3(90.0, 0.0, 0.0)
+        },
+    }) then
         SetVehicleDirtLevel(vehicle, 0.0)
         QBCore.Functions.Notify(Lang:t('success.cleaned'), 'success')
-        TriggerServerEvent('qb-mechanicjob:server:removeItem', 'cleaningkit')
-    end)
+        TriggerServerEvent('qb-mechanicjob:server:removeItem', 'kanebo')
+    end
 end)
 
 RegisterNetEvent('qb-mechanicjob:client:fixEverything', function()
