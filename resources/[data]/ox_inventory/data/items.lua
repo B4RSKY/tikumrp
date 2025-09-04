@@ -1540,6 +1540,7 @@ return {
 		description = "Untuk Membersihkan Kendaraan",
 		client = {
 			image = "kanebo.png",
+			event = "qb-mechanicjob:client:cleanVehicle"
 		}
 	},
 	["medikit"] = {
