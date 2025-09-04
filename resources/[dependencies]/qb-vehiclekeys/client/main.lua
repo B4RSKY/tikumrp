@@ -11,6 +11,7 @@ local lastPickedVehicle = nil
 local IsHotwiring = false
 local trunkclose = true
 local looped = false
+local kunci = false
 
 local function robKeyLoop()
     if looped then return end
@@ -171,10 +172,10 @@ end)
 function isKunci()
     if IsDisabledControlPressed(0, 19) then 
         if kunci then
-            ToggleVehicleLockswithoutnui(GetVehicle())
+            ToggleVehicleLocksWithoutNui(GetVehicle())
             kunci = false
         elseif not kunci then
-            ToggleVehicleLockswithoutnui(GetVehicle())
+            ToggleVehicleLocksWithoutNui(GetVehicle())
             kunci = true
         end
 	end
@@ -183,12 +184,12 @@ end
 RegisterNetEvent('tk-kunci:client:togglelocks', function()
     local ped = PlayerPedId()
     if IsPedInAnyVehicle(ped, false) then
-        ToggleVehicleLockswithoutnui(GetVehicle())
+        ToggleVehicleLocksWithoutNui(GetVehicle())
     else
         if Config.UseKeyfob then
-            openmenu()
+            OpenMenu()
         else
-        ToggleVehicleLockswithoutnui(GetVehicle())
+        ToggleVehicleLocksWithoutNui(GetVehicle())
         end
     end
 end)
