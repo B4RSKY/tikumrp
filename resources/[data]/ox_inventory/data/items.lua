@@ -3,10 +3,10 @@ return {
 		label = 'Perban',
 		weight = 115,
 		client = {
-			anim = { dict = 'missheistdockssetup1clipboard@idle_a', clip = 'idle_a', flag = 49 },
-			prop = { model = `prop_rolled_sock_02`, pos = vec3(-0.14, -0.14, -0.08), rot = vec3(-50.0, -50.0, 0.0) },
-			disable = { move = true, car = true, combat = true },
-			usetime = 3500,
+			anim = { dict = 'amb@world_human_clipboard@male@idle_a', clip = 'idle_c', flag = 49 },
+			prop = { bone = 18905, model = `prop_ld_health_pack`, pos = vec3(0.15, 0.08, 0.1), rot = vec3(180.0, 220.0, 0.0) },
+			disable = { move = false, car = true, combat = true },
+			usetime = 7000,
 		}
 	},
 
@@ -1540,7 +1540,6 @@ return {
 		description = "Untuk Membersihkan Kendaraan",
 		client = {
 			image = "kanebo.png",
-			event = "qb-mechanicjob:client:cleanVehicle"
 		}
 	},
 	["medikit"] = {
@@ -2460,26 +2459,6 @@ return {
 	},
 	["boombox"] = {
 		label = "Music Box",
-		weight = 20000,
-		stack = true,
-		close = true,
-		description = "Untuk Mendengarkan Musik",
-		client = {
-			image = "boombox.png",
-		}
-	},
-	["speaker_small"] = {
-		label = "speaker_small",
-		weight = 20000,
-		stack = true,
-		close = true,
-		description = "Untuk Mendengarkan Musik",
-		client = {
-			image = "boombox.png",
-		}
-	},
-	["speaker_stand_01a"] = {
-		label = "speaker_stand_01a",
 		weight = 20000,
 		stack = true,
 		close = true,
