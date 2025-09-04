@@ -62,15 +62,15 @@
                 },
 
                 methods: {
-					click_location: function (type, name) {
-						if (type == 'normal' || type == 'house' || type == 'appartment') {
-							axios.post('https://qb-spawn/setCam', {
-								posname: name,
-								type: type,
-							});
-						}
-						this.selectedValue = { type: type, name: name };
-					},
+                    click_location: function (type, name) {
+                        if (type == "normal") {
+                            axios.post("https://qb-spawn/setCam", {
+                                posname: name,
+                                type: type,
+                            });
+                        }
+                        this.selectedValue = { type: type, name: name };
+                    },
 
                     submit_spawn: function () {
                         this.show = false;

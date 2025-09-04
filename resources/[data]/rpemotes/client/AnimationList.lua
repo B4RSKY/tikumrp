@@ -3076,7 +3076,23 @@ RP.Dances = {
         AnimationOptions = {
             onFootFlag = AnimFlag.LOOP
         }
-    }
+    },
+    ["pgaramdanmadu"] = {
+        "pgaramdanmadu@animations",
+        "pgaramdanmaduclip",
+        "Garam Dan Madu Dance",
+        AnimationOptions = {
+            onFootFlag = AnimFlag.LOOP
+        }
+    },
+    ["psquidgameround"] = {
+        "psquidgameround@animations",
+        "psquidgameroundclip",
+        "Squid Game Round and Round",
+        AnimationOptions = {
+            onFootFlag = AnimFlag.LOOP
+        }
+    },
 }
 
 

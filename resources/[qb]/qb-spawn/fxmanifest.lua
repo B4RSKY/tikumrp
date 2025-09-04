@@ -10,7 +10,7 @@ shared_scripts {
     'locales/en.lua',
     'locales/*.lua',
     'config.lua',
-    -- '@qb-apartments/config.lua',
+    '@qb-apartments/config.lua',
 }
 
 client_script 'client.lua'
@@ -23,8 +23,8 @@ server_scripts {
 ui_page 'html/index.html'
 
 files {
-    'html/images/*.png',
     'html/index.html',
+    'html/images/*.png',
     'html/style.css',
     'html/vue.js',
     'html/reset.css'
