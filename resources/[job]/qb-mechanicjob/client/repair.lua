@@ -138,36 +138,49 @@ end)
 
 RegisterNetEvent('qb-mechanicjob:client:repairVehicleFull', function()
     local vehicle, distance = QBCore.Functions.GetClosestVehicle()
-    if vehicle == 0 or distance > 5.0 then return end
-    if not IsNearBone(vehicle, 'engine') then return end
-    if exports["qb-core"]:HasItem("toolkit", 1) then QBCore.Functions.Notify('SISTEM', 'Anda tidak memilik toolkit', 'error') return end
+    if vehicle == 0 or distance > 8.0 then return end
+    if not IsNearBone(vehicle, 'engine') then
+        QBCore.Functions.Notify('SISTEM', 'Terlalu jauh dari mesin, silahkan memperbaiki dekat mesin', 'error') 
+        return 
+    end
+    if not exports["qb-core"]:HasItem("toolkit", 1) then 
+        QBCore.Functions.Notify('SISTEM', 'Anda tidak memilik toolkit', 'error') 
+        return 
+    end
     ToggleHood(vehicle)
-    QBCore.Functions.Progressbar('repairing_vehicle', Lang:t('progress.repair_vehicle'), 10000, false, true, {
-        disableMovement = true,
-        disableCarMovement = true,
-        disableMouse = false,
-        disableCombat = true,
-    }, {
-        animDict = 'mini@repair',
-        anim = 'fixing_a_player',
-        flags = 1,
-    }, {
-        model = 'imp_prop_impexp_span_03',
-        bone = 28422,
-        coords = vec3(0.06, 0.01, -0.02),
-        rotation = vec3(0.0, 0.0, 0.0),
-    }, {}, function()
-        SetVehicleEngineHealth(vehicle, 1000.0)
-        SetVehicleBodyHealth(vehicle, 1000.0)
-        SetVehicleDeformationFixed(vehicle)
-        SetVehiclePetrolTankHealth(vehicle, 1000.0)
-        SetVehicleFixed(vehicle)
+    if lib.progressBar({
+        duration = 10000,
+        label = 'Memperbaiki Kendaraan',
+        useWhileDead = false,
+        canCancel = true,
+        disable = {
+            car = true,
+            move = true,
+            combat = true,
+            mouse = false
+        },
+        anim = {
+            dict = 'mini@repair',
+            clip = 'fixing_a_player'
+        },
+        prop = {
+            model = `imp_prop_impexp_span_03`,
+            bone = 28422,
+            pos = vec3(0.06, 0.01, -0.02),
+            rot = vec3(0.0, 0.0, 0.0)
+        },
+    }) then
+            SetVehicleEngineHealth(vehicle, 1000.0)
+            SetVehicleBodyHealth(vehicle, 1000.0)
+            SetVehicleDeformationFixed(vehicle)
+            SetVehiclePetrolTankHealth(vehicle, 1000.0)
+            SetVehicleFixed(vehicle)
+            ToggleHood(vehicle)
+            QBCore.Functions.Notify(Lang:t('success.repaired'), 'success')
+            TriggerServerEvent('qb-mechanicjob:server:removeItem', 'toolkit')
+    else
         ToggleHood(vehicle)
-        QBCore.Functions.Notify(Lang:t('success.repaired'), 'success')
-        TriggerServerEvent('qb-mechanicjob:server:removeItem', 'advancedrepairkit')
-    end, function()
-        ToggleHood(vehicle)
-    end)
+    end
 end)
 
 RegisterNetEvent('qb-mechanicjob:client:repairTire', function()
