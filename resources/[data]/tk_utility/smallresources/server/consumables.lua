@@ -213,6 +213,11 @@ end)
 RegisterNetEvent('consumables:server:addThirst', function(amount)
     local Player = QBCore.Functions.GetPlayer(source)
     if not Player then return end
+
+    if amount > 100 then
+        amount = 100
+    end
+
     Player.Functions.SetMetaData('thirst', amount)
     TriggerClientEvent('hud:client:UpdateNeeds', source, Player.PlayerData.metadata.hunger, amount)
 end)
@@ -220,6 +225,11 @@ end)
 RegisterNetEvent('consumables:server:addHunger', function(amount)
     local Player = QBCore.Functions.GetPlayer(source)
     if not Player then return end
+
+    if amount > 100 then
+        amount = 100
+    end
+
     Player.Functions.SetMetaData('hunger', amount)
     TriggerClientEvent('hud:client:UpdateNeeds', source, amount, Player.PlayerData.metadata.thirst)
 end)
