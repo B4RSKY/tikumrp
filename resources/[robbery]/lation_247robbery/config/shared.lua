@@ -53,14 +53,14 @@ return {
 
     police = {
         -- How many police must be online in order to start a robbery?
-        count = 0,
+        count = 3,
         -- Add your police job(s) below
         jobs = { 'police', 'sheriff' },
         -- Set your dispatch system
         -- Available options: 'cd_dispatch', 'ps-dispatch', 'qs-dispatch'
         -- 'core_dispatch', 'rcore_dispatch', aty_dispatch', 'op-dispatch',
         -- 'origen_police', 'emergencydispatch' & 'custom' option
-        dispatch = 'custom',
+        dispatch = 'ps-dispatch',
         -- Risk is a feature you can enable that will increase the players
         -- Reward payout based on the number of police online during the robbery!
         -- Do you want to enable the risk feature?
@@ -94,7 +94,7 @@ return {
         -- The metadata table is optional
         -- The 'item' can also be an account, such as 'cash' or 'bank'
         reward = {
-            { item = 'black_money', min = 750, max = 1250, chance = 100 },
+            { item = 'black_money', min = 50000, max = 100000, chance = 100 },
             -- { item = 'markedbills', min = 1, max = 1, chance = 100, metadata = { ['worth'] = math.random(750, 1250) } }
             -- Add or remove items as you wish following the same format
         },
@@ -148,7 +148,7 @@ return {
         -- The metadata table is optional
         -- The 'item' can also be an account, such as 'cash' or 'bank'
         reward = {
-            { item = 'black_money', min = 2000, max = 7000, chance = 100 },
+            { item = 'black_money', min = 250000, max = 350000, chance = 100 },
             -- { item = 'markedbills', min = 1, max = 1, chance = 100, metadata = { ['worth'] = math.random(2000, 7000) } }
             -- Add or remove items as you wish following the same format
         },

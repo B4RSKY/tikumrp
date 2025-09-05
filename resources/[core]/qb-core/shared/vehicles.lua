@@ -767,7 +767,7 @@ local Vehicles = {
     --DEALER
     { model = 'gbadmiral',     name = 'gbadmiral',     brand = 'TIKUM', price = 7851362, category = 'sports', type = 'automobile', shop = 'cardealer' },
     { model = 'gbmogulrs',     name = 'gbmogulrs',     brand = 'TIKUM', price = 3459821, category = 'sports', type = 'automobile', shop = 'cardealer' },
-    { model = 'gbbisonstx',    name = 'gbbisonstx',    brand = 'TIKUM', price = 5624119, category = 'sports', type = 'automobile', shop = 'cardealer' },
+    { model = 'gbbisonstx',    name = 'gbbisonstx',    brand = 'TIKUM', price = 1000000, category = 'sports', type = 'automobile', shop = 'cardealer' }, --STATERPACK
 
     --PDM
     { model = 'gbargento7f',   name = 'gbargento7f',   brand = 'TIKUM', price = 8211475, category = 'sports', type = 'automobile', shop = 'pdm' },
