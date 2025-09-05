@@ -157,6 +157,19 @@ RegisterNetEvent('hospital:server:TreatWounds', function(playerId)
 	end
 end)
 
+RegisterNetEvent('hospital:server:treatement', function(playerId)
+	local src = source
+	local Player = QBCore.Functions.GetPlayer(src)
+	local Patient = QBCore.Functions.GetPlayer(playerId)
+	if Patient then
+		if Player.PlayerData.job.name == 'ambulance' then
+			exports.ox_inventory:RemoveItem(src, 'bandage', 1)
+			TriggerClientEvent('hospital:client:treatement', Patient.PlayerData.source, 'full')
+			TriggerClientEvent('esx_ambulancejob:heal', Patient.PlayerData.source)
+		end
+	end
+end)
+
 RegisterNetEvent('hospital:server:AddDoctor', function(job)
 	if job == 'ambulance' then
 		local src = source

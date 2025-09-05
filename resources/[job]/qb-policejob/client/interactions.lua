@@ -68,7 +68,7 @@ end)
 
 RegisterNetEvent('police:client:PutInVehicle', function()
     local ped = PlayerPedId()
-    if isHandcuffed or isEscorted then
+    --if isHandcuffed or isEscorted then
         local vehicle = QBCore.Functions.GetClosestVehicle()
         if DoesEntityExist(vehicle) then
             for i = GetVehicleMaxNumberOfPassengers(vehicle), 0, -1 do
@@ -84,7 +84,7 @@ RegisterNetEvent('police:client:PutInVehicle', function()
                 end
             end
         end
-    end
+    --end
 end)
 
 RegisterNetEvent('police:client:SeizeCash', function()
@@ -183,6 +183,7 @@ RegisterNetEvent('police:client:PutPlayerInVehicle', function()
     if player ~= -1 and distance < 2.5 then
         local playerId = GetPlayerServerId(player)
         if not isHandcuffed and not isEscorted then
+            print('CILCIL')
             TriggerServerEvent('police:server:PutPlayerInVehicle', playerId)
         end
     else

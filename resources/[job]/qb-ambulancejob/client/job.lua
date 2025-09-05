@@ -257,6 +257,38 @@ RegisterNetEvent('hospital:client:TreatWounds', function()
     end
 end)
 
+RegisterNetEvent('hospital:client:treatement', function()
+    local hasItem = exports['qb-core']:HasItem('bandage', 1)
+    if hasItem then
+        local player, distance = GetClosestPlayer()
+        if player ~= -1 and distance < 5.0 then
+            local playerId = GetPlayerServerId(player)
+            if lib.progressBar({
+                duration = 5000,
+                label = Lang:t('progress.healing'),
+                useWhileDead = false,
+                canCancel = true,
+                disable = {
+                    move = true,
+                    car = true,
+                    combat = true,
+                    mouse = false
+                },
+                anim = { dict = healAnimDict, clip = healAnim},
+            }) then 
+                lib.notify({ title = 'Notifikasi', description = Lang:t('success.helped_player'), type = 'success'})
+                TriggerServerEvent('hospital:server:treatement', playerId)
+            else
+                lib.notify({ title = 'Notifikasi', description = Lang:t('error.canceled'), type = 'error'})
+            end
+        else
+            lib.notify({ title = 'Notifikasi', description = Lang:t('error.no_player'), type = 'error'})
+        end
+    else
+        lib.notify({ title = 'Notifikasi', description = Lang:t('error.no_bandage'), type = 'error'})
+    end
+end)
+
 local check = false
 local function EMSControls(variable)
     CreateThread(function()

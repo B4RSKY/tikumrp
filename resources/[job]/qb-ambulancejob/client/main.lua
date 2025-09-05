@@ -602,6 +602,24 @@ RegisterNetEvent('hospital:client:KillPlayer', function()
     SetEntityHealth(PlayerPedId(), 0)
 end)
 
+RegisterNetEvent('hospital:client:treatement', function(type)
+    if type == 'full' then
+        ResetAll()
+    else
+        ResetPartial()
+    end
+    TriggerServerEvent('hospital:server:RestoreWeaponDamage')
+    QBCore.Functions.Notify(Lang:t('success.wounds_healed'), 'success')
+end)
+
+RegisterNetEvent('esx_ambulancejob:heal')
+AddEventHandler('esx_ambulancejob:heal', function()
+	local playerPed = PlayerPedId()
+	local maxHealth = GetEntityMaxHealth(playerPed)
+
+	SetEntityHealth(playerPed, maxHealth)
+end)
+
 RegisterNetEvent('hospital:client:HealInjuries', function(type)
     if type == 'full' then
         ResetAll()

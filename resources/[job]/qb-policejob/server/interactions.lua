@@ -81,11 +81,13 @@ RegisterNetEvent('police:server:SetPlayerOutVehicle', function(playerId)
     local EscortPlayer = QBCore.Functions.GetPlayer(playerId)
     if not QBCore.Functions.GetPlayer(src) or not EscortPlayer then return end
 
-    if EscortPlayer.PlayerData.metadata['ishandcuffed'] or EscortPlayer.PlayerData.metadata['isdead'] then
-        TriggerClientEvent('police:client:SetOutVehicle', EscortPlayer.PlayerData.source)
-    else
-        TriggerClientEvent('QBCore:Notify', src, Lang:t('error.not_cuffed_dead'), 'error')
-    end
+    TriggerClientEvent('police:client:SetOutVehicle', EscortPlayer.PlayerData.source)
+
+    -- if EscortPlayer.PlayerData.metadata['ishandcuffed'] or EscortPlayer.PlayerData.metadata['isdead'] then
+    --     TriggerClientEvent('police:client:SetOutVehicle', EscortPlayer.PlayerData.source)
+    -- else
+    --     TriggerClientEvent('QBCore:Notify', src, Lang:t('error.not_cuffed_dead'), 'error')
+    -- end
 end)
 
 RegisterNetEvent('police:server:PutPlayerInVehicle', function(playerId)
@@ -99,11 +101,12 @@ RegisterNetEvent('police:server:PutPlayerInVehicle', function(playerId)
     local EscortPlayer = QBCore.Functions.GetPlayer(playerId)
     if not QBCore.Functions.GetPlayer(src) or not EscortPlayer then return end
 
-    if EscortPlayer.PlayerData.metadata['ishandcuffed'] or EscortPlayer.PlayerData.metadata['isdead'] then
-        TriggerClientEvent('police:client:PutInVehicle', EscortPlayer.PlayerData.source)
-    else
-        TriggerClientEvent('QBCore:Notify', src, Lang:t('error.not_cuffed_dead'), 'error')
-    end
+    TriggerClientEvent('police:client:PutInVehicle', EscortPlayer.PlayerData.source)
+    -- if EscortPlayer.PlayerData.metadata['ishandcuffed'] or EscortPlayer.PlayerData.metadata['isdead'] then
+    --     TriggerClientEvent('police:client:PutInVehicle', EscortPlayer.PlayerData.source)
+    -- else
+    --     TriggerClientEvent('QBCore:Notify', src, Lang:t('error.not_cuffed_dead'), 'error')
+    -- end
 end)
 
 RegisterNetEvent('police:server:BillPlayer', function(playerId, price)
