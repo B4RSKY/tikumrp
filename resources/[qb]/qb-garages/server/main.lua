@@ -55,10 +55,12 @@ local function filterVehiclesByCategory(vehicles, category)
 end
 
 local DepotCfg = {
-    percent_nonvip  = Config.priceAsuransi,   -- 2%
-    percent_vip    =  1, -- VIP 1%
-    min      = Config.minAsuransi,      -- batas bawah
-    fallback = Config.defaultAsuransi, -- jika harga tak ditemukan
+    percent_nonvip = Config.priceAsuransi,      -- 2% non-VIP
+    percent_vip    = 1,   -- 1% VIP
+    min            = Config.minAsuransi,         -- batas bawah (opsional)
+    fallback       = Config.defaultAsuransi,    -- fallback kalau harga tidak ada
+    max            = 50000,      -- hard cap "50 ribu"
+    strict_less    = true,                          -- true => paksa < max (bukan <=)
 }
 
 local vehiclePriceCache = {}
@@ -94,16 +96,29 @@ local function getSharedVehicleData(model)
     return nil
 end
 
+local function clampDepot(val)
+    if not val or val <= 0 then return DepotCfg.fallback end
+
+    if DepotCfg.max then
+        local cap = DepotCfg.strict_less and (DepotCfg.max - 1) or DepotCfg.max
+        if val > cap then val = cap end
+    end
+
+    if DepotCfg.min and val < DepotCfg.min then
+        val = DepotCfg.min
+    end
+    return val
+end
+
 local function calcDepotPrice(model, percentOverride)
     local data = getSharedVehicleData(model)
     local base = data and tonumber(data.price) or nil
     local pct  = percentOverride or DepotCfg.percent_nonvip
     if base and base > 0 then
-        local val = math.floor((base * (pct / 100)) + 0.5)
-        if val < DepotCfg.min then val = DepotCfg.min end
-        return val
+        local raw = math.floor((base * (pct / 100)) + 0.5)
+        return clampDepot(raw)
     end
-    return DepotCfg.fallback
+    return clampDepot(nil)
 end
 
 local function isVip(src)
@@ -141,13 +156,7 @@ local function reconcileDepotForPlayer(citizenId, src)
         if not entityExists then
             local desired = calcDepotPrice(row.vehicle, pct)
 
-            if not row.depotprice or row.depotprice <= 0 then
-                MySQL.update.await(
-                    'UPDATE player_vehicles SET depotprice = ? WHERE plate = ? AND citizenid = ? AND state = 0',
-                    { desired, row.plate, citizenId }
-                )
-                updated = true
-            elseif vip and row.depotprice > desired then
+            if (not row.depotprice or row.depotprice <= 0) or (row.depotprice > desired) then
                 MySQL.update.await(
                     'UPDATE player_vehicles SET depotprice = ? WHERE plate = ? AND citizenid = ? AND state = 0',
                     { desired, row.plate, citizenId }
@@ -331,7 +340,6 @@ RegisterNetEvent('qb-garages:server:PayDepotPrice', function(data)
     local cashBalance = Player.PlayerData.money['cash']
     local bankBalance = Player.PlayerData.money['bank']
 
-    -- Ambil data kendaraan + harga depot saat ini
     local row = MySQL.single.await('SELECT citizenid, vehicle, depotprice FROM player_vehicles WHERE plate = ?', { data.plate })
     if not row then return end
     if row.citizenid ~= Player.PlayerData.citizenid then
@@ -339,19 +347,19 @@ RegisterNetEvent('qb-garages:server:PayDepotPrice', function(data)
         return
     end
 
-    -- Hitung harga ideal berdasar status VIP saat ini
     local vip = isVip(src)
     local desired = calcDepotPrice(row.vehicle, vip and DepotCfg.percent_vip or DepotCfg.percent_nonvip)
     local depotPrice = row.depotprice or desired
 
-    -- Turunkan harga jika sekarang VIP dan harga tersimpan lebih tinggi
-    if vip and depotPrice > desired then
+    if depotPrice > desired then
         depotPrice = desired
-        MySQL.update.await('UPDATE player_vehicles SET depotprice = ? WHERE plate = ? AND citizenid = ?', { depotPrice, data.plate, Player.PlayerData.citizenid })
+        MySQL.update.await(
+            'UPDATE player_vehicles SET depotprice = ? WHERE plate = ? AND citizenid = ?',
+            { depotPrice, data.plate, Player.PlayerData.citizenid }
+        )
     end
 
     local function succeed()
-        -- reset depot & untrack
         MySQL.update.await('UPDATE player_vehicles SET depotprice = 0 WHERE plate = ? AND citizenid = ?', { data.plate, Player.PlayerData.citizenid })
         OutsideVehicles[data.plate] = nil
         TriggerClientEvent('qb-garages:client:takeOutGarage', src, data)
