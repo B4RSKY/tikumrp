@@ -8,7 +8,7 @@ Config.ColorFavorites = false                  -- add your own colors to the fav
 Config.NitrousBoost = 1.8                      -- how much boost nitrous gives (want this above 1.0)
 Config.NitrousUsage = 0.1                      -- how much nitrous is used per frame while holding key
 
-Config.UseDistance = true                      -- enable/disable saving vehicle distance
+Config.UseDistance = false                      -- enable/disable saving vehicle distance
 Config.UseDistanceDamage = false                -- damage vehicle engine health based on vehicle distance
 Config.UseWearableParts = false                 -- enable/disable wearable parts
 Config.WearablePartsChance = 1                 -- chance of wearable parts being damaged while driving if enabled
