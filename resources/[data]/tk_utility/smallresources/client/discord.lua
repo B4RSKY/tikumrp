@@ -1,25 +1,15 @@
-local QBCore = exports['qb-core']:GetCoreObject()
-
 CreateThread(function()
-    while Config.Discord.isEnabled do
-        SetDiscordAppId(Config.Discord.applicationId)
+	while Config.Discord.isEnabled do
+        local namanya = GetPlayerName(PlayerId())
+        local kantong = GetPlayerServerId(PlayerId())
+		local plyrcount = NetworkGetNumConnectedPlayers() or 64
+		SetDiscordAppId(Config.Discord.applicationId)
+        SetRichPresence('[' ..kantong.. '] '..namanya..' - '..plyrcount..' Players')
         SetDiscordRichPresenceAsset(Config.Discord.iconLarge)
         SetDiscordRichPresenceAssetText(Config.Discord.iconLargeHoverText)
         SetDiscordRichPresenceAssetSmall(Config.Discord.iconSmall)
         SetDiscordRichPresenceAssetSmallText(Config.Discord.iconSmallHoverText)
-
-        if Config.Discord.showPlayerCount then
-            QBCore.Functions.TriggerCallback('smallresources:server:GetCurrentPlayers', function(result)
-                SetRichPresence('Players: ' .. result .. '/' .. Config.Discord.maxPlayers)
-            end)
-        end
-
-        if Config.Discord.buttons and type(Config.Discord.buttons) == "table" then
-            for i, v in pairs(Config.Discord.buttons) do
-                SetDiscordRichPresenceAction(i - 1, v.text, v.url)
-            end
-        end
-
-        Wait(Config.Discord.updateRate)
-    end
+        SetDiscordRichPresenceAction(0, "Discord", "https://discord.gg/a9SPzgegrp")
+		Wait(Config.Discord.updateRate)
+	end
 end)
