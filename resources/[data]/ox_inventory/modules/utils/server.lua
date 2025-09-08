@@ -7,17 +7,12 @@ local webHook = GetConvar('inventory:webhook', '')
 if webHook ~= '' then
 	local validHosts = {
 		['i.imgur.com'] = true,
-		['i.ibb.co'] = true,
-		['cdn.discordapp.com'] = true,
 	}
 
 	local validExtensions = {
 		['png'] = true,
-		['jpg'] = true,
 		['apng'] = true,
 		['webp'] = true,
-		['gif'] = true,
-		['jpeg'] = true,
 	}
 
 	local headers = { ['Content-Type'] = 'application/json' }

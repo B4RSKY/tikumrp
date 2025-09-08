@@ -1,4 +1,8 @@
 {
+  "ui_pockets": "Pockets",
+  "ui_backpack": "Backpack",
+  "ui_crafting": "Recipes",
+  "ui_ground": "Ground",
   "ui_use": "Utiliser",
   "ui_give": "Donner",
   "ui_close": "Fermer",
@@ -88,6 +92,5 @@
   "crafting_item": "Fabrication %s",
   "crafting_bench": "Table de fabrication",
   "open_crafting_bench": "Ouvrir la table de fabrication",
-  "not_enough_durability": "%s n'a pas assez de durabilité",
-  "storage": "Stockage"
+  "not_enough_durability": "%s n'a pas assez de durabilité"
 }

@@ -9,8 +9,8 @@ Config.NitrousBoost = 1.8                      -- how much boost nitrous gives (
 Config.NitrousUsage = 0.1                      -- how much nitrous is used per frame while holding key
 
 Config.UseDistance = true                      -- enable/disable saving vehicle distance
-Config.UseDistanceDamage = true                -- damage vehicle engine health based on vehicle distance
-Config.UseWearableParts = true                 -- enable/disable wearable parts
+Config.UseDistanceDamage = false                -- damage vehicle engine health based on vehicle distance
+Config.UseWearableParts = false                 -- enable/disable wearable parts
 Config.WearablePartsChance = 1                 -- chance of wearable parts being damaged while driving if enabled
 Config.WearablePartsDamage = math.random(1, 2) -- how much wearable parts are damaged when damaged if enabled
 Config.DamageThreshold = 25                    -- how worn a part needs to be or below to apply an effect if enabled

@@ -17,40 +17,23 @@ return {
 		weight = 70000,
 		groups = shared.police
 	},
+
 	{
-		coords = vec3(-489.99, -978.17, 34.45),
+		coords = vec3(301.3, -600.23, 43.28),
 		target = {
-			loc = vec3(-489.99, -978.17, 34.45),
+			loc = vec3(301.82, -600.99, 43.29),
 			length = 0.6,
 			width = 1.8,
 			heading = 340,
 			minZ = 43.34,
 			maxZ = 44.74,
-			label = 'Loker Pribadi'
+			label = 'Open personal locker'
 		},
 		name = 'emslocker',
-		label = 'Loker Pribadi',
+		label = 'Personal Locker',
 		owner = true,
-		slots = 50,
+		slots = 70,
 		weight = 70000,
-		groups = {['ambulance'] = 1}
-	},
-	{
-		coords = vec3(-926.75, -2025.5, 14.45),
-		target = {
-			loc = vec3(-926.75, -2025.5, 14.45),
-			length = 0.6,
-			width = 1.8,
-			heading = 340,
-			minZ = 43.34,
-			maxZ = 44.74,
-			label = 'Loker Pribadi'
-		},
-		name = 'mechloker',
-		label = 'Loker Pribadi',
-		owner = true,
-		slots = 50,
-		weight = 70000,
-		groups = {['mechanic'] = 1}
+		groups = {['ambulance'] = 0}
 	},
 }

@@ -1,4 +1,8 @@
 {
+  "ui_pockets": "Pockets",
+  "ui_backpack": "Backpack",
+  "ui_crafting": "Recipes",
+  "ui_ground": "Ground",
   "ui_use": "Use",
   "ui_give": "Give",
   "ui_close": "Close",
@@ -89,5 +93,10 @@
   "crafting_bench": "Crafting Bench",
   "open_crafting_bench": "Open Crafting Bench",
   "not_enough_durability": "%s does not have enough durability",
-  "storage": "Storage"
+  "storage": "Storage",
+  "item_not_found" : "Item not found",
+  "player_not_found" : "Player not found",
+  "target_too_far" : "Player is too far away",
+  "inventory_full" : "Inventory is full",
+  "give_failed" : "Failed to give item"
 }

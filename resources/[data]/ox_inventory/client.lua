@@ -25,6 +25,30 @@ exports('setStashTarget', function(id, owner)
 	StashTarget = id and {id=id, owner=owner}
 end)
 
+local lastBackpackCheck = 0
+CreateThread(function()
+    while true do
+        Wait(5000) -- Check every 5 seconds
+        
+        if PlayerData and PlayerData.loaded then
+            local currentTime = GetGameTimer()
+            if currentTime - lastBackpackCheck > 5000 then
+                lastBackpackCheck = currentTime
+                
+                local hasBackpack = ClientFuncs.CheckForBackpack()
+                local currentState = LocalPlayer.state.backpack
+                
+                -- Debug logging
+                if hasBackpack then
+                    --print("DEBUG: Periodic check - Backpack found, state ID:", currentState and currentState.id or "none")
+                else
+                    --print("DEBUG: Periodic check - No backpack found")
+                end
+            end
+        end
+    end
+end)
+
 ---@type boolean | number
 local invBusy = true
 
@@ -68,20 +92,23 @@ end
 ---@param ped number
 ---@return boolean
 local function canOpenTarget(ped)
-	return IsPedFatallyInjured(ped)
-	or IsEntityPlayingAnim(ped, 'dead', 'dead_a', 3)
-	or IsPedCuffed(ped)
-	or IsEntityPlayingAnim(ped, 'mp_arresting', 'idle', 3)
-	or IsEntityPlayingAnim(ped, 'missminuteman_1ig_2', 'handsup_base', 3)
-	or IsEntityPlayingAnim(ped, 'missminuteman_1ig_2', 'handsup_enter', 3)
-	or IsEntityPlayingAnim(ped, 'random@mugging3', 'handsup_standing_base', 3)
+    return IsPedFatallyInjured(ped)
+    or IsEntityPlayingAnim(ped, 'dead', 'dead_a', 3)
+    or IsEntityPlayingAnim(ped, 'combat@damage@writhe', 'writhe_loop', 3) -- last stand
+    or IsEntityPlayingAnim(ped, 'combat@damage@writhe', 'writhe_loop_a', 3) -- sometimes another loop
+    or IsPedCuffed(ped)
+    or IsEntityPlayingAnim(ped, 'mp_arresting', 'idle', 3)
+    or IsEntityPlayingAnim(ped, 'missminuteman_1ig_2', 'handsup_base', 3)
+    or IsEntityPlayingAnim(ped, 'missminuteman_1ig_2', 'handsup_enter', 3)
+    or IsEntityPlayingAnim(ped, 'random@mugging3', 'handsup_standing_base', 3)
 end
+
 
 local defaultInventory = {
 	type = 'newdrop',
-	slots = shared.dropslots,
+	slots = shared.playerslots,
 	weight = 0,
-	maxWeight = shared.dropweight,
+	maxWeight = shared.playerweight,
 	items = {}
 }
 
@@ -113,10 +140,57 @@ local CraftingBenches = require 'modules.crafting.client'
 local Vehicles = lib.load('data.vehicles')
 local Inventory = require 'modules.inventory.client'
 
+---Simple backpack detection that checks common names
+---@param itemName string Item name to check
+---@return boolean isBackpack
+local function isBackpackItem(itemName)
+    if not itemName then return false end
+    
+    -- Check item definition first
+    local itemData = Items[itemName]
+    if itemData and itemData.backpack == true then
+        return true
+    end
+    
+    -- Check if item name contains "backpack" or "bag"
+    local lowerName = string.lower(itemName)
+    if string.find(lowerName, "backpack") or string.find(lowerName, "bag") then
+        return true
+    end
+    
+    -- Common backpack item names
+    local commonBackpacks = {
+        'backpack',
+        'backpack_medium',
+        'backpack_large', 
+        'tactical_backpack',
+        'small_backpack',
+        'medium_backpack',
+        'large_backpack',
+        'school_backpack',
+        'hiking_backpack',
+        'duffel_bag',
+        'sports_bag'
+    }
+    
+    -- Check against common names
+    for _, backpackName in ipairs(commonBackpacks) do
+        if itemName == backpackName then
+            return true
+        end
+    end
+    
+    return false
+end
+
+---@param inv string?
+---@param data any?
+---@return boolean?
 ---@param inv string?
 ---@param data any?
 ---@return boolean?
 function client.openInventory(inv, data)
+	local usebackpack = ClientFuncs.CheckForBackpack()
 	if invOpen then
 		if not inv and currentInventory.type == 'newdrop' then
 			return client.closeInventory()
@@ -159,26 +233,36 @@ function client.openInventory(inv, data)
         return lib.notify({ id = 'inventory_player_access', type = 'error', description = locale('inventory_player_access') })
     end
 
-    local left, right, accessError
+    local left, leftBottom, right, accessError
 
-    if inv == 'player' and data ~= cache.serverId then
-        local targetId, targetPed, serverId
+    if inv == 'player' or inv == 'showbpk' and data ~= cache.serverId then
+        local targetId, targetPed
 
         if not data then
             targetId, targetPed = Utils.GetClosestPlayer()
-            serverId = targetId and GetPlayerServerId(targetId)
-            data = serverId
+            data = targetId and GetPlayerServerId(targetId)
         else
-            serverId = type(data) == 'table' and data.id or data
+            local serverId = type(data) == 'table' and data.id or data
+
+            if serverId == cache.serverId then return end
+
             targetId = serverId and GetPlayerFromServerId(serverId)
             targetPed = targetId and GetPlayerPed(targetId)
         end
+		if inv == 'showbpk' then
+			local check = true
+			if Config["Backpack"].requireItem then
+				check = lib.callback.await('akilla-inventory:GetBackpackItem', 200, data)
+			end
 
-        if serverId == cache.serverId then return end
+			if not check then 
+				return lib.notify({ id = 'inventory_right_access', type = 'error', description = 'players do not have backpacks' })
+			end
+		end
 
         local targetCoords = targetPed and GetEntityCoords(targetPed)
 
-        if not targetCoords or #(targetCoords - GetEntityCoords(playerPed)) > 1.8 or (not client.hasGroup(shared.police) and not Player(serverId).state.canSteal) then
+        if not targetCoords or #(targetCoords - GetEntityCoords(playerPed)) > 1.8 or not (client.hasGroup(shared.police) or canOpenTarget(targetPed)) then
             return lib.notify({ id = 'inventory_right_access', type = 'error', description = locale('inventory_right_access') })
         end
     end
@@ -189,12 +273,14 @@ function client.openInventory(inv, data)
         end
 
         left, right, accessError = lib.callback.await('ox_inventory:openShop', 200, data)
+		leftBottom = lib.callback.await('ox_inventory:openShop2', 200)
     elseif inv == 'crafting' then
         if cache.vehicle then
             return lib.notify({ id = 'cannot_perform', type = 'error', description = locale('cannot_perform') })
         end
 
         left, right, accessError = lib.callback.await('ox_inventory:openCraftingBench', 200, data.id, data.index)
+		leftBottom = lib.callback.await('ox_inventory:openShop2', 200)
 
         if left then
             right = CraftingBenches[data.id]
@@ -235,7 +321,7 @@ function client.openInventory(inv, data)
             end
         end
 
-        left, right, accessError = lib.callback.await('ox_inventory:openInventory', false, inv, data)
+        left, right, leftBottom, accessError = lib.callback.await('ox_inventory:openInventory', false, inv, data)
     end
 
     if accessError then
@@ -274,12 +360,27 @@ function client.openInventory(inv, data)
     currentInventory = right or defaultInventory
     left.items = PlayerData.inventory
     left.groups = PlayerData.groups
+	if Config["Backpack"].requireItem then
+		if usebackpack then
+			if leftBottom ~= false then
+				leftBottom.open = true
+			else
+				lib.notify({description = "Please Reopen Your Inventory To View Backpack", type = "error", duration = 5000})
+			end
+		else
+			leftBottom.open = false
+		end
+	else
+		leftBottom.open = true
+	end
+
 
     SendNUIMessage({
         action = 'setupInventory',
         data = {
             leftInventory = left,
-            rightInventory = currentInventory
+            rightInventory = currentInventory,
+			leftInventoryBottom = leftBottom
         }
     })
 
@@ -706,7 +807,32 @@ local function useButton(id, slot)
 	end
 end
 
-local function openNearbyInventory() client.openInventory('player') end
+-- local function openNearbyInventory() client.openInventory('player') end
+local function openNearbyInventory()
+	lib.registerContext({
+		id = 'steal_inv',
+		title = 'Inven Menu',
+		menu = 'steal_inv',
+		options = {
+		  {
+			title = 'Steal Player Inventory',
+			icon = 'hand',
+			onSelect = function()
+				client.openInventory('player') 
+			end,
+		  },
+		  {
+			title = 'Steal Backpack Inventory',
+			icon = 'hand',
+			onSelect = function()
+				client.openInventory('showbpk') 
+			end,
+		  },
+		}
+	})
+	lib.showContext('steal_inv')
+	-- client.openInventory('player') 
+end
 
 exports('openNearbyInventory', openNearbyInventory)
 
@@ -737,9 +863,7 @@ local invHotkeys = false
 
 ---@type function?
 local function registerCommands()
-	if client.enablestealcommand then
-		RegisterCommand('steal', openNearbyInventory, false)
-	end
+	RegisterCommand('steal', openNearbyInventory, false)
 
 	local function openGlovebox(vehicle)
 		if not IsPedInAnyVehicle(playerPed, false) or not NetworkGetEntityIsNetworked(vehicle) then return end
@@ -817,7 +941,7 @@ local function registerCommands()
 			if not shared.target and entityType == 3 then
 				local model = GetEntityModel(entity)
 
-				if Inventory.Dumpsters:includes(model) then
+				if Inventory.Dumpsters[model] then
 					return Inventory.OpenDumpster(entity)
 				end
 			end
@@ -854,7 +978,7 @@ local function registerCommands()
 		description = locale('disable_hotbar'),
 		defaultKey = client.keys[3],
 		onPressed = function()
-			if EnableWeaponWheel or not invHotkeys or IsNuiFocused() or lib.progressActive() then return end
+			if EnableWeaponWheel or IsNuiFocused() or lib.progressActive() then return end
 			SendNUIMessage({ action = 'toggleHotbar' })
 		end
 	})
@@ -866,7 +990,7 @@ local function registerCommands()
 			defaultKey = tostring(i),
 			onPressed = function()
 				if invOpen or EnableWeaponWheel or not invHotkeys or IsNuiFocused() then return end
-				useSlot(i)
+				useSlot(i+4)
 			end
 		})
 	end
@@ -1021,10 +1145,9 @@ end)
 ---@param point CPoint
 local function nearbyDrop(point)
 	if not point.instance or point.instance == currentInstance then
-        DrawMarker(client.dropmarker.type, point.coords.x, point.coords.y, point.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, client.dropmarker.scale[1], client.dropmarker.scale[2], client.dropmarker.scale[3],
-        ---@diagnostic disable-next-line: param-type-mismatch
-        client.dropmarker.colour[1], client.dropmarker.colour[2], client.dropmarker.colour[3], 222, false, false, 0, true, false, false, false)
-    end
+		---@diagnostic disable-next-line: param-type-mismatch
+		DrawMarker(2, point.coords.x, point.coords.y, point.coords.z, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.3, 0.2, 0.15, 150, 30, 30, 222, false, false, 0, true, false, false, false)
+	end
 end
 
 ---@param point CPoint
@@ -1165,6 +1288,10 @@ local function setStateBagHandler(stateId)
 	setStateBagHandler = nil
 end
 
+RegisterNetEvent('akilla-inventory:setArmor', function(value)
+    SetPedArmour(PlayerPedId(), value)
+end)
+
 lib.onCache('seat', function(seat)
 	if seat then
 		local hasWeapon = GetCurrentPedVehicleWeapon(cache.ped)
@@ -1183,9 +1310,23 @@ lib.onCache('vehicle', function()
 	end
 end)
 
+function removeParachute()
+	local ped = cache.ped
+	if client.parachute then
+		Utils.DeleteEntity(client.parachute[1])
+		client.parachute = false
+	end
+end
+
 RegisterNetEvent('ox_inventory:setPlayerInventory', function(currentDrops, inventory, weight, player)
 	if source == '' then return end
-
+	
+	--[[print("=== DEBUG: setPlayerInventory Event Started ===")
+	print("DEBUG: Source:", source)
+	print("DEBUG: Inventory items count:", inventory and #inventory or "nil")
+	print("DEBUG: Weight:", weight)
+	print("DEBUG: Player:", player and player.source or "nil")
+--]]
     ---@class PlayerData
     ---@field inventory table<number, SlotWithItem?>
     ---@field weight number
@@ -1195,15 +1336,12 @@ RegisterNetEvent('ox_inventory:setPlayerInventory', function(currentDrops, inven
 	PlayerData.source = cache.serverId
     PlayerData.maxWeight = shared.playerweight
 
-	setmetatable(PlayerData, {
-		__index = function(self, key)
-			if key == 'ped' then
-				return PlayerPedId()
-			end
-		end
-	})
+	--print("DEBUG: PlayerData set with source:", PlayerData.source, "id:", PlayerData.id)
 
-	if setStateBagHandler then setStateBagHandler(('player:%s'):format(cache.serverId)) end
+	if setStateBagHandler then 
+		--print("DEBUG: Setting state bag handler")
+		setStateBagHandler(('player:%s'):format(cache.serverId)) 
+	end
 
 	local ItemData = table.create(0, #Items)
 
@@ -1228,6 +1366,8 @@ RegisterNetEvent('ox_inventory:setPlayerInventory', function(currentDrops, inven
 		}
 	end
 
+	--print("DEBUG: ItemData created with", #ItemData, "items")
+
 	for _, data in pairs(inventory) do
 		local item = Items[data.name]
 
@@ -1242,6 +1382,8 @@ RegisterNetEvent('ox_inventory:setPlayerInventory', function(currentDrops, inven
 		end
 	end
 
+	--print("DEBUG: Inventory item counts updated")
+
 	local phone = Items.phone
 
 	if phone and phone.count < 1 then
@@ -1254,6 +1396,8 @@ RegisterNetEvent('ox_inventory:setPlayerInventory', function(currentDrops, inven
 	client.setPlayerData('weight', weight)
 	currentWeapon = nil
 	Weapon.ClearAll()
+
+	--print("DEBUG: Player data set, current weapon cleared")
 
 	local uiLocales = {}
 	local locales = lib.getLocales()
@@ -1273,6 +1417,8 @@ RegisterNetEvent('ox_inventory:setPlayerInventory', function(currentDrops, inven
 		createDrop(dropId, data)
 	end
 
+	--print("DEBUG: Drops created:", #currentDrops)
+
 	local hasTextUi
 	local uiOptions = { icon = 'fa-id-card' }
 
@@ -1284,7 +1430,11 @@ RegisterNetEvent('ox_inventory:setPlayerInventory', function(currentDrops, inven
 		if point.isClosest and point.currentDistance < 1.2 then
 			if not hasTextUi then
 				hasTextUi = point
-				lib.showTextUI(point.message, uiOptions)
+				if Config["SK-UI"] then
+					exports["SK-UI"]:showTextUI(point.message, "bottom")
+				else
+					lib.showTextUI(point.message, {position = "bottom-center"})
+				end
 			end
 
 			if IsControlJustReleased(0, 38) then
@@ -1300,11 +1450,21 @@ RegisterNetEvent('ox_inventory:setPlayerInventory', function(currentDrops, inven
 			end
 		elseif hasTextUi == point then
 			hasTextUi = false
-			lib.hideTextUI()
+			if Config["SK-UI"] then
+				exports["SK-UI"]:hideTextUI()
+			else
+				lib.hideTextUI()
+			end
 		end
 	end
 
 	for id, data in pairs(lib.load('data.licenses') or {}) do
+		local newMsgSK = ""
+		if Config["SK-UI"] then
+			newMsgSK = ('%s %s'):format("\\key E\\endkey", locale('purchase_license', data.name))
+		else
+			newMsgSK = ('%s %s'):format("[E]", locale('purchase_license', data.name))
+		end
 		lib.points.new({
 			coords = data.coords,
 			distance = 16,
@@ -1313,11 +1473,15 @@ RegisterNetEvent('ox_inventory:setPlayerInventory', function(currentDrops, inven
 			price = data.price,
 			invId = id,
 			nearby = nearbyLicense,
-			message = ('**%s**  \n%s'):format(locale('purchase_license', data.name), locale('interact_prompt', GetControlInstructionalButton(0, 38, true):sub(3)))
+			message = newMsgSK
 		})
 	end
 
+	--print("DEBUG: License points created")
+
 	while not client.uiLoaded do Wait(50) end
+
+	--print("DEBUG: UI loaded, sending init message")
 
 	SendNUIMessage({
 		action = 'init',
@@ -1333,28 +1497,59 @@ RegisterNetEvent('ox_inventory:setPlayerInventory', function(currentDrops, inven
 			imagepath = client.imagepath
 		}
 	})
-
+	
+	--print("DEBUG: Init message sent to UI")
+	
+	-- CRITICAL FIX: Setup inventory settings and check backpack BEFORE marking player as loaded
+	--print("DEBUG: Setting up inventory settings...")
+	ClientFuncs.SetupInventorySettings()
+	
+	--print("DEBUG: Getting player license...")
+	local license = ClientFuncs.GetPlayerLicense()
+	LocalPlayer.state:set('license', license, true)
+	--print("DEBUG: License set:", license)
+	
+	-- CRITICAL FIX: Initial backpack check with proper timing
+	--print("DEBUG: Performing initial backpack check...")
+	CreateThread(function()
+		Wait(500) -- Small delay to ensure inventory is fully loaded
+		
+		--print("DEBUG: Checking for backpack after inventory load...")
+		local hasBackpack = ClientFuncs.CheckForBackpack()
+		--print("DEBUG: Initial backpack check result:", hasBackpack)
+		
+		-- Double check the state was set properly
+		local backpackState = LocalPlayer.state.backpack
+		--print("DEBUG: Backpack state after check:", backpackState and json.encode(backpackState) or "nil")
+		
+		-- If we have a backpack, ensure the server knows about it
+		if hasBackpack and backpackState then
+			--print("DEBUG: Syncing backpack state with server...")
+			TriggerServerEvent('akilla-inventory:SyncBackpackClothes', backpackState.id)
+		end
+	end)
+	
+	-- Mark player as loaded AFTER backpack check is initiated
 	PlayerData.loaded = true
+	--print("DEBUG: PlayerData.loaded set to true")
 
-	if not client.disablesetupnotification then
-		lib.notify({ description = locale('inventory_setup') })
-	end
-
+	lib.notify({ description = locale('inventory_setup') })
+	--print("DEBUG: Setup notification sent")
+	
 	Shops.refreshShops()
 	Inventory.Stashes()
 	Inventory.Evidence()
+	--print("DEBUG: Shops, stashes, and evidence refreshed")
 
-	if registerCommands then registerCommands() end
+	if registerCommands then 
+		--print("DEBUG: Registering commands")
+		registerCommands() 
+	end
 
 	TriggerEvent('ox_inventory:updateInventory', PlayerData.inventory)
+	--print("DEBUG: ox_inventory:updateInventory event triggered")
 
 	client.interval = SetInterval(function()
-        local canSteal = canOpenTarget(playerPed)
-
-        if canSteal ~= plyState.canSteal then
-            plyState:set('canSteal', canSteal, true)
-        end
-
 		if invOpen == false then
 			playerCoords = GetEntityCoords(playerPed)
 
@@ -1376,14 +1571,14 @@ RegisterNetEvent('ox_inventory:setPlayerInventory', function(currentDrops, inven
 						local ped = GetPlayerPed(id)
 						local pedCoords = GetEntityCoords(ped)
 
-						if not id or #(playerCoords - pedCoords) > maxDistance or (not client.hasGroup(shared.police) and not Player(currentInventory.id).state.canSteal) then
+						if not id or #(playerCoords - pedCoords) > maxDistance or not (client.hasGroup(shared.police) or canOpenTarget(ped)) then
 							client.closeInventory()
 							lib.notify({ id = 'inventory_lost_access', type = 'error', description = locale('inventory_lost_access') })
 						else
 							TaskTurnPedToFaceCoord(playerPed, pedCoords.x, pedCoords.y, pedCoords.z, 50)
 						end
 
-					elseif currentInventory.coords and (#(playerCoords - currentInventory.coords) > maxDistance or canSteal) then
+					elseif currentInventory.coords and (#(playerCoords - currentInventory.coords) > maxDistance or canOpenTarget(playerPed)) then
 						client.closeInventory()
 						lib.notify({ id = 'inventory_lost_access', type = 'error', description = locale('inventory_lost_access') })
 					end
@@ -1394,6 +1589,7 @@ RegisterNetEvent('ox_inventory:setPlayerInventory', function(currentDrops, inven
 		if client.parachute and GetPedParachuteState(playerPed) ~= -1 then
 			Utils.DeleteEntity(client.parachute[1])
 			client.parachute = false
+			TriggerServerEvent('akilla-inventory:RemoveParachute')
 		end
 
 		if EnableWeaponWheel then return end
@@ -1425,6 +1621,8 @@ RegisterNetEvent('ox_inventory:setPlayerInventory', function(currentDrops, inven
 			end
 		end
 	end, 200)
+
+	--print("DEBUG: Main inventory interval created")
 
 	local playerId = cache.playerId
 	local EnableKeys = client.enablekeys
@@ -1561,12 +1759,43 @@ RegisterNetEvent('ox_inventory:setPlayerInventory', function(currentDrops, inven
 		end
 	end)
 
+	--print("DEBUG: Input control tick created")
+
 	plyState:set('invBusy', false, true)
 	plyState:set('invOpen', false, false)
 	plyState:set('invHotkeys', true, false)
 	plyState:set('canUseWeapons', true, false)
+	
+	--print("DEBUG: Player states set")
+	
+	TriggerEvent('akilla-inventory:Client:ApplyArmorFromRejoinn')
+	--print("DEBUG: Armor rejoin event triggered")
+	
 	collectgarbage('collect')
+	--print("DEBUG: Garbage collection performed")
+	
+	-- ADDITIONAL DEBUG: Monitor backpack state changes
+	CreateThread(function()
+		local lastBackpackState = nil
+		while PlayerData.loaded do
+			Wait(2000) -- Check every 2 seconds
+			
+			local currentBackpackState = LocalPlayer.state.backpack
+			if currentBackpackState ~= lastBackpackState then
+				--[[print("DEBUG: Backpack state changed from", 
+					lastBackpackState and json.encode(lastBackpackState) or "nil", 
+					"to", 
+					currentBackpackState and json.encode(currentBackpackState) or "nil"
+				)--]]
+				lastBackpackState = currentBackpackState
+			end
+		end
+	end)
+	
+	--print("=== DEBUG: setPlayerInventory Event Completed ===")
 end)
+
+
 
 AddEventHandler('onResourceStop', function(resourceName)
 	if shared.resource == resourceName then
@@ -1585,6 +1814,17 @@ RegisterNetEvent('ox_inventory:viewInventory', function(left, right)
 	closeTrunk()
 
 	if client.screenblur then TriggerScreenblurFadeIn(0) end
+	local usingbackpack = ClientFuncs.CheckForBackpack()
+	local leftBottom = lib.callback.await('ox_inventory:openShop2', 200)
+	if Config["Backpack"].requireItem then
+		if usebackpack then
+			leftBottom.open = true
+		else
+			leftBottom.open = false
+		end
+	else
+		leftBottom.open = true
+	end
 
 	currentInventory = right or defaultInventory
 	currentInventory.ignoreSecurityChecks = true
@@ -1596,7 +1836,8 @@ RegisterNetEvent('ox_inventory:viewInventory', function(left, right)
 		action = 'setupInventory',
 		data = {
 			leftInventory = left,
-			rightInventory = currentInventory
+			rightInventory = currentInventory,
+			leftInventoryBottom = leftBottom
 		}
 	})
 end)
@@ -1674,7 +1915,26 @@ local function giveItemToTarget(serverId, slotId, count)
     local notification = lib.callback.await('ox_inventory:giveItem', false, slotId, serverId, count or 0)
 
     if notification then
-        lib.notify({ type = 'error', description = locale(table.unpack(notification)) })
+        local errorType = notification[1]
+        local message = ""
+        
+        if errorType == 'target_inventory_full' then
+            message = "Target player's pockets are full"
+        elseif errorType == 'cannot_give_item' then
+            message = "Cannot give item"
+        elseif errorType == 'item_not_found' then
+            message = "Item not found"
+        elseif errorType == 'no_access' then
+            message = "No access to inventory"
+        else
+            message = locale(table.unpack(notification))
+        end
+        
+        lib.notify({ 
+            type = 'error', 
+            description = message,
+            duration = 3000
+        })
     end
 end
 
@@ -1690,62 +1950,68 @@ local function isGiveTargetValid(ped, coords)
     return entity == ped and IsEntityVisible(ped)
 end
 
-RegisterNUICallback('giveItem', function(data, cb)
+RegisterNUICallback('validGiveItem', function(data, cb)
     cb(1)
+    giveItemToTarget(data.player, data.slot, data.count)
+end)
+
+RegisterNUICallback('giveItem', function(data, cb)
+	cb(1)
+
     if usingItem then return end
 
-    if client.giveplayerlist then
-        local playerCoords = GetEntityCoords(playerPed)
-        local nearbyPlayers = lib.getNearbyPlayers(playerCoords, 3.0)
+	if client.giveplayerlist then
+		local nearbyPlayers = lib.getNearbyPlayers(GetEntityCoords(playerPed), 3.0)
         local nearbyCount = #nearbyPlayers
-        if nearbyCount == 0 then return end
+
+		if nearbyCount == 0 then return end
 
         if nearbyCount == 1 then
-            local option = nearbyPlayers[1]
+			local option = nearbyPlayers[1]
+
             if not isGiveTargetValid(option.ped, option.coords) then return end
-            return giveItemToTarget(GetPlayerServerId(option.id), data.slot, data.count)
+            return ClientFuncs.SendGiveUI({playerlist = {GetPlayerServerId(option.id)}, slot = data.slot, count = data.count})
         end
 
-        local options, n = {}, 0
-        for i = 1, nearbyCount do
-            local option = nearbyPlayers[i]
+        local giveList, n = {}, 0
+
+		for i = 1, #nearbyPlayers do
+			local option = nearbyPlayers[i]
+
             if isGiveTargetValid(option.ped, option.coords) then
-                local svId = GetPlayerServerId(option.id)
-                local playerName = GetPlayerName(option.id)
-                n = n + 1
-                options[n] = {
-                    title = ('[%s] %s'):format(svId, playerName),
-                    icon = 'user',
-                    onSelect = function()
-                        giveItemToTarget(svId, data.slot, data.count)
-                    end
-                }
-            end
-        end
+				local playerName = GetPlayerName(option.id)
+				option.id = GetPlayerServerId(option.id)
+                ---@diagnostic disable-next-line: inject-field
+				option.label = ('[%s] %s'):format(option.id, playerName)
+				n += 1
+				giveList[n] = option
+			end
+		end
+
         if n == 0 then return end
 
-        lib.registerContext({
-            id = 'ox_inventory:givePlayerList',
-            title = 'Give item',
-            options = options
-        })
-        return lib.showContext('ox_inventory:givePlayerList')
-    end
+		-- FIXED: Changed playerID to giveList
+		return ClientFuncs.SendGiveUI({playerlist = giveList, slot = data.slot, count = data.count})
+	end
+
     if cache.vehicle then
-        local seats = GetVehicleMaxNumberOfPassengers(cache.vehicle) - 1
-        if seats >= 0 then
-            local passenger = GetPedInVehicleSeat(cache.vehicle, cache.seat - 2 * (cache.seat % 2) + 1)
-            if passenger ~= 0 and IsEntityVisible(passenger) then
+		local seats = GetVehicleMaxNumberOfPassengers(cache.vehicle) - 1
+
+		if seats >= 0 then
+			local passenger = GetPedInVehicleSeat(cache.vehicle, cache.seat - 2 * (cache.seat % 2) + 1)
+
+			if passenger ~= 0 and IsEntityVisible(passenger) then
                 return giveItemToTarget(GetPlayerServerId(NetworkGetPlayerIndexFromPed(passenger)), data.slot, data.count)
-            end
-        end
+			end
+		end
+
         return
-    end
+	end
 
     local entity = Utils.Raycast(1|2|4|8|16, GetOffsetFromEntityInWorldCoords(cache.ped, 0.0, 3.0, 0.5), 0.2)
-    if entity and IsPedAPlayer(entity) and IsEntityVisible(entity)
-        and #(GetEntityCoords(playerPed, true) - GetEntityCoords(entity, true)) < 3.0 then
-        return giveItemToTarget(GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity)), data.slot, data.count)
+
+    if entity and IsPedAPlayer(entity) and IsEntityVisible(entity) and #(GetEntityCoords(playerPed, true) - GetEntityCoords(entity, true)) < 3.0 then
+		return ClientFuncs.SendGiveUI({playerlist = {GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))}, slot = data.slot, count = data.count})
     end
 end)
 
@@ -1762,7 +2028,7 @@ end)
 lib.callback.register('ox_inventory:startCrafting', function(id, recipe)
 	recipe = CraftingBenches[id].items[recipe]
 
-	return lib.progressCircle({
+	return lib.progressBar({
 		label = locale('crafting_item', recipe.metadata?.label or Items[recipe.name].label),
 		duration = recipe.duration or 3000,
 		canCancel = true,
@@ -1777,6 +2043,38 @@ lib.callback.register('ox_inventory:startCrafting', function(id, recipe)
 	})
 end)
 
+local function refreshBackpackUI()
+    if not invOpen or not Config["Backpack"].requireItem then return end
+    
+    CreateThread(function()
+        Wait(200) -- Allow any pending updates to complete
+        
+        local hasBackpack = ClientFuncs.CheckForBackpack()
+        local leftBottom = lib.callback.await('ox_inventory:openShop2', 200)
+        
+        if leftBottom then
+            leftBottom.open = hasBackpack
+            
+            SendNUIMessage({
+                action = 'setupInventory',
+                data = {
+                    leftInventory = {
+                        id = cache.playerId,
+                        type = 'player',
+                        slots = shared.playerslots,
+                        weight = PlayerData.weight,
+                        maxWeight = shared.playerweight,
+                        items = PlayerData.inventory,
+                        groups = PlayerData.groups
+                    },
+                    rightInventory = currentInventory,
+                    leftInventoryBottom = leftBottom
+                }
+            })
+        end
+    end)
+end
+
 local swapActive = false
 
 ---Synchronise and validate all item movement between the NUI and server.
@@ -1785,6 +2083,34 @@ RegisterNUICallback('swapItems', function(data, cb)
 
     swapActive = true
 
+	-- Store the current backpack state before the swap
+	local hadBackpackBefore = ClientFuncs.CheckForBackpack()
+	local backpackStateBefore = LocalPlayer.state.backpack
+	local backpackIdBefore = backpackStateBefore and backpackStateBefore.id or nil
+	local wasBackpackInvOpen = currentInventory and currentInventory.type == 'backpack' or false
+
+	-- Check if this swap involves slot 1 (backpack slot)
+	local isSlot1Involved = (data.fromSlot == 1 or data.toSlot == 1)
+	local isBackpackItem = data.item and (
+		string.find(data.item:lower(), "backpack") or 
+		string.find(data.item:lower(), "bag") or
+		Items[data.item] and Items[data.item].backpack == true
+	)
+	
+	--print("DEBUG: Swap - fromSlot:", data.fromSlot, "toSlot:", data.toSlot, "isSlot1Involved:", isSlot1Involved)
+	--print("DEBUG: Backpack ID before swap:", backpackIdBefore)
+
+	-- Handle armor removal logic (existing code)
+	if data.fromSlot == 2 and data.item == "armour" then
+		local ped = PlayerPedId()
+		SetPedArmour(ped, 0)
+	end
+
+	if data.toSlot == 2 and data.item == "armour" then
+		TriggerServerEvent("akilla-inventory:Server:ReApplyPlates")
+	end
+
+	-- Handle drop logic (existing code)
 	if data.toType == 'newdrop' then
 		if cache.vehicle or IsPedFalling(playerPed) then
 			swapActive = false
@@ -1803,9 +2129,7 @@ RegisterNUICallback('swapItems', function(data, cb)
 
 				if retval ~= 1 then
 					if not hit then return end
-
 					data.coords = vec3(endCoords.x, endCoords.y, endCoords.z + 1.0)
-
 					break
 				end
 			end
@@ -1825,10 +2149,23 @@ RegisterNUICallback('swapItems', function(data, cb)
 	end
 
 	local success, response, weaponSlot = lib.callback.await('ox_inventory:swapItems', false, data)
+	
+	-- Check if backpack changed and refresh UI if needed
+	if success and (data.fromSlot == 1 or data.toSlot == 1) then
+		local backpackStateAfter = LocalPlayer.state.backpack
+		local backpackIdAfter = backpackStateAfter and backpackStateAfter.id or nil
+		--print("DEBUG: Backpack ID after swap:", backpackIdAfter)
+		if backpackIdBefore ~= backpackIdAfter then
+			--print("DEBUG: Backpack ID changed, refreshing UI")
+			refreshBackpackUI()
+		else
+			--print("DEBUG: Backpack ID unchanged, no UI refresh needed")
+		end
+	end
     swapActive = false
 
 	cb(success or false)
-
+	
 	if success then
         if weaponSlot and currentWeapon then
             currentWeapon.slot = weaponSlot
@@ -1837,11 +2174,86 @@ RegisterNUICallback('swapItems', function(data, cb)
 		if response then
 			updateInventory(response.items, response.weight)
 		end
+
+		-- BACKPACK UPDATE LOGIC - Check if backpack state changed
+		if isSlot1Involved then
+			CreateThread(function()
+				Wait(100) -- Small delay to ensure inventory is updated
+				
+				local hasBackpackAfter = ClientFuncs.CheckForBackpack()
+				local backpackStateAfter = LocalPlayer.state.backpack
+				local backpackIdAfter = backpackStateAfter and backpackStateAfter.id or nil
+				
+				-- If backpack ID changed (including nil to ID or ID to nil), refresh the inventory
+				if backpackIdBefore ~= backpackIdAfter then
+					--print("DEBUG: Backpack ID changed from", backpackIdBefore, "to", backpackIdAfter, "- refreshing inventory")
+					
+					-- Close current inventory
+					client.closeInventory()
+					
+					Wait(200) -- Brief delay
+					
+					-- Reopen inventory to reflect backpack changes
+					if cache.vehicle then
+						local function openGlovebox(vehicle)
+							if not IsPedInAnyVehicle(playerPed, false) or not NetworkGetEntityIsNetworked(vehicle) then return end
+							local vehicleHash = GetEntityModel(vehicle)
+							local vehicleClass = GetVehicleClass(vehicle)
+							local checkVehicle = Vehicles.Storage[vehicleHash]
+							if (checkVehicle == 0 or checkVehicle == 2) or (not Vehicles.glovebox[vehicleClass] and not Vehicles.glovebox.models[vehicleHash]) then return end
+							local isOpen = client.openInventory('glovebox', { netid = NetworkGetNetworkIdFromEntity(vehicle) })
+							if isOpen then
+								currentInventory.entity = vehicle
+							end
+						end
+						openGlovebox(cache.vehicle)
+					else
+						local closest = lib.points.getClosestPoint()
+						if closest and closest.currentDistance < 1.2 and (not closest.instance or closest.instance == currentInstance) then
+							if closest.inv == 'crafting' then
+								client.openInventory('crafting', { id = closest.id, index = closest.index })
+							elseif closest.inv ~= 'license' and closest.inv ~= 'policeevidence' then
+								client.openInventory(closest.inv or 'drop', { id = closest.invId, type = closest.type })
+							end
+						else
+							client.openInventory()
+						end
+					end
+				else
+					--print("DEBUG: Backpack ID unchanged, no full inventory refresh needed")
+				end
+			end)
+		end
+
 	elseif response then
 		if type(response) == 'table' then
 			SendNUIMessage({ action = 'refreshSlots', data = { items = response } })
 		else
 			lib.notify({ type = 'error', description = locale(response) })
+		end
+	end
+
+	-- Handle post-swap logic (existing code)
+	if data.toType == 'player' then
+		if data.toSlot == 1 then
+			if data.item == 'backpack' then
+				-- Backpack equipped - handled by the refresh logic above
+			end
+		elseif data.toSlot == 2 then
+			ClientFuncs.CheckArmorItem(data.item)
+		elseif data.toSlot == 3 then
+			
+		elseif data.toSlot == 4 then
+			ClientFuncs.CheckParachuteItem(data.item)
+		end
+		
+		if data.fromSlot == 1 then
+			if data.item == 'backpack' then
+				-- Backpack removed - handled by the refresh logic above
+			end
+		elseif data.fromSlot == 3 then
+		elseif data.fromSlot == 4 then
+			ClientFuncs.CheckParachuteItem(data.item, true)
 		end
 	end
 end)

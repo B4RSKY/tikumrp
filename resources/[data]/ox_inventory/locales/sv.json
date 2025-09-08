@@ -1,4 +1,8 @@
 {
+  "ui_pockets": "Pockets",
+  "ui_backpack": "Backpack",
+  "ui_crafting": "Recipes",
+  "ui_ground": "Ground",
   "ui_use": "Använd",
   "ui_give": "Ge",
   "ui_close": "Stäng",
