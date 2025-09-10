@@ -67,6 +67,25 @@ Config.Shops = {
     --     camCoords = vector3(-779.257, -1496.29, 1.7786),
     --     TestDriveCoords = vector3(-832.4774, -1532.5023, -0.4745)
     -- },
+    pdm = {
+        -- Blip
+        title = 'Dealer Kendaraan Premium',
+        color = 0,
+        id = 820,
+        scale = 0.5,
+        coords = vector3(-245.22, -897.14, 32.91),
+        -- Other
+        requiredJob = true,
+        jobName = 'cardealer',
+        gradeBoss = 'boss',
+        bossMenu = vector3(-201.23, -1170.77, 23.76),
+        actionjob = vector3(-242.47, -897.72, 32.91),
+        showcase = vector3(-242.8, -905.2, 32.69),
+        spawnShowCase = vector4(-234.76, -904.6, 32.69, 155.13),
+        spawnVehicleBuy = vector3(-236.51, -923.45, 32.65),
+        camCoords = vector3(-237.52, -908.84, 32.69),
+        TestDriveCoords = vector3(-889.877, -3205.54, 13.944)
+    },
     -- plane = {
     --     -- Blip
     --     title = 'Plane Dealership',
@@ -102,6 +121,19 @@ Config.Categories = {
         { label = 'Off-Road',       name = 'offroad' },
         { label = 'Vans',           name = 'vans' },
     },
+    pdm = {
+        { label = 'SUVs',           name = 'suvs' },
+        { label = 'Muscle',         name = 'muscle' },
+        { label = 'Sports',         name = 'sports' },
+        { label = 'Sedans',         name = 'sedans' },
+        { label = 'Off-Road',       name = 'offroad' },
+        { label = 'Sports Classic', name = 'sportsclassic' },
+        { label = 'Motorcycles',    name = 'motorcycles' },
+        -- { label = 'Compacts',       name = 'compacts' },
+        -- { label = 'Coupes',         name = 'coupes' },
+        -- { label = 'Super',          name = 'super' },
+        -- { label = 'Vans',           name = 'vans' },
+    }
     -- police = {
     --     { label = "Armored",    name = "armored" },
     --     { label = "Car",        name = "car" },
@@ -188,4 +220,48 @@ Config.Vehicles = {
     { name = "Burrito 3",         model = "burrito3",    category = "vans",           price = 1270000,      dealership = "cardealer" },
     { name = "Rumpo",             model = "rumpo",       category = "vans",           price = 1503000,      dealership = "cardealer" },
     { name = "Gburrito 2",        model = "gburrito2",   category = "vans",           price = 1860250,      dealership = "cardealer" },
+
+    --PDM
+    --SUVs
+    { name = "Ganesis GV80",           model = "19gv80",        category = "suvs",   price = 1602500,  dealership = "pdm" },
+
+    -- Muscle
+    { name = "Monte Carlo 1977",       model = "77Monte",       category = "muscle", price = 14850000, dealership = "pdm" },
+    { name = "2016 Charger",           model = "16charger",     category = "muscle", price = 14850000, dealership = "pdm" },
+    { name = "Musting Boss 429",       model = "BOSS429",       category = "muscle", price = 19800000, dealership = "pdm" },
+    { name = "Charger F8",             model = "chargerf8",     category = "muscle", price = 16250000, dealership = "pdm" },
+    { name = "Dedge Charger",          model = "rmodcharger",   category = "muscle", price = 17100000, dealership = "pdm" },
+    { name = "1969 Charger",           model = "rmodcharger69", category = "muscle", price = 18900000, dealership = "pdm" },
+    { name = "Dedge Raid",             model = "raid",          category = "muscle", price = 15300000, dealership = "pdm" },
+    { name = "Hellcat F9",             model = "HELLCATF9",     category = "muscle", price = 19550000, dealership = "pdm" },
+    { name = "Hellcat Liberty Walk",   model = "hellcatlb",     category = "muscle", price = 20000000, dealership = "pdm" },
+
+    -- Sports
+    { name = "Nissin 370Z FD",         model = "fd370z",        category = "sports", price = 16750000, dealership = "pdm" },
+    { name = "BMR M3 E36",             model = "m3e36",         category = "sports", price = 15900000, dealership = "pdm" },
+    { name = "BMR M3 E92",             model = "m3e92",         category = "sports", price = 16400000, dealership = "pdm" },
+    { name = "Civic 2020",             model = "civic2020",     category = "sports", price = 13800000, dealership = "pdm" },
+    { name = "Animated FK8 HR",        model = "animfk8hr",     category = "sports", price = 14500000, dealership = "pdm" },
+    { name = "Lancar Evo 9 Drift",     model = "evo9drift",     category = "sports", price = 17200000, dealership = "pdm" },
+    { name = "Sivik RS WB",            model = "74civrswb",     category = "sports", price = 11137500, dealership = "pdm" },
+    { name = "Nissin 350Z",            model = "350z",          category = "sports", price = 11137500, dealership = "pdm" },
+    { name = "2nd Drag",               model = "2nddragg",      category = "sports", price = 10420000, dealership = "pdm" },
+
+    --sportsclassic
+    { name = "Porse 356A",             model = "356a",          category = "sportsclassic", price = 18300000, dealership = "pdm" },
+
+    -- Sedans
+    { name = "Mirsidis S650 Pullman",  model = "2018s650p",     category = "sedans", price = 19200000, dealership = "pdm" },
+    { name = "Awdi A4",                model = "AAQ4",          category = "sedans", price = 14100000, dealership = "pdm" },
+    { name = "Alpina B7",              model = "alpinab7",      category = "sedans", price = 17800000, dealership = "pdm" },
+
+    -- Off Road
+    { name = "RAM 1500 Ghoul",         model = "1500ghoul",     category = "offroad", price = 16800000, dealership = "pdm" },
+    { name = "RAM TRX 6x6",            model = "ramtrx6x6",     category = "offroad", price = 19450000, dealership = "pdm" },
+    { name = "Brubas 6x6",             model = "6x6",           category = "offroad", price = 10420000,  dealership = "pdm" },
+    { name = "Silverado K9",           model = "17silvk9rb",    category = "offroad", price = 10420000,  dealership = "pdm" },
+    
+    -- Motorcycles
+    { name = "Yumaha Airox 155",       model = "aerox155",      category = "motorcycles", price = 90987390, dealership = "pdm" },
+    { name = "Fangle 450",             model = "fangle450",     category = "motorcycles", price = 90987390, dealership = "pdm" },
 }
