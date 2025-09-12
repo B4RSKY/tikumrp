@@ -31,40 +31,40 @@ p {
 }
 img {
   position: absolute;
-  left:6px;
+  right:18px;
   top:41px;
 }
 #idnum {
   font-weight: bolder;
-  font-size: 18px;
+  font-size: 12px;
   color: #282828;
   position: absolute;
-  top: 40px;
-  left: 190px;
+  top: 98px;
+  left: 140px;
 }
 #expiry {
   font-weight: bolder;
-  font-size: 18px;
+  font-size: 12px;
   color: #282828;
   position: absolute;
-  top: 79px;
-  left: 190px;
+  bottom: 10px;
+  left: 80px;
 }
 #name {
   font-weight: bolder;
-  font-size: 18px;
+  font-size: 12px;
   color: #282828;
   position: absolute;
-  top: 105px;
-  left: 190px;
+  top: 120px;
+  left: 180px;
 }
 #fname {
   font-weight: bolder;
-  font-size: 18px;
+  font-size: 12px;
   color: #282828;
   position: absolute;
-  top: 131px;
-  left: 190px;
+  top: 120px;
+  left: 140px;
 }
 #inline {
   position: absolute;
@@ -72,26 +72,30 @@ img {
 }
 #dob {
   position: absolute;
-  left: 190px;
-  top: 182px;
+  left: 140px;
+  top: 140px;
   font-weight: bolder;
-  font-size: 18px;
+  font-size: 12px;
   color: #282828;
   width: 100px;
 }
 #sex {
   position: absolute;
-  color: #b34949;
+  left: 140px;
+  top: 160px;
   font-weight: bolder;
-  left: 245px;
-  top: 210px;
+  font-size: 12px;
+  color: #282828;
+  width: 100px;
 }
 #nationality {
   position: absolute;
-  color: #b34949;
+  left: 140px;
+  top: 185px;
   font-weight: bolder;
-  left: 245px;
-  top: 223px;
+  font-size: 12px;
+  color: #282828;
+  width: 100px;
 }
 #dstatus {
   position: absolute;
@@ -143,9 +147,9 @@ img {
 }
 #signature {
   position: absolute;
-  bottom: 30px;
-  left: 15px;
-  color: #272727;
+  bottom: 25px;
+  right: 15px;
+  color: #000000;
   font-weight: bolder;
   font-size: 19px;
   text-transform:capitalize;

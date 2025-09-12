@@ -11,9 +11,9 @@ $(document).ready(function(){
 		$('#name').css('color', '#282828');
 		$('#fname').css('color', '#282828');
 		if ( sex == 0 ) {
-			$('#sex').text('m');
+			$('#sex').text('Pria');
 		  } else {
-			$('#sex').text('f');
+			$('#sex').text('Wanita');
 		  }
 		$('img').attr('src', mugshot);
 		$('#idnum').text(metadata.citizenid);
@@ -39,9 +39,9 @@ $(document).ready(function(){
 		$('#name').css('color', '#282828');
 		$('#fname').css('color', '#282828');
 		if ( sex == 0 ) {
-			$('#sex').text('m');
+			$('#sex').text('Pria');
 		  } else {
-			$('#sex').text('f');
+			$('#sex').text('Wanita');
 		  }
 		$('img').attr('src', mugshot);
 		$('#name').text(metadata.lastName);
@@ -57,10 +57,10 @@ $(document).ready(function(){
 		$('#idnum').text(metadata.citizenid);
 		$('#name').css('color', '#282828');
 		$('#fname').css('color', '#282828');
-		if ( sex == 0 ) {
-			$('#sex').text('m');
+		if ( sex == 1 ) {
+			$('#sex').text('Pria');
 		  } else {
-			$('#sex').text('f');
+			$('#sex').text('Wanita');
 		  }
 		$('img').attr('src', mugshot);
 		$('#name').text(metadata.lastName);
@@ -79,9 +79,9 @@ $(document).ready(function(){
 		$('#name').css('color', '#282828');
 		$('#fname').css('color', '#282828');
 		if ( sex == 0 ) {
-			$('#sex').text('m');
+			$('#sex').text('Pria');
 		  } else {
-			$('#sex').text('f');
+			$('#sex').text('Wanita');
 		  }
 		$('img').attr('src', mugshot);
 		$('#name').text(metadata.lastName);
