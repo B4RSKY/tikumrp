@@ -102,8 +102,6 @@ local function wipeShops()
 	table.wipe(shops)
 end
 
-local markerColour = { 30, 150, 30 }
-
 local function refreshShops()
 	wipeShops()
 
@@ -189,23 +187,16 @@ local function refreshShops()
 				local coords = shop.locations[i]
 				id += 1
 
-				local newMsgSKK = ""
-				if Config["SK-UI"] then
-					newMsgSKK = ('%s %s'):format("\\key E\\endkey", label)
-				else
-					newMsgSKK = ('%s %s'):format("[E]", label)
-				end
-				
 				shops[id] = lib.points.new(coords, 16, {
 					coords = coords,
 					distance = 16,
 					inv = 'shop',
 					invId = i,
 					type = type,
-                    marker = markerColour,
+                    marker = client.shopmarker,
                     prompt = {
                         options = shop.icon and { icon = shop.icon } or shopPrompt,
-                        message = newMsgSKK
+                        message = ('**%s**  \n%s'):format(label, locale('interact_prompt', GetControlInstructionalButton(0, 38, true):sub(3)))
                     },
 					nearby = Utils.nearbyMarker,
 					blip = blip and createBlip(blip, coords)

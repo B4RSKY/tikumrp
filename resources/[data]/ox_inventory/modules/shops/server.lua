@@ -152,13 +152,8 @@ lib.callback.register('ox_inventory:openShop', function(source, data)
 	return { label = left.label, type = left.type, slots = left.slots, weight = left.weight, maxWeight = left.maxWeight }, shop
 end)
 
-local function canAffordItem(inv, currency, price, type, source)
-	local canAfford = nil
-	if type == 'cash' or type == 'black_money' then  
-		canAfford = price >= 0 and Inventory.GetItemCount(inv, currency) >= price
-	else
-		canAfford = ServerFuncs["GetBankBal"](source) >= price
-	end
+local function canAffordItem(inv, currency, price)
+	local canAfford = price >= 0 and Inventory.GetItemCount(inv, currency) >= price
 
 	return canAfford or {
 		type = 'error',
@@ -166,12 +161,8 @@ local function canAffordItem(inv, currency, price, type, source)
 	}
 end
 
-local function removeCurrency(inv, currency, price, type, source)
-	if type == 'cash' or type == 'black_money' then
-		Inventory.RemoveItem(inv, currency, price)
-	else
-		ServerFuncs["RemoveMoney"](source, price, 'buying item')
-	end
+local function removeCurrency(inv, currency, price)
+	Inventory.RemoveItem(inv, currency, price)
 end
 
 local TriggerEventHooks = require 'modules.hooks.server'
@@ -245,7 +236,7 @@ lib.callback.register('ox_inventory:buyItem', function(source, data)
 					return false, false, { type = 'error', description = locale('cannot_carry') }
 				end
 
-				local canAfford = canAffordItem(playerInv, currency, price, data.type, source)
+				local canAfford = canAffordItem(playerInv, currency, price)
 
 				if canAfford ~= true then
 					return false, false, canAfford
@@ -268,7 +259,7 @@ lib.callback.register('ox_inventory:buyItem', function(source, data)
 
 				Inventory.SetSlot(playerInv, fromItem, count, metadata, data.toSlot)
 				playerInv.weight = newWeight
-				removeCurrency(playerInv, currency, price, data.type, source)
+				removeCurrency(playerInv, currency, price)
 
 				if fromData.count then
 					shop.items[data.fromSlot].count = fromData.count - count

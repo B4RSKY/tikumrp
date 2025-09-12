@@ -4,17 +4,10 @@ local CraftingBenches = {}
 local Items = require 'modules.items.client'
 local createBlip = require 'modules.utils.client'.CreateBlip
 local Utils = require 'modules.utils.client'
-local markerColour = { 150, 150, 30 }
 local prompt = {
-	options = { icon = 'fa-wrench' },
-	message = ('%s %s'):format("[E]", locale('open_crafting_bench'))
+    options = { icon = 'fa-wrench' },
+    message = ('**%s**  \n%s'):format(locale('open_crafting_bench'), locale('interact_prompt', GetControlInstructionalButton(0, 38, true):sub(3)))
 }
-if Config["SK-UI"] then
-	prompt = {
-		options = { icon = 'fa-wrench' },
-		message = ('%s %s'):format("\\key E\\endkey", locale('open_crafting_bench'))
-	}
-end
 
 ---@param id number
 ---@param data table
@@ -86,7 +79,7 @@ local function createCraftingBench(id, data)
 					index = i,
 					inv = 'crafting',
                     prompt = prompt,
-                    marker = markerColour,
+                    marker = client.craftingmarker,
 					nearby = Utils.nearbyMarker
 				})
 
@@ -100,6 +93,6 @@ local function createCraftingBench(id, data)
 	end
 end
 
-for id, data in pairs(lib.load('data.crafting') or {}) do createCraftingBench(id, data) end
+for id, data in pairs(lib.load('data.crafting') or {}) do createCraftingBench(data.name or id, data) end
 
 return CraftingBenches

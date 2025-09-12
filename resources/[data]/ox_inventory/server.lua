@@ -6,7 +6,7 @@ require 'modules.shops.server'
 require 'modules.pefcl.server'
 
 if GetConvar('inventory:versioncheck', 'true') == 'true' then
-	lib.versionCheck('overextended/ox_inventory')
+	lib.versionCheck('TheOrderFivem/ox_inventory')
 end
 
 local TriggerEventHooks = require 'modules.hooks.server'
@@ -111,61 +111,6 @@ local function getClosestStashCoords(playerPed, stash)
 	return #(coordinates - playerCoords) < distance and coordinates or nil
 end
 
----Gets backpack properties from item definition
----@param itemName string The backpack item name
----@return number slots, number maxWeight
-local function getBackpackProperties(itemName)
-    local itemData = exports.ox_inventory:Items(itemName)
-    
-    if not itemData then
-        return Config.Backpack.slots, Config.Backpack.maxWeight
-    end
-    
-    local slots = itemData.bp_slot or Config.Backpack.slots
-    local maxWeight = (itemData.bp_weight or Config.Backpack.maxWeight) * 1000 -- Convert kg to grams
-    
-    return slots, maxWeight
-end
-
-
----Checks if item is a backpack
----@param itemName string Item name to check
----@return boolean isBackpack
-local function isBackpackItem(itemName)
-    local itemData = exports.ox_inventory:Items(itemName)
-    return itemData and itemData.backpack == true
-end
-
----Server-side function to check if player has backpack in slot 1
----@param source number Player source ID
----@return table|nil backpackItem The backpack item or nil if not found
-local function getPlayerBackpackItem(source)
-    local playerInventory = Inventory(source)
-    if not playerInventory or not playerInventory.items then
-        return nil
-    end
-    
-    local slot = 1
-    local data = playerInventory.items[slot]
-    
-    return data and isBackpackItem(data.name) and data or nil
-end
-
----Simple check if player has a backpack equipped
----@param source number Player source ID  
----@return boolean hasBackpack
-local function hasBackpackEquipped(source)
-    return getPlayerBackpackItem(source) ~= nil
-end
-
----Registers a backpack stash with properties from item definition
----@param stashId string The stash identifier
----@param itemName string The backpack item name
-local function registerBackpackStash(stashId, itemName)
-    local slots, maxWeight = getBackpackProperties(itemName)
-    exports.ox_inventory:RegisterStash(stashId, 'Backpack', slots, maxWeight, false)
-end
-
 ---@param source number
 ---@param invType string
 ---@param data? string|number|table
@@ -174,38 +119,10 @@ end
 local function openInventory(source, invType, data, ignoreSecurityChecks)
 	if Inventory.Lock then return false end
 
-	local PlayerState = Player(source).state
-	local BackpackState = PlayerState.backpack
 	local left = Inventory(source)
-	local right, closestCoords, leftBottom
+	local right, closestCoords
+
     if not left then return end
-    
-    -- Corrected server-side backpack check
-    local function getBackpackData()
-        local playerInventory = Inventory(source)
-        if not playerInventory or not playerInventory.items then
-            return nil
-        end
-        
-        local slot = 1
-        local data = playerInventory.items[slot]
-        
-        return data and isBackpackItem(data.name) and data or nil
-    end
-    
-	local databackpack = {}
-    local backpackItem = nil
-    
-    if Config["Backpack"].owner then
-        if BackpackState ~= nil then
-            databackpack = {id = 'backpack-'..BackpackState.id, owner = false}
-            backpackItem = getBackpackData()
-        else
-            databackpack = source
-        end
-    else
-        databackpack = {id = 'backpack', owner = PlayerState.license}
-    end
 
     left:closeInventory(true)
 	Inventory.CloseAll(left, source)
@@ -216,23 +133,6 @@ local function openInventory(source, invType, data, ignoreSecurityChecks)
 
     local playerPed = left.player.ped
 
-	leftBottom = Inventory(databackpack)
-	if leftBottom == false then
-		if Config["Backpack"].owner then
-            -- Register dynamic stash with item definition properties
-            if backpackItem then
-                registerBackpackStash('backpack-'..BackpackState.id, backpackItem.name)
-            else
-                -- Fallback to default values
-                exports.ox_inventory:RegisterStash('backpack-'..BackpackState.id, 'Backpack', Config["Backpack"].slots, Config["Backpack"].maxWeight, false)
-            end
-		else
-			exports.ox_inventory:RegisterStash('backpack', 'Backpack', Config["Backpack"].slots, Config["Backpack"].maxWeight, true)
-		end
-		Wait(150)
-		leftBottom = Inventory(databackpack)
-		if leftBottom == false then return false end
-	end
 	if data then
         local isDataTable = type(data) == 'table'
 
@@ -277,33 +177,19 @@ local function openInventory(source, invType, data, ignoreSecurityChecks)
 				data.type = invType
 				right = Inventory(data)
 
-                if right and data.netid ~= right.netid then
-                    local invEntity = NetworkGetEntityFromNetworkId(right.netid)
+				if right and data.netid ~= right.netid then
+					local invEntity = NetworkGetEntityFromNetworkId(right.netid)
 
-                    if invEntity > 0 and DoesEntityExist(invEntity) or plate and not string.match(GetVehicleNumberPlateText(invEntity) or '', plate) then
-                        return
-                    end
-
-                    Inventory.Remove(right)
-                    right = Inventory(data)
-                end
+					if not (invEntity > 0 and DoesEntityExist(invEntity)) or (plate and not string.match(GetVehicleNumberPlateText(invEntity) or '', plate)) then
+						Inventory.Remove(right)
+						right = Inventory(data)
+					end
+				end
 			elseif invType == 'drop' then
 				right = Inventory(data.id)
 			else
 				return
 			end
-		elseif invType == 'showbpk' then
-			local PlayerState = Player(tonumber(data)).state
-			local BackpackState = PlayerState.backpack
-			local data2 = {}
-			if Config["Backpack"].owner then
-				if BackpackState ~= nil then
-					data2 = {id = 'backpack-'..BackpackState.id, owner = false}
-				end
-			else
-				data2 = {id = 'backpack', owner = PlayerState.license}
-			end
-			right = Inventory(data2)
 		elseif invType == 'policeevidence' then
 			if ignoreSecurityChecks or server.hasGroup(left, shared.police) then
 				right = Inventory(('evidence-%s'):format(data))
@@ -394,25 +280,28 @@ local function openInventory(source, invType, data, ignoreSecurityChecks)
 		items = right.items,
 		coords = closestCoords or right.coords,
 		distance = right.distance
-	}, leftBottom and {
-		id = leftBottom.id,
-		label = leftBottom.player and '' or leftBottom.label,
-		type = 'backpack',
-		slots = leftBottom.slots,
-		weight = leftBottom.weight,
-		maxWeight = leftBottom.maxWeight,
-		items = leftBottom.items,
-		coords = closestCoords or leftBottom.coords,
-		distance = leftBottom.distance
 	}
 end
 
 ---@param source number
 ---@param invType string
 ---@param data string|number|table
-
 lib.callback.register('ox_inventory:openInventory', function(source, invType, data)
-	return openInventory(source, invType, data)
+    if invType == 'player' and source ~= data then
+        local serverId = type(data) == 'table' and data.id or data
+
+        if source == serverId or type(serverId) ~= 'number' then return end
+
+        local left = Inventory(source)
+        if not left then return end
+
+        local isPolice = server.hasGroup(left, shared.police)
+        local isTargetStealable = Player(serverId).state.canSteal
+
+        if not isPolice and not isTargetStealable then return end
+    end
+
+    return openInventory(source, invType, data)
 end)
 
 ---@param netId number
@@ -435,59 +324,6 @@ function server.forceOpenInventory(playerId, invType, data)
 end
 
 exports('forceOpenInventory', server.forceOpenInventory)
-
-lib.callback.register('ox_inventory:openShop2', function(source)
-	local PlayerState = Player(source).state
-	local BackpackState = PlayerState.backpack
-    
-    -- Corrected server-side backpack check
-    local function getBackpackData()
-        local playerInventory = Inventory(source)
-        if not playerInventory or not playerInventory.items then
-            return nil
-        end
-        
-        local slot = 1
-        local data = playerInventory.items[slot]
-        
-        return data and isBackpackItem(data.name) and data or nil
-    end
-    
-	local databackpack = {}
-    local backpackItem = nil
-    
-    if Config["Backpack"].owner then
-        if BackpackState ~= nil then
-            databackpack = {id = 'backpack-'..BackpackState.id, owner = false}
-            backpackItem = getBackpackData()
-        else
-            databackpack = source
-        end
-    else
-        databackpack = {id = 'backpack', owner = PlayerState.license}
-    end
-    
-	local leftBottom = Inventory(databackpack)
-	if leftBottom == false then return false end
-    
-    -- Get dynamic backpack properties from item definition
-    local slots, maxWeight = Config["Backpack"].slots, Config["Backpack"].maxWeight
-    if backpackItem then
-        slots, maxWeight = getBackpackProperties(backpackItem.name)
-    end
-    
-	return {
-		id = leftBottom.id,
-		label = leftBottom.player and '' or leftBottom.label,
-		type = 'backpack',
-		slots = slots, -- Use dynamic slots
-		weight = leftBottom.weight,
-		maxWeight = maxWeight, -- Use dynamic maxWeight
-		items = leftBottom.items,
-		coords = closestCoords or leftBottom.coords,
-		distance = leftBottom.distance
-	}
-end)
 
 local Licenses = lib.load('data.licenses')
 
@@ -520,7 +356,6 @@ lib.callback.register('ox_inventory:getInventory', function(source, id)
 	}
 end)
 
-
 RegisterNetEvent('ox_inventory:usedItemInternal', function(slot)
     local inventory = Inventory(source)
 
@@ -546,9 +381,9 @@ end)
 ---@param metadata { [string]: any }?
 ---@return table | boolean | nil
 lib.callback.register('ox_inventory:useItem', function(source, itemName, slot, metadata, noAnim)
-	local inventory = Inventory(source) --[[@as OxInventory]]
+	local inventory = Inventory(source)
 
-	if inventory.player then
+	if inventory and inventory.player then
 		local item = Items(itemName)
 		local data = item and (slot and inventory.items[slot] or Inventory.GetSlotWithItem(inventory, item.name, metadata, true))
 
@@ -613,7 +448,7 @@ lib.callback.register('ox_inventory:useItem', function(source, itemName, slot, m
 				end
 			elseif not item.weapon and server.UseItem then
                 inventory.usingItem = data
-				-- This is used to call an external useItem function, i.e. ESX.UseItem / QBCore.Functions.CanUseItem
+				-- This is used to call an external useItem function, i.e. ESX.UseItem
 				-- If an error is being thrown on item use there is no internal solution. We previously kept a list
 				-- of usable items which led to issues when restarting resources (for obvious reasons), but config
 				-- developers complained the inventory broke their items. Safely invoking registered item callbacks
@@ -622,6 +457,13 @@ lib.callback.register('ox_inventory:useItem', function(source, itemName, slot, m
 			end
 
 			data.consume = consume
+
+            if not TriggerEventHooks('usingItem', {
+				source = source,
+                inventoryId = inventory and inventory.id,
+                item = inventory.items[slot],
+                consume = consume
+			}) then return false end
 
             ---@type boolean
 			local success = lib.callback.await('ox_inventory:usingItem', source, data, noAnim)
@@ -727,7 +569,8 @@ lib.addCommand({'additem', 'giveitem'}, {
 
 	if item then
 		local inventory = Inventory(args.target) --[[@as OxInventory]]
-		local count = args.count or 1
+		local count = args.count and math.max(args.count, 1) or 1
+
 		local success, response = Inventory.AddItem(inventory, item.name, count, args.type and { type = tonumber(args.type) or args.type })
 
 		if not success then
@@ -747,25 +590,27 @@ lib.addCommand('removeitem', {
 	params = {
 		{ name = 'target', type = 'playerId', help = 'The player to remove the item from' },
 		{ name = 'item', type = 'string', help = 'The name of the item' },
-		{ name = 'count', type = 'number', help = 'The amount of the item to take' },
+		{ name = 'count', type = 'number', help = 'The amount of the item to take', optional = true },
 		{ name = 'type', help = 'Only remove items with a matching metadata "type"', optional = true },
 	},
 	restricted = 'group.admin',
 }, function(source, args)
 	local item = Items(args.item)
 
-	if item and args.count > 0 then
+	if item then
 		local inventory = Inventory(args.target) --[[@as OxInventory]]
-		local success, response = Inventory.RemoveItem(inventory, item.name, args.count, args.type and { type = tonumber(args.type) or args.type }, nil, true)
+		local count = args.count and math.max(args.count, 1) or 1
+
+		local success, response = Inventory.RemoveItem(inventory, item.name, count, args.type and { type = tonumber(args.type) or args.type }, nil, true)
 
 		if not success then
-			return Citizen.Trace(('Failed to remove %sx %s from player %s (%s)'):format(args.count, item.name, args.target, response))
+			return Citizen.Trace(('Failed to remove %sx %s from player %s (%s)'):format(count, item.name, args.target, response))
 		end
 
 		source = Inventory(source) or {label = 'console', owner = 'console'}
 
 		if server.loglevel > 0 then
-			lib.logger(source.owner, 'admin', ('"%s" removed %sx %s from "%s"'):format(source.label, args.count, item.name, inventory.label))
+			lib.logger(source.owner, 'admin', ('"%s" removed %sx %s from "%s"'):format(source.label, count, item.name, inventory.label))
 		end
 	end
 end)
@@ -784,16 +629,18 @@ lib.addCommand('setitem', {
 
 	if item then
 		local inventory = Inventory(args.target) --[[@as OxInventory]]
-		local success, response = Inventory.SetItem(inventory, item.name, args.count or 0, args.type and { type = tonumber(args.type) or args.type })
+		local count = args.count and math.max(args.count, 0) or 0
+
+		local success, response = Inventory.SetItem(inventory, item.name, count or 0, args.type and { type = tonumber(args.type) or args.type })
 
 		if not success then
-			return Citizen.Trace(('Failed to set %s count to %sx for player %s (%s)'):format(item.name, args.count, args.target, response))
+			return Citizen.Trace(('Failed to set %s count to %sx for player %s (%s)'):format(item.name, count, args.target, response))
 		end
 
 		source = Inventory(source) or {label = 'console', owner = 'console'}
 
 		if server.loglevel > 0 then
-			lib.logger(source.owner, 'admin', ('"%s" set "%s" %s count to %sx'):format(source.label, inventory.label, item.name, args.count))
+			lib.logger(source.owner, 'admin', ('"%s" set "%s" %s count to %sx'):format(source.label, inventory.label, item.name, count))
 		end
 	end
 end)
@@ -807,6 +654,8 @@ lib.addCommand('clearevidence', {
 	if not server.isPlayerBoss then return end
 
 	local inventory = Inventory(source)
+	if not inventory then return end
+
 	local group, grade = server.hasGroup(inventory, shared.police)
 	local hasPermission = group and server.isPlayerBoss(source, group, grade)
 
@@ -864,4 +713,3 @@ lib.addCommand('viewinv', {
 }, function(source, args)
 	Inventory.InspectInventory(source, tonumber(args.invId) or args.invId)
 end)
-

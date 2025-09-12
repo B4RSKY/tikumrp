@@ -2,12 +2,11 @@ fx_version 'cerulean'
 use_experimental_fxv2_oal 'yes'
 lua54 'yes'
 game 'gta5'
-
 name 'ox_inventory'
 author 'Overextended'
-version '2.44.1'
+version '2.44.5'
+repository 'https://github.com/TheOrderFivem/ox_inventory'
 description 'Slot-based inventory with item metadata support'
-repository 'https://github.com/overextended/ox_inventory'
 
 dependencies {
     '/server:6116',
@@ -16,63 +15,33 @@ dependencies {
     'ox_lib',
 }
 
-shared_script {
-    '@ox_lib/init.lua',
-    'config.lua'
-}
+shared_script '@ox_lib/init.lua'
 
 ox_libs {
     'locale',
-    'math',
     'table',
+    'math',
 }
 
 server_scripts {
     '@oxmysql/lib/MySQL.lua',
-    'init.lua',
-    'sv_escrow.lua',
+    'init.lua'
 }
 
-client_scripts {
-    'init.lua',
-    '@qbx_core/modules/playerdata.lua',
-    'cl_escrow.lua',
-}
+client_script 'init.lua'
 
 ui_page 'web/build/index.html'
 
 files {
     'client.lua',
     'server.lua',
-    'init.lua',
-    'config.lua',
-    'data/*.lua',
     'locales/*.json',
-    'modules/**/**',
-    'setup/*.lua',
     'web/build/index.html',
     'web/build/assets/*.js',
     'web/build/assets/*.css',
-    'web/build/assets/*.png',
-    'web/images/*.png'
-}
-
-
--- Escrow Ignore (Alphabetized)
-escrow_ignore {
-    'client.lua',
-    'server.lua',
-    'init.lua',
-    'config.lua',
-    'data/*.lua',
-    'locales/*.json',
-    'modules/**/**',
-    'setup/*.lua',
-    'web/build/index.html',
-    'web/build/assets/*.js',
-    'web/build/assets/*.css',
-    'web/build/assets/*.png',
     'web/images/*.png',
+    'modules/**/shared.lua',
+    'modules/**/client.lua',
+    'modules/bridge/**/client.lua',
+    'data/*.lua',
 }
-
-dependency '/assetpacks'
