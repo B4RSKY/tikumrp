@@ -75,8 +75,8 @@ local function openMyReferralPanel()
             if input and input[1] then TriggerServerEvent('tk_referral:redeem', input[1]) end
             end
         },
-        { title='Claim (Referred)', description = 'Ini Jika Kode anda yang di redeem',  icon='gift',   onSelect=function() openClaimsPanel('referred') end },
-        { title='Claim (Referrer)', description = 'Ini Jika anda Meredeem Kode Teman',  icon='trophy', onSelect=function() openClaimsPanel('referrer') end },
+        { title='Claim (Referred)', description = 'Ini Jika anda Meredeem Kode Teman',  icon='gift',   onSelect=function() openClaimsPanel('referred') end },
+        { title='Claim (Referrer)', description = 'Ini Jika Kode anda yang di redeem',  icon='trophy', onSelect=function() openClaimsPanel('referrer') end },
         { title='Leaderboard',      icon='ranking-star', onSelect=function() openTopPanel() end },
         -- {
         --     title='Ganti Kode (Grace)', icon='rotate',

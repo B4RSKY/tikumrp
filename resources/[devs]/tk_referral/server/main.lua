@@ -305,6 +305,28 @@ local function rebuildLeaderboard()
   LeaderboardCache.updatedAt = Utils.now()
 end
 
+local function sendRedeemWebhook(refOwnerRow, ids, playerName, citizenid, refId, reqSecs, isSelf, is_debug_flag)
+  if not (Config.WebhookRedeem and Config.WebhookRedeem.Enable and (Config.WebhookRedeem.Url or '') ~= '') then return end
+
+  local referrerAlias = refOwnerRow.alias or refOwnerRow.license
+  local desc = ('%s **menggunakan** kode **%s**'):format(playerName or (ids.license or 'Unknown'), refOwnerRow.code)
+
+  local fields = {
+    { name = 'Referrer', value = ('%s\n`%s`'):format(referrerAlias, refOwnerRow.license), inline = false },
+    { name = 'Code',     value = ('`%s`'):format(refOwnerRow.code), inline = true },
+
+    { name = 'Referred (Player)', value = ('license: `%s`\ncitizenid: `%s`'):format(ids.license or 'n/a', citizenid or 'n/a'), inline = false },
+    { name = 'Steam',    value = ('`%s`'):format(ids.steam or 'n/a'), inline = true },
+    { name = 'IP',       value = ('`%s`'):format(ids.ip or 'n/a'), inline = true },
+
+    { name = 'Flags',    value = ('debug=%s  self=%s'):format((is_debug_flag==1) and 'yes' or 'no', isSelf and 'yes' or 'no'), inline = true },
+    { name = 'Referral Row', value = ('id: `%d`\nrequirement: `%ds`'):format(refId or 0, reqSecs or 0), inline = false },
+  }
+
+  local payload = Utils.formatDiscordEmbed('Referral Redeem', desc, fields)
+  PerformHttpRequest(Config.WebhookRedeem.Url, function() end, 'POST', json.encode(payload), { ['Content-Type']='application/json' })
+end
+
 -- =========================
 -- Threads
 -- =========================
@@ -725,6 +747,21 @@ RegisterNetEvent('tk_referral:redeem', function(code)
 
   if overActiveCapForReferrer(row.license) then
     TriggerClientEvent('ox_lib:notify', src, { type='error', description='Kode ini sedang ramai. Coba lagi nanti.' }); return
+  end
+
+  -- Tambahkan setelah pengecekan overActiveCapForReferrer dan sebelum MySQL.insert.await:
+  local existingRedeem = MySQL.single.await([[
+    SELECT id FROM referrals 
+    WHERE referrer_license = ? AND referred_license = ?
+    LIMIT 1
+  ]], { row.license, ids.license })
+  
+  if existingRedeem then
+    TriggerClientEvent('ox_lib:notify', src, { 
+      type='error', 
+      description='Anda sudah pernah meredeem kode ini sebelumnya.' 
+    })
+    return
   end
 
   local reqSecs = Config.RequirementSeconds

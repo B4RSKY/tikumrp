@@ -23,7 +23,7 @@ Config.Leaderboard = {
   TopN = 10,
   InGameRefreshMinutes = 60,
   DiscordRefreshHours  = 2,
-  FallbackToLifetimeIfEmpty = true
+  FallbackToLifetimeIfEmpty = false
 }
 
 Config.DailyReferrerActivity = {
@@ -33,7 +33,7 @@ Config.DailyReferrerActivity = {
   Policy = 'DECAY',
   DecayPerWindow = 1,  -- dipakai saat 'hour'
   DecayPerDay = 1,     -- dipakai saat 'day'
-  Floor = 1,
+  Floor = 0,
   TimezoneOffsetMinutes = 420
 }
 
@@ -48,13 +48,13 @@ Config.Validation = {
 
 Config.Rewards = {
   ReferredOnRedeem   = { money = 0, items = {} },
-  ReferredOnComplete = { money = 5000, items = { bread=3, water=3 } },
+  ReferredOnComplete = { money = 10000, items = { burger=3, water=3 } },
 
   ReferrerMilestones = {
     [1]  = { money = 10000 },
-    [2]  = { items = { phone = 1 } },
-    [5]  = { money = 25000, items = { repairkit = 5 } },
-    [10] = { money = 50000, items = { radio = 1 } },
+    [2]  = { money = 15000, items = { bakso=3, esteh=3 } },
+    [5]  = { money = 50000, items = { radio = 1 } },
+    [10] = { money = 100000, items = { esjeruk=10, naspad=10 } },
   },
 
   MoneyAccount = 'cash',
