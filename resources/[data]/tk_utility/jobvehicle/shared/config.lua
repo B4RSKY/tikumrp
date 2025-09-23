@@ -140,9 +140,9 @@ return {
             label = 'Dealer Heli EMS',
             ped = {
                 model = 's_m_m_doctor_01',
-                coords = vector4(-463.76, -962.86, 39.78, 171.78)
+                coords = vector4(312.0, -1451.92, 46.51, 337.4)
             },
-            spawn = vector4(-458.86, -953.44, 41.49, 188.0),
+            spawn = vector4(319.62, -1457.78, 46.51, 278.71),
             vehicle = {
                 swift = {
                     price = 20000,
@@ -159,9 +159,9 @@ return {
             label = 'Dealer EMS',
             ped = {
                 model = 's_m_m_doctor_01',
-                coords = vector4(-431.61, -959.58, 23.69, 2.51)
+                coords = vector4(357.49, -1398.19, 26.2, 137.71)
             },
-            spawn = vector4(-430.66, -955.76, 23.7, 352.67),
+            spawn = vector4(364.68, -1394.65, 26.2, 142.13),
             vehicle = {
                 ambulance = {
                     price = 5000,
