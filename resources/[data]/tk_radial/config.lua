@@ -14,7 +14,7 @@ Config.ItemRadial = {
             exports["lb-phone"]:ToggleOpen(true, false)
         end
     },
-    {
+    { 
         id = 'radial:inventory',
         label = 'Inventory',
         icon = "briefcase",
@@ -206,11 +206,54 @@ Config.ItemRadial = {
     },
     {
         id = 'radial:emsjob',
-        label = 'Medis',
+        label = 'EMT',
         icon = "user-doctor",
         KeepOpen = false,
         canEnable = function()
-            return exports.tk_disnaker:hasJob("ambulance")
+            local Data = QBCore.Functions.GetPlayerData()
+            return exports.tk_disnaker:hasJob("ambulance") and Data.job.grade.level <= 3
+        end,
+        options = {
+            {
+                id = "ems:billplayer",
+                icon = "money-bill",
+                label = "Billing Warga",
+                event = "peleg-billing:client:invOpen"
+            },
+            {
+                id = "ems:masukkan",
+                icon = "car-side",
+                label = "Masukkan Paksa",
+                event = "police:client:PutPlayerInVehicle"
+            },
+            {
+                id = "ems:tokno",
+                icon = "car-side",
+                label = "Keluarkan Paksa",
+                event = "police:client:SetPlayerOutVehicle"
+            },
+            {
+                id = "ems:seret",
+                icon = "shield-alt",
+                label = "Seret",
+                event = "tk-job:seret"
+            },
+            {
+                id = "ems:mdt",
+                icon = "mobile-alt",
+                label = "MDT",
+                command = "mdt"
+            },
+        }
+    },
+        {
+        id = 'radial:emsjob',
+        label = 'EMS',
+        icon = "user-doctor",
+        KeepOpen = false,
+        canEnable = function()
+            local Data = QBCore.Functions.GetPlayerData()
+            return exports.tk_disnaker:hasJob("ambulance") and Data.job.grade.level >= 4
         end,
         options = {
             {
