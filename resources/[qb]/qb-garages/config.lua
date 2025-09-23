@@ -214,4 +214,30 @@ Config.Garages = {
         type = 'depot',
         category = Config.VehicleClass['car']
     },
+    --Garasi Job
+    garasi_heliems = {
+        label = 'Garasi Heli EMS',
+        takeVehicle = vector3(299.32, -1453.53, 46.51),
+        zone = {
+            shape = {
+                vector2(300.25045776367, -1461.5063476562),
+                vector2(307.10815429688, -1452.8734130859),
+                vector2(299.01742553711, -1445.7391357422),
+                vector2(291.84332275391, -1454.1472167969)
+            },
+            minZ = 45.363189697266,
+            maxZ = 50.412441253662
+        },
+        spawnPoint = {
+            vector4(299.32, -1453.53, 46.51, 332.68)
+        },
+        showBlip = false,
+        blipName = 'Garasi Heli EMS',
+        blipNumber = 357,
+        blipColor = 38,
+        type = 'job',
+        category = Config.VehicleClass['air'], --car, air, sea, rig
+        job = 'ambulance',
+        jobType = 'leo'
+    },
 }
