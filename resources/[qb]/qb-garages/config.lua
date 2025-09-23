@@ -240,4 +240,29 @@ Config.Garages = {
         job = 'ambulance',
         jobType = 'leo'
     },
+    garasi_ems = {
+        label = 'Garasi EMS',
+        takeVehicle = vector3(365.7, -1393.97, 26.2),
+        zone = {
+            shape = {
+                vector2(358.43200683594, -1397.6136474609),
+                vector2(363.15496826172, -1401.5733642578),
+                vector2(371.04934692383, -1391.9512939453),
+                vector2(366.35720825195, -1388.1303710938)
+            },
+            minZ = 22.201187133789,
+            maxZ = 28.203886032104
+        },
+        spawnPoint = {
+            vector4(365.7, -1393.97, 26.2, 150.42)
+        },
+        showBlip = false,
+        blipName = 'Garasi EMS',
+        blipNumber = 357,
+        blipColor = 38,
+        type = 'job',
+        category = Config.VehicleClass['car'], --car, air, sea, rig
+        job = 'ambulance',
+        jobType = 'leo'
+    },
 }
